@@ -10,8 +10,16 @@ export default function App() {
   const { session, profile, loading } = useAuth()
   const location = useLocation()
 
-  // Rota pública do onboarding — acessível sem login, antes de qualquer gate de auth.
+  // Rota pública do onboarding — acessível sem login. Se o visitante estiver logado
+  // como admin/gestor_trafego, OnboardingView abre direto em modo edição.
   if (location.pathname.startsWith('/o/')) {
+    if (loading) {
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-obsidian">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand border-t-transparent" />
+        </div>
+      )
+    }
     return (
       <Routes>
         <Route path="/o/:slug" element={<OnboardingView />} />

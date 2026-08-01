@@ -1,5 +1,4 @@
 import type { Bloco7Fases } from '../../../types/onboarding'
-import { formatPercent } from '../../../lib/format'
 import { BlockHeading } from '../BlockHeading'
 
 export function Block07Fases({ data }: { data: Bloco7Fases }) {
@@ -11,7 +10,7 @@ export function Block07Fases({ data }: { data: Bloco7Fases }) {
           <div key={i} className="rounded border border-obsidian/10 p-4">
             <div className="mb-2 flex items-center justify-between">
               <p className="font-medium">{fase.nome}</p>
-              <span className="font-mono text-sm text-brand">{formatPercent(fase.percentualVerba)} da verba</span>
+              <span className="font-mono text-sm text-brand">{fase.periodo}</span>
             </div>
             <p className="mb-2 text-obsidian/70">{fase.objetivo}</p>
             <p className="text-sm text-obsidian/50">

@@ -1,4 +1,5 @@
 import type { OnboardingPayload } from '../../types/onboarding'
+import { CANAL_COMUNICACAO_PADRAO, FREQUENCIA_REPORT_PADRAO } from '../../lib/comoTrabalharTemplates'
 
 export function emptyPayload(): OnboardingPayload {
   return {
@@ -39,36 +40,42 @@ export function emptyPayload(): OnboardingPayload {
       regioesExcluidas: [],
     },
     bloco6_caminhoPaciente: {
+      caminhoSelecionado: null,
       etapas: [],
     },
     bloco7_fases: {
+      templateSelecionado: null,
       fases: [],
     },
     bloco8_criativos: {
-      formatos: [''],
-      angulosDeMensagem: [''],
+      temPosicionamento: false,
+      formatos: [],
+      formatosCustomizados: [],
+      linhas: [],
       copyDePartida: '',
       linkReferencias: '',
     },
     bloco9_riscos: {
+      templateSelecionado: null,
+      temReativacaoBase: false,
       riscos: [],
     },
     bloco10_checklist: {
+      templateSelecionado: null,
       itens: [],
     },
     bloco11_comoTrabalhar: {
-      canalComunicacao: '',
-      frequenciaReport: '',
+      canalComunicacao: CANAL_COMUNICACAO_PADRAO,
+      frequenciaReport: FREQUENCIA_REPORT_PADRAO,
+      oQuePodeEsperarTemplateId: null,
       oQuePodeEsperar: '',
       motivoParceriaValerAPena: '',
+      usarCitacaoPadrao: false,
+      citacaoPadraoId: null,
     },
     bloco12_primeiros30Dias: {
       cronograma: [],
-      oQueNaoVaiAcontecer: [
-        'Os primeiros 7-14 dias são de aprendizado do algoritmo.',
-        'O CPL começa alto e cai ao longo da otimização.',
-        'Dado de poucos dias não é conclusivo.',
-      ],
+      oQueNaoVaiAcontecer: [],
     },
   }
 }

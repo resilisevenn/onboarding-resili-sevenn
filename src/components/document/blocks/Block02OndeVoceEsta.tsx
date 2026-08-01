@@ -1,12 +1,19 @@
 import type { Bloco2OndeVoceEsta } from '../../../types/onboarding'
 import { formatCurrency, formatNumber, formatPercent } from '../../../lib/format'
+import { calcPacientesCobertura } from '../../../lib/calculations'
 import { BlockHeading } from '../BlockHeading'
+import { EditableNumber, EditablePercent } from '../EditableField'
 
-export function Block02OndeVoceEsta({ data }: { data: Bloco2OndeVoceEsta }) {
-  const pacientesCobertura =
-    data.ticketMedio > 0 && data.margem > 0
-      ? data.custoOperacionalMensal / (data.ticketMedio * data.margem)
-      : 0
+export function Block02OndeVoceEsta({
+  data,
+  editable = false,
+  onChange,
+}: {
+  data: Bloco2OndeVoceEsta
+  editable?: boolean
+  onChange?: (data: Bloco2OndeVoceEsta) => void
+}) {
+  const pacientesCobertura = calcPacientesCobertura(data)
 
   return (
     <div>
@@ -16,16 +23,61 @@ export function Block02OndeVoceEsta({ data }: { data: Bloco2OndeVoceEsta }) {
         {data.faturamentoUltimos3Meses.map((v, i) => (
           <div key={i} className="rounded border border-obsidian/10 p-4">
             <p className="text-xs text-obsidian/50">Mês {i + 1}</p>
-            <p className="font-mono text-lg">{formatCurrency(v)}</p>
+            {editable && onChange ? (
+              <EditableNumber
+                value={v}
+                prefix="R$"
+                className="text-lg"
+                onChange={(next) => {
+                  const copy = [...data.faturamentoUltimos3Meses] as [number, number, number]
+                  copy[i] = next
+                  onChange({ ...data, faturamentoUltimos3Meses: copy })
+                }}
+              />
+            ) : (
+              <p className="font-mono text-lg">{formatCurrency(v)}</p>
+            )}
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <Stat label="Ticket médio" value={formatCurrency(data.ticketMedio)} />
-        <Stat label="Custo operacional/mês" value={formatCurrency(data.custoOperacionalMensal)} />
-        <Stat label="Margem" value={formatPercent(data.margem)} />
-        <Stat label="Verba de anúncio atual" value={formatCurrency(data.verbaAnuncioAtual)} />
+        <Stat label="Ticket médio">
+          {editable && onChange ? (
+            <EditableNumber value={data.ticketMedio} prefix="R$" onChange={(v) => onChange({ ...data, ticketMedio: v })} />
+          ) : (
+            <p className="font-mono text-lg">{formatCurrency(data.ticketMedio)}</p>
+          )}
+        </Stat>
+        <Stat label="Custo operacional/mês">
+          {editable && onChange ? (
+            <EditableNumber
+              value={data.custoOperacionalMensal}
+              prefix="R$"
+              onChange={(v) => onChange({ ...data, custoOperacionalMensal: v })}
+            />
+          ) : (
+            <p className="font-mono text-lg">{formatCurrency(data.custoOperacionalMensal)}</p>
+          )}
+        </Stat>
+        <Stat label="Margem">
+          {editable && onChange ? (
+            <EditablePercent value={data.margem} onChange={(v) => onChange({ ...data, margem: v })} />
+          ) : (
+            <p className="font-mono text-lg">{formatPercent(data.margem)}</p>
+          )}
+        </Stat>
+        <Stat label="Verba de anúncio mensal">
+          {editable && onChange ? (
+            <EditableNumber
+              value={data.verbaAnuncioAtual}
+              prefix="R$"
+              onChange={(v) => onChange({ ...data, verbaAnuncioAtual: v })}
+            />
+          ) : (
+            <p className="font-mono text-lg">{formatCurrency(data.verbaAnuncioAtual)}</p>
+          )}
+        </Stat>
       </div>
 
       <div className="mt-6 rounded border border-brand/30 bg-brand/5 p-4">
@@ -38,11 +90,11 @@ export function Block02OndeVoceEsta({ data }: { data: Bloco2OndeVoceEsta }) {
   )
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
       <p className="text-xs text-obsidian/50">{label}</p>
-      <p className="font-mono text-lg">{value}</p>
+      {children}
     </div>
   )
 }

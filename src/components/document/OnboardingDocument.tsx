@@ -12,6 +12,7 @@ import { Block09Riscos } from './blocks/Block09Riscos'
 import { Block10Checklist } from './blocks/Block10Checklist'
 import { Block11ComoTrabalhar } from './blocks/Block11ComoTrabalhar'
 import { Block12Primeiros30Dias } from './blocks/Block12Primeiros30Dias'
+import { EditorBar } from './EditorBar'
 import { cn } from '../../lib/utils'
 
 const NAV_ITEMS = [
@@ -33,20 +34,53 @@ export function OnboardingDocument({
   clientName,
   payload,
   generatedAt,
+  editable = false,
+  onSave,
 }: {
   clientName: string
   payload: OnboardingPayload
   generatedAt: string
+  editable?: boolean
+  onSave?: (payload: OnboardingPayload) => Promise<void>
 }) {
   const [active, setActive] = useState('bloco-1')
+  const [draft, setDraft] = useState(payload)
+  const [dirty, setDirty] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [savedAt, setSavedAt] = useState<Date | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   function scrollTo(id: string) {
     setActive(id)
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
+  function patch<K extends keyof OnboardingPayload>(key: K, value: OnboardingPayload[K]) {
+    setDraft((d) => ({ ...d, [key]: value }))
+    setDirty(true)
+  }
+
+  async function handleSave() {
+    if (!onSave) return
+    setSaving(true)
+    setSaveError(null)
+    try {
+      await onSave(draft)
+      setDirty(false)
+      setSavedAt(new Date())
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : 'Erro ao salvar.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const data = editable ? draft : payload
+
   return (
     <div className="min-h-screen bg-bone text-obsidian">
+      {editable && <EditorBar dirty={dirty} saving={saving} savedAt={savedAt} error={saveError} onSave={handleSave} />}
+
       <header className="border-b border-obsidian/10 px-6 py-8 md:px-12">
         <img src="/logo-resili-sevenn.png" alt="Resili Sevenn" className="mb-4 h-8" />
         <h1 className="font-display text-3xl text-obsidian md:text-4xl">{clientName}</h1>
@@ -73,40 +107,65 @@ export function OnboardingDocument({
 
         <main className="min-w-0 flex-1 space-y-16">
           <section id="bloco-1">
-            <Block01Negocio data={payload.bloco1_negocio} />
+            <Block01Negocio data={data.bloco1_negocio} />
           </section>
           <section id="bloco-2">
-            <Block02OndeVoceEsta data={payload.bloco2_ondeVoceEsta} />
+            <Block02OndeVoceEsta
+              data={data.bloco2_ondeVoceEsta}
+              editable={editable}
+              onChange={(v) => patch('bloco2_ondeVoceEsta', v)}
+            />
           </section>
           <section id="bloco-3">
-            <Block03OndeQuerChegar data={payload.bloco3_ondeQuerChegar} ticketMedio={payload.bloco2_ondeVoceEsta.ticketMedio} />
+            <Block03OndeQuerChegar
+              data={data.bloco3_ondeQuerChegar}
+              ticketMedio={data.bloco2_ondeVoceEsta.ticketMedio}
+              editable={editable}
+              onChange={(v) => patch('bloco3_ondeQuerChegar', v)}
+            />
           </section>
           <section id="bloco-4">
-            <Block04ParaQuemAnunciar data={payload.bloco4_paraQuemAnunciar} />
+            <Block04ParaQuemAnunciar data={data.bloco4_paraQuemAnunciar} />
           </section>
           <section id="bloco-5">
-            <Block05OndeVamosAnunciar data={payload.bloco5_ondeVamosAnunciar} />
+            <Block05OndeVamosAnunciar
+              data={data.bloco5_ondeVamosAnunciar}
+              editable={editable}
+              onChange={(v) => patch('bloco5_ondeVamosAnunciar', v)}
+            />
           </section>
           <section id="bloco-6">
-            <Block06CaminhoPaciente data={payload.bloco6_caminhoPaciente} />
+            <Block06CaminhoPaciente data={data.bloco6_caminhoPaciente} />
           </section>
           <section id="bloco-7">
-            <Block07Fases data={payload.bloco7_fases} />
+            <Block07Fases data={data.bloco7_fases} />
           </section>
           <section id="bloco-8">
-            <Block08Criativos data={payload.bloco8_criativos} />
+            <Block08Criativos
+              data={data.bloco8_criativos}
+              editable={editable}
+              onChange={(v) => patch('bloco8_criativos', v)}
+            />
           </section>
           <section id="bloco-9">
-            <Block09Riscos data={payload.bloco9_riscos} />
+            <Block09Riscos data={data.bloco9_riscos} editable={editable} onChange={(v) => patch('bloco9_riscos', v)} />
           </section>
           <section id="bloco-10">
-            <Block10Checklist data={payload.bloco10_checklist} />
+            <Block10Checklist
+              data={data.bloco10_checklist}
+              editable={editable}
+              onChange={(v) => patch('bloco10_checklist', v)}
+            />
           </section>
           <section id="bloco-11">
-            <Block11ComoTrabalhar data={payload.bloco11_comoTrabalhar} />
+            <Block11ComoTrabalhar
+              data={data.bloco11_comoTrabalhar}
+              editable={editable}
+              onChange={(v) => patch('bloco11_comoTrabalhar', v)}
+            />
           </section>
           <section id="bloco-12">
-            <Block12Primeiros30Dias data={payload.bloco12_primeiros30Dias} />
+            <Block12Primeiros30Dias data={data.bloco12_primeiros30Dias} />
           </section>
         </main>
       </div>

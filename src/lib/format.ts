@@ -13,5 +13,7 @@ export function formatNumber(value: number): string {
 export function formatDate(iso: string): string {
   if (!iso) return ''
   const d = new Date(iso + 'T00:00:00')
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
+  const dataCurta = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+  const diaSemana = d.toLocaleDateString('pt-BR', { weekday: 'long' })
+  return `${dataCurta} (${diaSemana})`
 }

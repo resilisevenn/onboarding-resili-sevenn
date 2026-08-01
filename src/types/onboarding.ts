@@ -73,25 +73,36 @@ export interface Bloco5OndeVamosAnunciar {
 
 // 6. O caminho do paciente
 export interface Bloco6CaminhoPaciente {
+  caminhoSelecionado: number | null // 1 a 5, referente a CAMINHOS_PACIENTE_TEMPLATES
   etapas: { titulo: string; descricao: string }[]
 }
 
 // 7. As fases
 export interface Fase {
   nome: string
-  percentualVerba: number // 0-1
+  periodo: string // ex: "Dias 1 a 7" ou "A partir do dia 22 (contínua)"
   objetivo: string
   gatilhoMudancaFase: string
 }
 
 export interface Bloco7Fases {
+  templateSelecionado: 'agressivo' | 'padrao' | 'conservador' | null
   fases: Fase[]
 }
 
 // 8. O que os anúncios vão dizer
-export interface Bloco8Criativos {
-  formatos: string[]
+export interface LinhaCriativo {
+  procedimentoId: string | null // id de PROCEDIMENTOS_CATALOGO, ou null se linha manual
+  nomeProcedimento: string
   angulosDeMensagem: string[]
+  exemploNarrativa: string
+}
+
+export interface Bloco8Criativos {
+  temPosicionamento: boolean
+  formatos: string[]
+  formatosCustomizados: string[]
+  linhas: LinhaCriativo[]
   copyDePartida: string
   linkReferencias: string
 }
@@ -104,6 +115,8 @@ export interface Risco {
 }
 
 export interface Bloco9Riscos {
+  templateSelecionado: 'so_trafego' | 'trafego_comercial' | 'trafego_posicionamento_comercial' | 'completo_crc' | null
+  temReativacaoBase: boolean
   riscos: Risco[]
 }
 
@@ -115,6 +128,7 @@ export interface ItemChecklist {
 }
 
 export interface Bloco10Checklist {
+  templateSelecionado: 'so_trafego' | 'trafego_comercial' | 'trafego_posicionamento_comercial' | 'completo_crc' | null
   itens: ItemChecklist[]
 }
 
@@ -122,8 +136,11 @@ export interface Bloco10Checklist {
 export interface Bloco11ComoTrabalhar {
   canalComunicacao: string
   frequenciaReport: string
+  oQuePodeEsperarTemplateId: string | null
   oQuePodeEsperar: string
   motivoParceriaValerAPena: string // devolvido nas palavras da clínica
+  usarCitacaoPadrao: boolean // true quando a clínica não disse nada no formulário
+  citacaoPadraoId: string | null
 }
 
 // 12. Os primeiros 30 dias

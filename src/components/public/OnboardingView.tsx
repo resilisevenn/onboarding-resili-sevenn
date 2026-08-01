@@ -1,6 +1,14 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { useParams } from 'react-router-dom'
-import { getOnboardingPublic, type PublicOnboarding } from '../../lib/onboardings'
+import { useAuth } from '../../context/AuthContext'
+import {
+  getOnboardingBySlug,
+  getOnboardingPublic,
+  updateOnboardingPayload,
+  type OnboardingRow,
+  type PublicOnboarding,
+} from '../../lib/onboardings'
+import type { OnboardingPayload } from '../../types/onboarding'
 import { OnboardingDocument } from '../document/OnboardingDocument'
 
 type State =
@@ -9,10 +17,44 @@ type State =
   | { status: 'found'; row: PublicOnboarding }
   | { status: 'unavailable' }
 
+const EDITOR_ROLES = ['admin', 'gestor_trafego']
+
 export function OnboardingView() {
   const { slug } = useParams<{ slug: string }>()
+  const { session, profile } = useAuth()
   const [code, setCode] = useState('')
   const [state, setState] = useState<State>({ status: 'gate' })
+
+  const canEdit = !!session && profile?.status === 'active' && EDITOR_ROLES.includes(profile.role)
+
+  const [editorRow, setEditorRow] = useState<OnboardingRow | null>(null)
+  const [editorLoading, setEditorLoading] = useState(canEdit)
+  const [editorError, setEditorError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!canEdit || !slug) return
+    let active = true
+    setEditorLoading(true)
+    getOnboardingBySlug(slug)
+      .then((row) => {
+        if (active) setEditorRow(row)
+      })
+      .catch((e) => {
+        if (active) setEditorError(e instanceof Error ? e.message : 'Erro ao carregar onboarding.')
+      })
+      .finally(() => {
+        if (active) setEditorLoading(false)
+      })
+    return () => {
+      active = false
+    }
+  }, [canEdit, slug])
+
+  async function handleSave(payload: OnboardingPayload) {
+    if (!editorRow || !session) return
+    await updateOnboardingPayload(editorRow.id, payload, session.user.id)
+    setEditorRow({ ...editorRow, payload, last_edited_at: new Date().toISOString(), last_edited_by: session.user.id })
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -29,6 +71,32 @@ export function OnboardingView() {
     } catch {
       setState({ status: 'unavailable' })
     }
+  }
+
+  if (canEdit) {
+    if (editorLoading) {
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-bone">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand border-t-transparent" />
+        </div>
+      )
+    }
+    if (editorError || !editorRow) {
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-bone px-4 text-center text-obsidian/70">
+          {editorError ?? 'Onboarding não encontrado.'}
+        </div>
+      )
+    }
+    return (
+      <OnboardingDocument
+        clientName={editorRow.client_name}
+        payload={editorRow.payload}
+        generatedAt={editorRow.created_at}
+        editable
+        onSave={handleSave}
+      />
+    )
   }
 
   if (state.status === 'found') {
@@ -53,7 +121,7 @@ export function OnboardingView() {
               maxLength={4}
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-              className="w-full rounded border border-white/10 bg-obsidian-alt px-3 py-3 text-center font-mono text-2xl tracking-[0.5em] text-bone outline-none focus:border-brand"
+              className="w-full rounded border border-white/10 bg-obsidian-field px-3 py-3 text-center font-mono text-2xl tracking-[0.5em] text-bone outline-none focus:border-brand"
               autoFocus
             />
             <button

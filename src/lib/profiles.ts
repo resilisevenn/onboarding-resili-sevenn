@@ -27,3 +27,11 @@ export async function fetchProfile(userId: string): Promise<Profile | null> {
 export async function touchLastSeen(userId: string): Promise<void> {
   await supabase.from('profiles').update({ last_seen_at: new Date().toISOString() }).eq('id', userId)
 }
+
+export async function fetchProfilesByIds(userIds: string[]): Promise<Record<string, Profile>> {
+  const { data, error } = await supabase.from('profiles').select('*').in('id', userIds)
+  if (error) throw error
+  const byId: Record<string, Profile> = {}
+  for (const p of (data as Profile[]) ?? []) byId[p.id] = p
+  return byId
+}

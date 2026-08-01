@@ -8,13 +8,26 @@ export function Block12Primeiros30Dias({ data }: { data: Bloco12Primeiros30Dias 
       <BlockHeading title="Os primeiros 30 dias" />
 
       <ol className="mb-8 space-y-4 border-l border-obsidian/10 pl-6">
-        {data.cronograma.map((evento, i) => (
-          <li key={i} className="relative">
-            <span className="absolute -left-[27px] top-1 h-2.5 w-2.5 rounded-full bg-brand" />
-            <p className="font-mono text-sm text-obsidian/50">{formatDate(evento.data)}</p>
-            <p>{evento.descricao}</p>
-          </li>
-        ))}
+        {data.cronograma.map((evento, i) => {
+          const primeiraData = data.cronograma[0]?.data
+          const diaRelativo =
+            evento.data && primeiraData
+              ? Math.round(
+                  (new Date(evento.data + 'T00:00:00').getTime() - new Date(primeiraData + 'T00:00:00').getTime()) /
+                    (1000 * 60 * 60 * 24),
+                )
+              : null
+          return (
+            <li key={i} className="relative">
+              <span className="absolute -left-[27px] top-1 h-2.5 w-2.5 rounded-full bg-brand" />
+              <p className="font-mono text-sm text-obsidian/50">
+                {formatDate(evento.data)}
+                {diaRelativo != null && ` — Dia ${diaRelativo}`}
+              </p>
+              <p>{evento.descricao}</p>
+            </li>
+          )
+        })}
       </ol>
 
       <div className="rounded border border-obsidian/10 bg-obsidian/5 p-4">

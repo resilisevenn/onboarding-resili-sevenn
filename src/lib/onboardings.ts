@@ -13,6 +13,8 @@ export interface OnboardingRow {
   created_by: string | null
   created_at: string
   last_viewed_at: string | null
+  last_edited_at: string | null
+  last_edited_by: string | null
 }
 
 function slugify(text: string): string {
@@ -76,6 +78,21 @@ export async function listOnboardings(): Promise<OnboardingRow[]> {
 
 export async function setOnboardingStatus(id: string, status: OnboardingStatus): Promise<void> {
   const { error } = await supabase.from('onboardings').update({ status }).eq('id', id)
+  if (error) throw error
+}
+
+/** Leitura autenticada por slug — usada pelo modo editor (admin/gestor_trafego), sem gate de código. */
+export async function getOnboardingBySlug(slug: string): Promise<OnboardingRow | null> {
+  const { data, error } = await supabase.from('onboardings').select('*').eq('slug', slug).maybeSingle()
+  if (error) throw error
+  return data as OnboardingRow | null
+}
+
+export async function updateOnboardingPayload(id: string, payload: OnboardingPayload, editedBy: string): Promise<void> {
+  const { error } = await supabase
+    .from('onboardings')
+    .update({ payload, last_edited_at: new Date().toISOString(), last_edited_by: editedBy })
+    .eq('id', id)
   if (error) throw error
 }
 

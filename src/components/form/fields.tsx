@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
+import { cn } from '../../lib/utils'
 
 const inputClass =
-  'w-full rounded border border-white/10 bg-obsidian px-3 py-2 text-bone outline-none focus:border-brand'
+  'w-full rounded border border-white/10 bg-obsidian-field px-3 py-2 text-bone outline-none focus:border-brand'
 
 export function TextField({
   label,
@@ -26,16 +27,18 @@ export function TextAreaField({
   value,
   onChange,
   rows = 3,
+  className,
 }: {
   label: string
   value: string
   onChange: (v: string) => void
   rows?: number
+  className?: string
 }) {
   return (
     <label className="block">
       <span className="mb-1 block text-sm text-bone/70">{label}</span>
-      <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={rows} className={inputClass} />
+      <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={rows} className={cn(inputClass, className)} />
     </label>
   )
 }
@@ -134,7 +137,7 @@ export function ObjectListField<T>({
       <span className="mb-2 block text-sm text-bone/70">{label}</span>
       <div className="space-y-3">
         {values.map((item, i) => (
-          <div key={i} className="rounded border border-white/10 p-3">
+          <div key={i} className="rounded-lg border border-white/10 bg-obsidian/40 p-3 shadow-inner">
             <div className="mb-2 flex justify-end">
               <button
                 type="button"

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding — Clínica Vitá Estética (Simulação)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #59a52c;
+    --brand-dark: #021611;
+    --brand-hover: #4c8f24;
+    --brand-light: #8fd45f;
+    --obsidian: #0b1310;
+    --obsidian-alt: #142019;
+    --obsidian-deep: #050a08;
+    --obsidian-field: #1e2e26;
+    --bone: #fafafa;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    background: var(--bone);
+    color: var(--obsidian);
+  }
+  .serif { font-family: 'DM Serif Display', ui-serif, Georgia, serif; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  /* ---------- GATE SCREEN ---------- */
+  #gate {
+    min-height: 100vh;
+    background: radial-gradient(circle at 50% 20%, var(--obsidian-alt), var(--obsidian) 65%);
+    color: var(--bone);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  #gate .card {
+    max-width: 384px;
+    width: 100%;
+    text-align: center;
+  }
+  #gate img.logo { height: 32px; margin: 0 auto 32px; display: block; }
+  #gate p.hint { color: rgba(250,250,250,0.7); font-size: 14px; margin-bottom: 20px; }
+  #gate input {
+    width: 100%;
+    text-align: center;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 28px;
+    letter-spacing: 0.5em;
+    padding: 12px 8px 12px 16px;
+    background: var(--obsidian-field);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--bone);
+    outline: none;
+    margin-bottom: 16px;
+  }
+  #gate input:focus { border-color: var(--brand); }
+  #gate button {
+    width: 100%;
+    background: var(--brand);
+    color: var(--brand-dark);
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  #gate button:hover { background: var(--brand-hover); }
+  #gate .toggle-link {
+    display: inline-block;
+    margin-top: 24px;
+    color: rgba(250,250,250,0.5);
+    font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* ---------- DOCUMENT VIEW ---------- */
+  #document { display: none; }
+  header.doc-header {
+    border-bottom: 1px solid rgba(11,19,16,0.1);
+    background: linear-gradient(180deg, rgba(89,165,44,0.04), var(--bone) 70%);
+    padding: 24px 24px 24px 68px;
+  }
+  header.doc-header .inner { max-width: 880px; margin: 0; }
+  header.doc-header img.logo { height: 32px; margin-bottom: 16px; display: block; }
+  header.doc-header h1 { font-size: 32px; margin: 0 0 6px; }
+  header.doc-header .sub { color: rgba(11,19,16,0.6); font-size: 14px; margin: 0; }
+
+  .layout {
+    padding: 32px 24px 96px;
+  }
+
+  /* Sidebar fixa, colada à esquerda da janela, recolhida — expande só no hover. */
+  nav.sidebar {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 44px;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 8px;
+    border-radius: 0 14px 14px 0;
+    background: rgba(250,250,250,0.85);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(11,19,16,0.08);
+    border-left: none;
+    box-shadow: 0 4px 20px rgba(11,19,16,0.08);
+    transition: width 0.22s ease, box-shadow 0.22s ease;
+  }
+  nav.sidebar:hover {
+    width: 260px;
+    box-shadow: 0 8px 30px rgba(11,19,16,0.16);
+  }
+  nav.sidebar a {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    text-decoration: none;
+    color: rgba(11,19,16,0.6);
+    white-space: nowrap;
+    overflow: hidden;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  nav.sidebar a .num { flex: 0 0 auto; }
+  nav.sidebar a .label {
+    flex: 0 0 auto;
+    max-width: 0;
+    opacity: 0;
+    transition: max-width 0.22s ease, opacity 0.15s ease;
+  }
+  nav.sidebar:hover a .label { max-width: 220px; opacity: 1; }
+  nav.sidebar a:hover { background: rgba(11,19,16,0.05); color: var(--obsidian); }
+  nav.sidebar a.active { background: linear-gradient(135deg, var(--obsidian), var(--obsidian-alt)); color: var(--bone); box-shadow: 0 2px 8px rgba(11,19,16,0.25); }
+
+  main.content {
+    max-width: 880px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+  }
+
+  section.block h2 { font-size: 28px; margin: 0 0 6px; transition: color 0.2s ease; }
+  section.block.active h2 { color: var(--brand); }
+  section.block .block-sub { color: rgba(11,19,16,0.6); margin: 0 0 24px; font-size: 14.5px; }
+  section.block h2:only-child { margin-bottom: 0; }
+  section.block { padding-top: 48px; border-top: 1px solid rgba(11,19,16,0.1); }
+  section.block:first-child { padding-top: 0; border-top: none; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .full { grid-column: 1 / -1; }
+  .field label {
+    display: block;
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(11,19,16,0.5);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .field p, .field ul { margin: 0; font-size: 15px; line-height: 1.6; }
+  .field ul { padding-left: 18px; }
+  .field ul li { margin-bottom: 4px; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 20px; }
+  .month-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
+  .box {
+    border: 1px solid rgba(11,19,16,0.1);
+    border-radius: 12px;
+    padding: 16px;
+    background: linear-gradient(180deg, rgba(11,19,16,0.015), rgba(11,19,16,0));
+    box-shadow: 0 1px 2px rgba(11,19,16,0.04), 0 4px 12px rgba(11,19,16,0.05);
+    transition: box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .box:hover {
+    box-shadow: 0 2px 4px rgba(11,19,16,0.06), 0 10px 24px rgba(89,165,44,0.22);
+    transform: translateY(-1px);
+    background: linear-gradient(180deg, rgba(89,165,44,0.28), rgba(89,165,44,0.1));
+    border-color: rgba(89,165,44,0.6);
+  }
+  .box .k { font-size: 12.5px; color: rgba(11,19,16,0.55); margin-bottom: 6px; }
+  .box .v { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 19px; font-weight: 600; }
+
+  .callout {
+    border: 1px solid rgba(89,165,44,0.35);
+    background: linear-gradient(135deg, rgba(89,165,44,0.1), rgba(89,165,44,0.04));
+    border-radius: 12px;
+    padding: 18px 20px;
+    font-size: 15px;
+    box-shadow: 0 4px 14px rgba(89,165,44,0.08);
+  }
+  .callout strong.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--brand-hover); }
+
+  .level-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  .level-card {
+    border: 1px solid rgba(11,19,16,0.1);
+    border-radius: 12px;
+    padding: 18px;
+    background: linear-gradient(180deg, rgba(11,19,16,0.015), rgba(11,19,16,0));
+    box-shadow: 0 1px 2px rgba(11,19,16,0.04), 0 4px 12px rgba(11,19,16,0.05);
+    transition: box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .level-card:hover {
+    box-shadow: 0 2px 4px rgba(11,19,16,0.06), 0 10px 24px rgba(89,165,44,0.22);
+    transform: translateY(-1px);
+    background: linear-gradient(180deg, rgba(89,165,44,0.28), rgba(89,165,44,0.1));
+    border-color: rgba(89,165,44,0.6);
+  }
+  .level-card .name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .level-card .amount { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 24px; font-weight: 700; margin-bottom: 12px; color: var(--brand-hover); }
+  .level-card dl { margin: 0; font-size: 13.5px; }
+  .level-card dl div { display: flex; justify-content: space-between; padding: 4px 0; border-top: 1px solid rgba(11,19,16,0.06); }
+  .level-card dl div:first-child { border-top: none; }
+  .level-card dl dt { color: rgba(11,19,16,0.55); }
+  .level-card dl dd { margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 600; }
+
+  .intro-note { font-size: 13.5px; color: rgba(11,19,16,0.6); margin-bottom: 20px; }
+  .intro-note b { color: var(--obsidian); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  ol.journey { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  ol.journey li { position: relative; display: flex; gap: 16px; align-items: flex-start; padding-bottom: 28px; }
+  ol.journey li:last-child { padding-bottom: 0; }
+  ol.journey li::before {
+    content: ''; position: absolute; left: 15px; top: 32px; bottom: 4px;
+    width: 2px; background: linear-gradient(180deg, rgba(89,165,44,0.5), rgba(89,165,44,0.15));
+  }
+  ol.journey li:last-child::before { display: none; }
+  ol.journey .badge {
+    flex: 0 0 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-hover), var(--obsidian) 85%); color: var(--bone);
+    display: flex; align-items: center; justify-content: center;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 700; font-size: 14px;
+    box-shadow: 0 2px 8px rgba(89,165,44,0.25);
+    position: relative; z-index: 1;
+  }
+  ol.journey .title { font-weight: 600; margin-bottom: 2px; }
+  ol.journey .desc { color: rgba(11,19,16,0.6); font-size: 14.5px; }
+
+  .phase-card {
+    border: 1px solid rgba(11,19,16,0.1);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    background: linear-gradient(180deg, rgba(11,19,16,0.015), rgba(11,19,16,0));
+    box-shadow: 0 1px 2px rgba(11,19,16,0.04), 0 4px 12px rgba(11,19,16,0.05);
+    transition: box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .phase-card:hover {
+    box-shadow: 0 2px 4px rgba(11,19,16,0.06), 0 10px 24px rgba(89,165,44,0.22);
+    transform: translateY(-1px);
+    background: linear-gradient(180deg, rgba(89,165,44,0.28), rgba(89,165,44,0.1));
+    border-color: rgba(89,165,44,0.6);
+  }
+  .phase-card .row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .phase-card .row .name { font-weight: 600; font-size: 16px; }
+  .phase-card .row .pct { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--brand-hover); font-weight: 600; }
+  .phase-card .obj { font-size: 14.5px; margin-bottom: 10px; }
+  .phase-card .trigger { font-size: 13px; color: rgba(11,19,16,0.6); }
+  .phase-card .trigger b { color: var(--obsidian); }
+
+  .risk-card {
+    border: 1px solid rgba(11,19,16,0.1);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    background: linear-gradient(180deg, rgba(11,19,16,0.015), rgba(11,19,16,0));
+    box-shadow: 0 1px 2px rgba(11,19,16,0.04), 0 4px 12px rgba(11,19,16,0.05);
+    transition: box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .risk-card:hover {
+    box-shadow: 0 2px 4px rgba(11,19,16,0.06), 0 10px 24px rgba(89,165,44,0.22);
+    transform: translateY(-1px);
+    background: linear-gradient(180deg, rgba(89,165,44,0.28), rgba(89,165,44,0.1));
+    border-color: rgba(89,165,44,0.6);
+  }
+  .risk-card .row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+  .risk-card .desc { font-weight: 600; font-size: 15px; }
+  .pill { flex: 0 0 auto; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  .pill.clinica { background: rgba(89,165,44,0.15); color: var(--brand-hover); }
+  .pill.gestor { background: rgba(11,19,16,0.08); color: rgba(11,19,16,0.7); }
+  .risk-card .plan { font-size: 13.5px; color: rgba(11,19,16,0.7); }
+  .risk-card .plan b { color: var(--obsidian); }
+
+  table.access {
+    width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14.5px;
+    border: 1px solid rgba(11,19,16,0.1); border-radius: 12px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(11,19,16,0.04), 0 4px 12px rgba(11,19,16,0.05);
+  }
+  table.access th { text-align: left; padding: 12px; background: rgba(11,19,16,0.03); border-bottom: 1px solid rgba(11,19,16,0.1); font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; color: rgba(11,19,16,0.55); }
+  table.access td { padding: 12px; border-bottom: 1px solid rgba(11,19,16,0.06); transition: background 0.12s ease; }
+  table.access tr:last-child td { border-bottom: none; }
+  table.access td.prazo { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  table.access tbody tr:nth-child(even) td { background: rgba(11,19,16,0.025); }
+  table.access tbody tr:hover td { background: rgba(89,165,44,0.16); }
+
+  .partnership-box {
+    border: 1px solid rgba(89,165,44,0.35);
+    background: linear-gradient(135deg, rgba(89,165,44,0.1), rgba(89,165,44,0.04));
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-top: 8px;
+    box-shadow: 0 4px 14px rgba(89,165,44,0.08);
+  }
+  .partnership-box h3 { font-size: 15px; margin: 0 0 8px; font-weight: 600; }
+  .partnership-box p { margin: 0; font-style: italic; font-size: 15px; }
+
+  .timeline { position: relative; margin-left: 104px; padding-left: 24px; border-left: 2px solid rgba(11,19,16,0.12); display: flex; flex-direction: column; gap: 20px; }
+  .timeline .event { position: relative; }
+  .timeline .event::before {
+    content: ''; position: absolute; left: -29px; top: 4px;
+    width: 10px; height: 10px; border-radius: 50%; background: var(--brand);
+    box-shadow: 0 0 0 4px rgba(89,165,44,0.15);
+  }
+  .timeline .day {
+    position: absolute; left: -104px; top: 1px; width: 60px; text-align: right;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 15px; font-weight: 700; color: var(--obsidian);
+  }
+  .timeline .date { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; font-weight: 600; color: rgba(11,19,16,0.55); margin-bottom: 4px; }
+  .timeline .desc { font-size: 14.5px; }
+
+  .not-happen {
+    background: linear-gradient(180deg, rgba(11,19,16,0.045), rgba(11,19,16,0.025));
+    border: 1px solid rgba(11,19,16,0.1); border-radius: 12px; padding: 4px 20px; margin-top: 20px;
+    box-shadow: inset 0 1px 2px rgba(11,19,16,0.03);
+  }
+  .not-happen summary {
+    list-style: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 0; font-size: 15px; font-weight: 600; color: var(--obsidian);
+  }
+  .not-happen summary::-webkit-details-marker { display: none; }
+  .not-happen summary::after {
+    content: '›'; font-size: 20px; color: rgba(11,19,16,0.4);
+    transform: rotate(90deg); transition: transform 0.2s ease;
+  }
+  .not-happen[open] summary::after { transform: rotate(-90deg); }
+  .not-happen ul { margin: 0; padding: 0 0 16px 18px; font-size: 14.5px; line-height: 1.7; }
+
+  a.ref-link { color: var(--brand-hover); text-decoration: underline; }
+
+  .banner {
+    background: linear-gradient(90deg, var(--brand-dark), var(--obsidian-alt));
+    color: var(--bone);
+    text-align: center;
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  @media (max-width: 900px) {
+    nav.sidebar {
+      position: static; transform: none; width: 100%; max-height: none; overflow: visible;
+      flex-direction: row; flex-wrap: wrap; border-radius: 12px; border-left: 1px solid rgba(11,19,16,0.08);
+      margin-bottom: 24px; background: rgba(250,250,250,0.85);
+    }
+    nav.sidebar:hover { width: 100%; }
+    nav.sidebar a .label { max-width: none; opacity: 1; }
+    .grid2, .stat-grid, .month-grid, .level-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .grid2, .stat-grid, .month-grid, .level-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="banner">🔧 SIMULAÇÃO: arquivo estático apenas para pré-visualização de layout e conteúdo (dados fictícios)</div>
+
+<!-- ===================== GATE SCREEN ===================== -->
+<div id="gate">
+  <div class="card">
+    <img class="logo" src="public/logo-resili-sevenn.png" alt="Resili Sevenn" onerror="this.style.display='none'">
+    <p class="hint">Digite os 4 últimos dígitos do WhatsApp cadastrado para acessar.</p>
+    <input type="text" maxlength="4" placeholder="0000" id="codeInput">
+    <button onclick="document.getElementById('gate').style.display='none';document.getElementById('document').style.display='block';window.scrollTo(0,0);">Acessar</button>
+    <span class="toggle-link" onclick="document.getElementById('gate').style.display='none';document.getElementById('document').style.display='block';window.scrollTo(0,0);">Pular direto para o documento (simulação)</span>
+  </div>
+</div>
+
+<!-- ===================== DOCUMENT VIEW ===================== -->
+<div id="document">
+  <header class="doc-header">
+    <div class="inner">
+      <img class="logo" src="public/logo-resili-sevenn.png" alt="Resili Sevenn" onerror="this.style.display='none'">
+      <h1 class="serif">Clínica Vitá Estética</h1>
+      <p class="sub">Onboarding gerado em 31/07/2026</p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar">
+      <a href="#b1" class="active"><span class="num">1.</span><span class="label">&nbsp;O seu negócio</span></a>
+      <a href="#b2"><span class="num">2.</span><span class="label">&nbsp;Onde você está hoje</span></a>
+      <a href="#b3"><span class="num">3.</span><span class="label">&nbsp;Onde você quer chegar</span></a>
+      <a href="#b4"><span class="num">4.</span><span class="label">&nbsp;Para quem vamos anunciar</span></a>
+      <a href="#b5"><span class="num">5.</span><span class="label">&nbsp;Onde vamos anunciar</span></a>
+      <a href="#b6"><span class="num">6.</span><span class="label">&nbsp;O caminho do paciente</span></a>
+      <a href="#b7"><span class="num">7.</span><span class="label">&nbsp;As fases</span></a>
+      <a href="#b8"><span class="num">8.</span><span class="label">&nbsp;O que os anúncios vão dizer</span></a>
+      <a href="#b9"><span class="num">9.</span><span class="label">&nbsp;Riscos que assumimos juntos</span></a>
+      <a href="#b10"><span class="num">10.</span><span class="label">&nbsp;O que precisa de você</span></a>
+      <a href="#b11"><span class="num">11.</span><span class="label">&nbsp;Como vamos trabalhar</span></a>
+      <a href="#b12"><span class="num">12.</span><span class="label">&nbsp;Os primeiros 30 dias</span></a>
+    </nav>
+
+    <main class="content">
+
+      <!-- BLOCK 01 -->
+      <section class="block active" id="b1">
+        <h2 class="serif">O seu negócio, como eu entendi</h2>
+        <p class="block-sub">Confira se está tudo certo; se algo estiver errado, é só nos avisar.</p>
+        <div class="grid2">
+          <div class="field"><label>Serviços</label>
+            <ul>
+              <li>Harmonização facial</li>
+              <li>Preenchimento labial</li>
+              <li>Botox terapêutico e estético</li>
+              <li>Bioestimuladores de colágeno</li>
+            </ul>
+          </div>
+          <div class="field"><label>Diferencial</label>
+            <p>Atendimento médico especializado com protocolo de acompanhamento pós-procedimento em 7, 30 e 90 dias, algo que a concorrência local não oferece.</p>
+          </div>
+          <div class="field"><label>Público descrito</label>
+            <p>Mulheres de 28 a 50 anos, classe B/A, que já usam procedimentos estéticos mas buscam um profissional de confiança para resultados mais naturais.</p>
+          </div>
+          <div class="field"><label>Regiões atendidas</label>
+            <p>Zona Sul e Centro da cidade, com pacientes vindos também da região metropolitana.</p>
+          </div>
+          <div class="field"><label>Horários de funcionamento</label>
+            <p>Segunda a sexta, das 9h às 19h. Sábados das 9h às 13h mediante agendamento.</p>
+          </div>
+          <div class="field"><label>Sazonalidade</label>
+            <p>Aumento de demanda em outubro/novembro (temporada de festas) e queda em janeiro/fevereiro.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 02 -->
+      <section class="block" id="b2">
+        <h2 class="serif">Onde você está hoje</h2>
+        <p class="block-sub">A linha de base a partir da qual medimos o progresso.</p>
+        <div class="month-grid">
+          <div class="box"><div class="k">Faturamento — Mês 1</div><div class="v mono">R$ 42.000</div></div>
+          <div class="box"><div class="k">Faturamento — Mês 2</div><div class="v mono">R$ 38.500</div></div>
+          <div class="box"><div class="k">Faturamento — Mês 3</div><div class="v mono">R$ 45.200</div></div>
+        </div>
+        <div class="stat-grid">
+          <div class="box"><div class="k">Ticket médio</div><div class="v mono">R$ 850</div></div>
+          <div class="box"><div class="k">Custo operacional/mês</div><div class="v mono">R$ 28.000</div></div>
+          <div class="box"><div class="k">Margem</div><div class="v mono">34%</div></div>
+          <div class="box"><div class="k">Verba de anúncio mensal</div><div class="v mono">R$ 3.000</div></div>
+        </div>
+        <div class="callout">Pacientes/mês necessários só para cobrir a operação: <strong class="mono">33</strong></div>
+      </section>
+
+      <!-- BLOCK 03 -->
+      <section class="block" id="b3">
+        <h2 class="serif">Onde você quer chegar — em pacientes, não só em reais</h2>
+        <p class="block-sub">A meta declarada traduzida em pacientes, leads e verba necessária.</p>
+        <p class="intro-note">Taxas de conversão usadas (histórico/teórico): lead → agendamento <b>32%</b>, agendamento → comparecimento <b>70%</b>, comparecimento → fechamento <b>45%</b>. CPL estimado: <b>R$ 28</b>.</p>
+        <div class="level-grid">
+          <div class="level-card">
+            <div class="name">Meta inicial</div>
+            <div class="amount">R$ 60.000</div>
+            <dl>
+              <div><dt>Pacientes/mês</dt><dd>71</dd></div>
+              <div><dt>Leads necessários</dt><dd>226</dd></div>
+              <div><dt>Verba necessária</dt><dd>R$ 6.328</dd></div>
+            </dl>
+          </div>
+          <div class="level-card">
+            <div class="name">Meta intermediária</div>
+            <div class="amount">R$ 90.000</div>
+            <dl>
+              <div><dt>Pacientes/mês</dt><dd>106</dd></div>
+              <div><dt>Leads necessários</dt><dd>336</dd></div>
+              <div><dt>Verba necessária</dt><dd>R$ 9.408</dd></div>
+            </dl>
+          </div>
+          <div class="level-card">
+            <div class="name">Super meta</div>
+            <div class="amount">R$ 130.000</div>
+            <dl>
+              <div><dt>Pacientes/mês</dt><dd>153</dd></div>
+              <div><dt>Leads necessários</dt><dd>485</dd></div>
+              <div><dt>Verba necessária</dt><dd>R$ 13.580</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 04 -->
+      <section class="block" id="b4">
+        <h2 class="serif">Para quem vamos anunciar</h2>
+        <div class="grid2">
+          <div class="field full"><label>Perfil demográfico</label>
+            <p>Mulheres, 28–50 anos, classe A/B, moradoras da Zona Sul e Centro, ativas em redes sociais, que seguem influenciadoras de estética e bem-estar.</p>
+          </div>
+          <div class="field"><label>Dores</label>
+            <ul>
+              <li>Medo de resultado artificial ("cara de boneca")</li>
+              <li>Insegurança sobre a reputação do profissional</li>
+              <li>Falta de tempo para pesquisar clínicas</li>
+            </ul>
+          </div>
+          <div class="field"><label>Desejos</label>
+            <ul>
+              <li>Resultado natural e discreto</li>
+              <li>Autoestima e confiança no dia a dia</li>
+              <li>Atendimento humanizado, sem julgamento</li>
+            </ul>
+          </div>
+          <div class="field full"><label>Nível de consciência sobre o procedimento</label>
+            <p>Maioria já conhece os procedimentos (consciente do produto), mas ainda não decidiu por qual clínica/profissional optar — a decisão está em "qual marca escolher", não em "se devo fazer".</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 05 -->
+      <section class="block" id="b5">
+        <h2 class="serif">Onde vamos anunciar — e onde não vamos</h2>
+        <div class="grid2">
+          <div class="field"><label>Regiões incluídas</label>
+            <ul>
+              <li>Zona Sul</li>
+              <li>Centro</li>
+              <li>Região metropolitana (raio de 25km)</li>
+            </ul>
+          </div>
+          <div class="field"><label>Regiões excluídas</label>
+            <ul>
+              <li><b>Zona Norte</b> — <span style="color:rgba(11,19,16,0.6)">distância inviabiliza deslocamento até a clínica</span></li>
+              <li><b>Cidades vizinhas de baixa renda</b> — <span style="color:rgba(11,19,16,0.6)">ticket médio incompatível com o público-alvo</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 06 -->
+      <section class="block" id="b6">
+        <h2 class="serif">O caminho do paciente</h2>
+        <p class="block-sub">Caminho 01 — WhatsApp direto</p>
+        <ol class="journey">
+          <li><span class="badge">1</span><div><div class="title">Anúncio Instagram</div></div></li>
+          <li><span class="badge">2</span><div><div class="title">Clique no botão "WhatsApp"</div></div></li>
+          <li><span class="badge">3</span><div><div class="title">Conversa com atendente/recepção</div></div></li>
+          <li><span class="badge">4</span><div><div class="title">Qualificação</div><div class="desc">Dúvidas, convênio, disponibilidade.</div></div></li>
+          <li><span class="badge">5</span><div><div class="title">Agendamento confirmado</div></div></li>
+        </ol>
+      </section>
+
+      <!-- BLOCK 07 -->
+      <section class="block" id="b7">
+        <h2 class="serif">As fases</h2>
+        <p class="block-sub">Padrão — ritmo equilibrado</p>
+        <div class="phase-card">
+          <div class="row"><span class="name">Aprendizado</span><span class="pct mono">Dias 1 a 14</span></div>
+          <div class="obj">Validar públicos, criativos e ofertas.</div>
+          <div class="trigger"><b>Gatilho de mudança de fase:</b> CPL estável e mínimo de 40 leads.</div>
+        </div>
+        <div class="phase-card">
+          <div class="row"><span class="name">Otimização</span><span class="pct mono">Dias 15 a 30</span></div>
+          <div class="obj">Escalar vencedores, cortar low performers.</div>
+          <div class="trigger"><b>Gatilho de mudança de fase:</b> CPL dentro da meta por 7 dias seguidos.</div>
+        </div>
+        <div class="phase-card">
+          <div class="row"><span class="name">Escala</span><span class="pct mono">A partir do dia 31 (contínua)</span></div>
+          <div class="obj">Aumentar verba nos melhores conjuntos.</div>
+          <div class="trigger"><b>Gatilho de mudança de fase:</b> Reavaliação mensal de saturação de público.</div>
+        </div>
+      </section>
+
+      <!-- BLOCK 08 -->
+      <section class="block" id="b8">
+        <h2 class="serif">O que os anúncios vão dizer</h2>
+
+        <div class="callout" style="margin-bottom:24px;">
+          <p style="margin:0 0 4px;font-weight:600;">Com Posicionamento — estrutura em 3 camadas</p>
+          <p style="margin:0;color:rgba(11,19,16,0.7);">
+            <b>Atração:</b> conteúdo educacional/lifestyle, sem oferta direta, para quem ainda não conhece a clínica.
+            <b>Confiança:</b> autoridade, bastidores, prova social, para quem já segue mas ainda não decidiu.
+            <b>Conversão:</b> quebra de objeção e urgência, levando direto para o WhatsApp.
+          </p>
+        </div>
+
+        <div class="grid2">
+          <div class="field"><label>Formatos de criativo</label>
+            <ul>
+              <li>Vídeo depoimento de paciente (UGC)</li>
+              <li>Antes/depois com autorização</li>
+              <li>Reels institucional da clínica e equipe</li>
+            </ul>
+          </div>
+          <div class="field full"><label>Copy de partida</label>
+            <p style="white-space:pre-wrap;">Resultado natural, sem exagero. Na Vitá Estética, cada procedimento é pensado para valorizar o que já é seu — com acompanhamento médico em todas as etapas. Agende sua avaliação.</p>
+          </div>
+          <div class="field full"><label>Referências</label>
+            <p><a class="ref-link" href="#" onclick="return false;">https://drive.google.com/referencias-criativos-vita</a></p>
+          </div>
+        </div>
+
+        <div style="margin-top:24px;display:flex;flex-direction:column;gap:16px;">
+          <div class="box" style="text-align:left;">
+            <div style="font-weight:600;margin-bottom:10px;">Frente 1 — Harmonização Facial / Estética não invasiva</div>
+            <div class="k" style="margin-bottom:4px;">Ângulos de mensagem</div>
+            <ul style="margin:0 0 12px;">
+              <li>Naturalidade, "sem parecer mexido"</li>
+              <li>Envelhecer bem, realce sutil</li>
+              <li>Prova social e reputação local</li>
+            </ul>
+            <div style="border:1px solid rgba(11,19,16,0.1);border-radius:8px;padding:10px;background:rgba(11,19,16,0.03);">
+              <div class="k" style="margin-bottom:4px;">Exemplo de narrativa — referência de tom, não é copy pronta para publicar</div>
+              <p style="margin:0;font-style:italic;">"Resultado natural, sem exagero. Cada procedimento pensado para valorizar o que já é seu — com acompanhamento médico em todas as etapas. Agende sua avaliação."</p>
+            </div>
+          </div>
+          <div class="box" style="text-align:left;">
+            <div style="font-weight:600;margin-bottom:10px;">Frente 2 — Odontologia Estética (facetas, lentes em resina, clareamento)</div>
+            <div class="k" style="margin-bottom:4px;">Ângulos de mensagem</div>
+            <ul style="margin:0 0 12px;">
+              <li>Autoestima ao sorrir</li>
+              <li>Resolver de uma vez, sem tratamento longo</li>
+              <li>Confiança social, sorriso alinhado sem parecer falso</li>
+            </ul>
+            <div style="border:1px solid rgba(11,19,16,0.1);border-radius:8px;padding:10px;background:rgba(11,19,16,0.03);">
+              <div class="k" style="margin-bottom:4px;">Exemplo de narrativa — referência de tom, não é copy pronta para publicar</div>
+              <p style="margin:0;font-style:italic;">"Vergonha de sorrir em fotos? Recupere a confiança com Facetas em Resina — resultado em 1 sessão, sem desgastar os dentes. Agende sua avaliação."</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 09 -->
+      <section class="block" id="b9">
+        <h2 class="serif">Riscos que assumimos juntos</h2>
+        <p class="block-sub">Escrito desde o dia 1 — se acontecer, já temos um plano combinado.</p>
+        <div class="risk-card">
+          <div class="row"><span class="desc">A recepção não responde rápido ao lead que chegou pelo anúncio (lead esfria em minutos, não em horas).</span><span class="pill clinica">Identificado pela clínica</span></div>
+          <div class="plan"><b>Plano de ação:</b> definir um tempo máximo de resposta ao lead (ideal: minutos) e priorizar o atendimento a leads de anúncio na rotina da recepção.</div>
+        </div>
+        <div class="risk-card">
+          <div class="row"><span class="desc">Falta de confirmação de agendamento, gerando falta do paciente no dia.</span><span class="pill clinica">Identificado pela clínica</span></div>
+          <div class="plan"><b>Plano de ação:</b> implementar confirmação de agendamento (mensagem ou ligação) 1 dia antes da consulta.</div>
+        </div>
+        <div class="risk-card">
+          <div class="row"><span class="desc">Ninguém é claramente responsável por atender o lead — mensagens inconsistentes, contato perdido.</span><span class="pill clinica">Identificado pela clínica</span></div>
+          <div class="plan"><b>Plano de ação:</b> definir uma única pessoa responsável por cada lead até o agendamento, evitando que a mensagem se perca entre a equipe.</div>
+        </div>
+        <div class="risk-card">
+          <div class="row"><span class="desc">O anúncio é genérico demais e atrai gente só curiosa ou pesquisando preço, não paciente pronto para agendar.</span><span class="pill gestor">Identificado pelo gestor</span></div>
+          <div class="plan"><b>Plano de ação:</b> refinar segmentação e criativos ao longo da fase de aprendizado para qualificar melhor quem chega pelo anúncio.</div>
+        </div>
+        <div class="risk-card">
+          <div class="row"><span class="desc">Sazonalidade do negócio não é avisada com antecedência, e o cliente estranha quando o resultado varia.</span><span class="pill clinica">Identificado pela clínica</span></div>
+          <div class="plan"><b>Plano de ação:</b> a clínica avisa com antecedência os períodos de sazonalidade (feriados, alta/baixa temporada) para ajustar a expectativa de resultado.</div>
+        </div>
+      </section>
+
+      <!-- BLOCK 10 -->
+      <section class="block" id="b10">
+        <h2 class="serif">O que precisa de você</h2>
+        <p class="block-sub">O acesso ao Meta Ads é configurado ao vivo na call — isto só prepara para ser rápido. Tráfego + Estruturação Comercial</p>
+        <table class="access">
+          <thead><tr><th>Item</th><th>Prazo</th><th>Responsável</th></tr></thead>
+          <tbody>
+            <tr><td>Acesso de administrador ao Business Manager (Meta)</td><td class="prazo">Imediato, máximo 2 dias</td><td>Cliente</td></tr>
+            <tr><td>Acesso à página do Instagram/Facebook (ou convite como parceiro)</td><td class="prazo">Imediato, junto do acesso ao BM</td><td>Cliente</td></tr>
+            <tr><td>Forma de pagamento ativa na conta de anúncios</td><td class="prazo">Semana 1</td><td>Cliente</td></tr>
+            <tr><td>Definir quem responde os leads no WhatsApp</td><td class="prazo">Antes de começar</td><td>Cliente</td></tr>
+            <tr><td>Enviar materiais/fotos/vídeos para os criativos iniciais</td><td class="prazo">Até 3 dias</td><td>Cliente</td></tr>
+            <tr><td>Configurar Business Manager, pixel e públicos</td><td class="prazo">Semana 1</td><td>Agência</td></tr>
+            <tr><td>Criar e subir os primeiros criativos</td><td class="prazo">Semana 1, até o 7º dia</td><td>Agência</td></tr>
+            <tr><td>Definir responsável único por lead, configurado no CRM</td><td class="prazo">Imediato</td><td>Cliente</td></tr>
+            <tr><td>Definir e comunicar o tempo máximo de resposta ao lead (ideal: minutos) para a equipe de recepção</td><td class="prazo">Antes de começar</td><td>Cliente</td></tr>
+            <tr><td>Acesso ao WhatsApp Business (número principal)</td><td class="prazo">Semana 1</td><td>Cliente</td></tr>
+            <tr><td>Implementar CRM com processo de atendimento/objeções (inclui roteiro de objeções de preço e automação de confirmação de agendamento)</td><td class="prazo">10 a 15 dias</td><td>Agência</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- BLOCK 11 -->
+      <section class="block" id="b11">
+        <h2 class="serif">Como vamos trabalhar juntos</h2>
+        <div class="grid2">
+          <div class="field full"><label>Canal de comunicação</label>
+            <p style="display:flex;align-items:center;gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366" style="flex:0 0 auto;" aria-hidden="true">
+                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.71.45 3.38 1.3 4.85L2.05 22l5.36-1.4a9.9 9.9 0 0 0 4.63 1.18h.01c5.46 0 9.9-4.45 9.9-9.9 0-2.65-1.03-5.13-2.9-7-1.88-1.88-4.37-2.88-7.01-2.88Zm0 18.13h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.18.83.85-3.1-.2-.32a8.2 8.2 0 0 1-1.26-4.4c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.55-3.7 8.24-8.21 8.24Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.24-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.24-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.24-.86.85-.86 2.07s.89 2.4 1.01 2.56c.12.17 1.75 2.67 4.24 3.74.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.28Z"/>
+              </svg>
+              <span>Grupo dedicado no WhatsApp entre clínica e gestor de tráfego.</span>
+            </p>
+          </div>
+          <div class="field full"><label>Frequência de report</label>
+            <p>Relatório mensal + 1 reunião mensal de alinhamento.</p>
+          </div>
+          <div class="field full"><label>O que você pode esperar</label>
+            <p>Transparência total sobre números, suporte de segunda a sexta das 9h às 19h com resposta em até 3 horas, e recomendações proativas — não vamos só executar, vamos pensar estrategicamente com você.</p>
+          </div>
+        </div>
+        <div class="partnership-box full">
+          <h3>Na sua avaliação, o que precisa acontecer para a parceria valer a pena</h3>
+          <p>"Ver a agenda cheia de forma previsível, sem eu precisar me preocupar com marketing no dia a dia."</p>
+        </div>
+      </section>
+
+      <!-- BLOCK 12 -->
+      <section class="block" id="b12">
+        <h2 class="serif">Os primeiros 30 dias</h2>
+        <div class="timeline">
+          <div class="event"><div class="day mono">05/08</div><div class="date mono">(quarta-feira) — Dia 0</div><div class="desc">Início oficial da parceria: hoje, essa reunião e alinhamento de expectativas.</div></div>
+          <div class="event"><div class="day mono">07/08</div><div class="date mono">(sexta-feira) — Dia 2</div><div class="desc">Estruturação do Marketing: configuração da captação de leads (estratégia, conta de anúncios e anúncios) e estruturação do Posicionamento/Conteúdos (quando contratado).</div></div>
+          <div class="event"><div class="day mono">12/08</div><div class="date mono">(quarta-feira) — Dia 7</div><div class="desc">Lançamento das campanhas: início da geração de demanda.</div></div>
+          <div class="event"><div class="day mono">20/08</div><div class="date mono">(quinta-feira) — Dia 15</div><div class="desc">Primeiros leads e possíveis primeiros agendamentos: primeira leitura de dados, ajustes iniciais de segmentação e otimização dos resultados da primeira semana. Primeiro relatório de meio de período, com checagem de CPL e volume de leads.</div></div>
+          <div class="event"><div class="day mono">04/09</div><div class="date mono">(sexta-feira) — Dia 30</div><div class="desc">Fechamento do primeiro ciclo: resultados tendem a melhorar e estabilizar.</div></div>
+        </div>
+        <details class="not-happen">
+          <summary>O que não vai acontecer</summary>
+          <ul>
+            <li>Resultado explosivo imediato, pois o algoritmo ainda está aprendendo.</li>
+            <li>Mudança de estratégia a cada poucos dias, pois testes precisam de tempo pra gerar dado confiável.</li>
+            <li>Não podemos deixar a verba acabar em hipótese alguma, pois perde performance na campanha.</li>
+          </ul>
+        </details>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main.content section.block'));
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.sidebar a'));
+    if (!sections.length || !links.length) return;
+
+    var linkById = {};
+    links.forEach(function (link) {
+      linkById[link.getAttribute('href').slice(1)] = link;
+    });
+
+    var sectionById = {};
+    sections.forEach(function (section) {
+      sectionById[section.id] = section;
+    });
+
+    var current = null;
+    function setActive(id) {
+      if (id === current) return;
+      current = id;
+      links.forEach(function (link) { link.classList.remove('active'); });
+      sections.forEach(function (section) { section.classList.remove('active'); });
+      var link = linkById[id];
+      if (link) link.classList.add('active');
+      var section = sectionById[id];
+      if (section) section.classList.add('active');
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        // Ativa assim que >= 60% da seção estiver visível; entre várias, prioriza a mais no topo.
+        var visible = entries.filter(function (e) { return e.isIntersecting && e.intersectionRatio >= 0.6; });
+        if (!visible.length) return;
+        visible.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+        setActive(visible[0].target.id);
+      },
+      { rootMargin: '0px', threshold: 0.6 }
+    );
+
+    sections.forEach(function (section) { observer.observe(section); });
+
+    // Última seção: garante que o menu bata em "12" mesmo se ela terminar antes
+    // da linha de leitura (pouco conteúdo + fim de página).
+    window.addEventListener('scroll', function () {
+      var doc = document.getElementById('document');
+      if (!doc || doc.style.display === 'none') return;
+      var atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atBottom) setActive(sections[sections.length - 1].id);
+    }, { passive: true });
+  })();
+</script>
+
+</body>
+</html>

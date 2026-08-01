@@ -11,12 +11,15 @@
   --color-brand-hover: #4c8f24;
   --color-brand-light: #8fd45f;
 
-  --color-obsidian: #0d0d0d;
-  --color-obsidian-alt: #1a1a1a;
-  --color-obsidian-deep: #050505;
+  --color-obsidian: #0b1310;
+  --color-obsidian-alt: #142019;
+  --color-obsidian-deep: #050a08;
+  --color-obsidian-field: #1e2e26;
   --color-bone: #fafafa;
 }
 
 body {
   font-family: var(--font-sans);
+  background-color: var(--color-obsidian);
+  color: var(--color-bone);
 }
