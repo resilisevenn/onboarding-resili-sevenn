@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { OnboardingPayload } from '../../types/onboarding'
 import { Block01Negocio } from './blocks/Block01Negocio'
 import { Block02OndeVoceEsta } from './blocks/Block02OndeVoceEsta'
@@ -16,18 +16,20 @@ import { EditorBar } from './EditorBar'
 import { cn } from '../../lib/utils'
 
 const NAV_ITEMS = [
-  { id: 'bloco-1', label: '1. O seu negócio' },
-  { id: 'bloco-2', label: '2. Onde você está hoje' },
-  { id: 'bloco-3', label: '3. Onde você quer chegar' },
-  { id: 'bloco-4', label: '4. Para quem vamos anunciar' },
-  { id: 'bloco-5', label: '5. Onde vamos anunciar' },
-  { id: 'bloco-6', label: '6. O caminho do paciente' },
-  { id: 'bloco-7', label: '7. As fases' },
-  { id: 'bloco-8', label: '8. O que os anúncios vão dizer' },
-  { id: 'bloco-9', label: '9. Riscos que assumimos juntos' },
-  { id: 'bloco-10', label: '10. O que precisa de você' },
-  { id: 'bloco-11', label: '11. Como vamos trabalhar' },
-  { id: 'bloco-12', label: '12. Os primeiros 30 dias' },
+  { id: 'cover', num: '0.', label: 'Capa' },
+  { id: 'bloco-1', num: '1.', label: 'O retrato da sua operação' },
+  { id: 'bloco-2', num: '2.', label: 'Onde você está hoje' },
+  { id: 'bloco-3', num: '3.', label: 'Onde você quer chegar' },
+  { id: 'bloco-4', num: '4.', label: 'Para quem vamos anunciar' },
+  { id: 'bloco-5', num: '5.', label: 'Onde vamos anunciar' },
+  { id: 'bloco-6', num: '6.', label: 'O caminho do paciente' },
+  { id: 'bloco-7', num: '7.', label: 'As fases dos anúncios' },
+  { id: 'bloco-8', num: '8.', label: 'O que os anúncios vão dizer' },
+  { id: 'bloco-9', num: '9.', label: 'Riscos que assumimos juntos' },
+  { id: 'bloco-10', num: '10.', label: 'O que precisa de você' },
+  { id: 'bloco-11', num: '11.', label: 'Como vamos trabalhar' },
+  { id: 'bloco-12', num: '12.', label: 'Os primeiros 30 dias' },
+  { id: 'closing', num: '↓', label: 'Obrigado' },
 ]
 
 export function OnboardingDocument({
@@ -49,11 +51,60 @@ export function OnboardingDocument({
   const [saving, setSaving] = useState(false)
   const [savedAt, setSavedAt] = useState<Date | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    function onScroll() {
+      const h = document.documentElement
+      const scrolled = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100
+      setProgress(Number.isFinite(scrolled) ? scrolled : 0)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({})
+
+  useEffect(() => {
+    const sections = Object.values(sectionRefs.current).filter((el): el is HTMLElement => !!el)
+    if (!sections.length) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting && e.intersectionRatio >= 0.5)
+        if (!visible.length) return
+        visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        setActive(visible[0].target.id)
+      },
+      { threshold: 0.5 },
+    )
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
 
   function scrollTo(id: string) {
     setActive(id)
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
+      const target = e.target as HTMLElement | null
+      if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return
+
+      const currentIndex = NAV_ITEMS.findIndex((item) => item.id === active)
+      if (currentIndex === -1) return
+      const nextIndex = e.key === 'ArrowRight' ? currentIndex + 1 : currentIndex - 1
+      const next = NAV_ITEMS[nextIndex]
+      if (!next) return
+
+      e.preventDefault()
+      scrollTo(next.id)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [active])
 
   function patch<K extends keyof OnboardingPayload>(key: K, value: OnboardingPayload[K]) {
     setDraft((d) => ({ ...d, [key]: value }))
@@ -81,93 +132,180 @@ export function OnboardingDocument({
     <div className="min-h-screen bg-bone text-obsidian">
       {editable && <EditorBar dirty={dirty} saving={saving} savedAt={savedAt} error={saveError} onSave={handleSave} />}
 
-      <header className="border-b border-obsidian/10 px-6 py-8 md:px-12">
-        <img src="/logo-resili-sevenn.png" alt="Resili Sevenn" className="mb-4 h-8" />
-        <h1 className="font-display text-3xl text-obsidian md:text-4xl">{clientName}</h1>
-        <p className="mt-1 text-sm text-obsidian/60">
-          Onboarding gerado em {new Date(generatedAt).toLocaleDateString('pt-BR')}
-        </p>
-      </header>
+      <div className="fixed left-0 top-0 z-[100] h-[3px] bg-gradient-to-r from-brand to-brand-light transition-[width] duration-100 ease-linear" style={{ width: `${progress}%` }} />
 
-      <div className="mx-auto flex max-w-6xl gap-10 px-6 py-10 md:px-12">
-        <nav className="sticky top-10 hidden h-fit w-56 shrink-0 space-y-1 md:block">
+      {/* ===================== CAPA ===================== */}
+      <div
+        id="cover"
+        ref={(el) => {
+          sectionRefs.current.cover = el
+        }}
+        className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-12 text-center text-bone"
+        style={{
+          background:
+            'linear-gradient(180deg, var(--color-brand-dark), var(--color-brand-dark) 60%, var(--color-obsidian-alt))',
+        }}
+      >
+        <div className="mb-7 font-mono text-lg uppercase tracking-wider text-brand-light">Onboarding Resili Sevenn</div>
+        <h1 className="mb-6 font-display text-[clamp(38px,6vw,84px)] leading-[0.98] tracking-tight">
+          Bem-vindo ao
+          <br />
+          nosso Ecossistema
+        </h1>
+        <p className="mx-auto mb-14 max-w-[640px] text-[clamp(16px,2vw,22px)] leading-relaxed text-bone/65">
+          O plano completo de como vamos levar sua clínica de onde está hoje até a meta que você definiu, passo a passo.
+        </p>
+        <div className="mb-16 flex flex-wrap justify-center gap-12">
+          <div className="text-center">
+            <div className="font-display text-[clamp(28px,4vw,44px)] leading-none text-brand-light">{clientName}</div>
+          </div>
+        </div>
+        <a
+          href="#bloco-1"
+          onClick={(e) => {
+            e.preventDefault()
+            scrollTo('bloco-1')
+          }}
+          className="flex animate-scroll-bob cursor-pointer flex-col items-center gap-2 text-[12.5px] uppercase tracking-wider text-bone/40 no-underline transition-colors hover:text-brand-light"
+        >
+          <span>Role para ver o plano</span>
+          <span>↓</span>
+        </a>
+      </div>
+
+      <div className="pl-0 md:pl-[68px]">
+        {/* ===================== SIDEBAR ===================== */}
+        <nav className="group fixed left-0 top-1/2 z-40 hidden max-h-[80vh] w-11 -translate-y-1/2 flex-col gap-0.5 overflow-hidden rounded-r-2xl border border-l-0 border-obsidian/10 bg-bone/85 py-2.5 shadow-[0_4px_20px_rgba(11,19,16,0.08)] backdrop-blur-md transition-all duration-200 hover:w-[270px] hover:shadow-[0_8px_30px_rgba(11,19,16,0.16)] md:flex">
           {NAV_ITEMS.map((item) => (
-            <button
+            <a
               key={item.id}
-              onClick={() => scrollTo(item.id)}
+              href={`#${item.id}`}
+              onClick={(e) => {
+                e.preventDefault()
+                scrollTo(item.id)
+              }}
               className={cn(
-                'block w-full rounded px-3 py-2 text-left text-sm transition',
-                active === item.id ? 'bg-obsidian text-bone' : 'text-obsidian/60 hover:bg-obsidian/5',
+                'mx-1.5 flex items-center gap-1 overflow-hidden whitespace-nowrap rounded-lg px-2.5 py-2 text-[13.5px] no-underline transition-colors',
+                active === item.id
+                  ? 'bg-gradient-to-br from-[var(--color-doc-dark)] to-obsidian-alt text-bone shadow-[0_2px_8px_rgba(11,19,16,0.25)]'
+                  : 'text-obsidian/60 hover:bg-obsidian/5 hover:text-obsidian',
               )}
             >
-              {item.label}
-            </button>
+              <span className="shrink-0 font-mono">{item.num}</span>
+              <span className="max-w-0 shrink-0 opacity-0 transition-[max-width,opacity] duration-200 group-hover:max-w-[220px] group-hover:opacity-100">
+                &nbsp;{item.label}
+              </span>
+            </a>
           ))}
         </nav>
 
-        <main className="min-w-0 flex-1 space-y-16">
-          <section id="bloco-1">
-            <Block01Negocio data={data.bloco1_negocio} />
-          </section>
-          <section id="bloco-2">
-            <Block02OndeVoceEsta
-              data={data.bloco2_ondeVoceEsta}
-              editable={editable}
-              onChange={(v) => patch('bloco2_ondeVoceEsta', v)}
-            />
-          </section>
-          <section id="bloco-3">
-            <Block03OndeQuerChegar
-              data={data.bloco3_ondeQuerChegar}
-              ticketMedio={data.bloco2_ondeVoceEsta.ticketMedio}
-              editable={editable}
-              onChange={(v) => patch('bloco3_ondeQuerChegar', v)}
-            />
-          </section>
-          <section id="bloco-4">
-            <Block04ParaQuemAnunciar data={data.bloco4_paraQuemAnunciar} />
-          </section>
-          <section id="bloco-5">
-            <Block05OndeVamosAnunciar
-              data={data.bloco5_ondeVamosAnunciar}
-              editable={editable}
-              onChange={(v) => patch('bloco5_ondeVamosAnunciar', v)}
-            />
-          </section>
-          <section id="bloco-6">
-            <Block06CaminhoPaciente data={data.bloco6_caminhoPaciente} />
-          </section>
-          <section id="bloco-7">
-            <Block07Fases data={data.bloco7_fases} />
-          </section>
-          <section id="bloco-8">
-            <Block08Criativos
-              data={data.bloco8_criativos}
-              editable={editable}
-              onChange={(v) => patch('bloco8_criativos', v)}
-            />
-          </section>
-          <section id="bloco-9">
-            <Block09Riscos data={data.bloco9_riscos} editable={editable} onChange={(v) => patch('bloco9_riscos', v)} />
-          </section>
-          <section id="bloco-10">
-            <Block10Checklist
-              data={data.bloco10_checklist}
-              editable={editable}
-              onChange={(v) => patch('bloco10_checklist', v)}
-            />
-          </section>
-          <section id="bloco-11">
-            <Block11ComoTrabalhar
-              data={data.bloco11_comoTrabalhar}
-              editable={editable}
-              onChange={(v) => patch('bloco11_comoTrabalhar', v)}
-            />
-          </section>
-          <section id="bloco-12">
-            <Block12Primeiros30Dias data={data.bloco12_primeiros30Dias} />
-          </section>
+        <main className="mx-auto max-w-[980px] px-6">
+          {[
+            { id: 'bloco-1', node: <Block01Negocio data={data.bloco1_negocio} /> },
+            {
+              id: 'bloco-2',
+              node: (
+                <Block02OndeVoceEsta
+                  data={data.bloco2_ondeVoceEsta}
+                  editable={editable}
+                  onChange={(v) => patch('bloco2_ondeVoceEsta', v)}
+                />
+              ),
+            },
+            {
+              id: 'bloco-3',
+              node: (
+                <Block03OndeQuerChegar
+                  data={data.bloco3_ondeQuerChegar}
+                  ticketMedio={data.bloco2_ondeVoceEsta.ticketMedio}
+                  editable={editable}
+                  onChange={(v) => patch('bloco3_ondeQuerChegar', v)}
+                />
+              ),
+            },
+            { id: 'bloco-4', node: <Block04ParaQuemAnunciar data={data.bloco4_paraQuemAnunciar} /> },
+            {
+              id: 'bloco-5',
+              node: (
+                <Block05OndeVamosAnunciar
+                  data={data.bloco5_ondeVamosAnunciar}
+                  editable={editable}
+                  onChange={(v) => patch('bloco5_ondeVamosAnunciar', v)}
+                />
+              ),
+            },
+            { id: 'bloco-6', node: <Block06CaminhoPaciente data={data.bloco6_caminhoPaciente} /> },
+            { id: 'bloco-7', node: <Block07Fases data={data.bloco7_fases} /> },
+            {
+              id: 'bloco-8',
+              node: (
+                <Block08Criativos
+                  data={data.bloco8_criativos}
+                  editable={editable}
+                  onChange={(v) => patch('bloco8_criativos', v)}
+                />
+              ),
+            },
+            {
+              id: 'bloco-9',
+              node: <Block09Riscos data={data.bloco9_riscos} editable={editable} onChange={(v) => patch('bloco9_riscos', v)} />,
+            },
+            {
+              id: 'bloco-10',
+              node: (
+                <Block10Checklist
+                  data={data.bloco10_checklist}
+                  editable={editable}
+                  onChange={(v) => patch('bloco10_checklist', v)}
+                />
+              ),
+            },
+            {
+              id: 'bloco-11',
+              node: (
+                <Block11ComoTrabalhar
+                  data={data.bloco11_comoTrabalhar}
+                  editable={editable}
+                  onChange={(v) => patch('bloco11_comoTrabalhar', v)}
+                />
+              ),
+            },
+            { id: 'bloco-12', node: <Block12Primeiros30Dias data={data.bloco12_primeiros30Dias} /> },
+          ].map(({ id, node }, i) => (
+            <section
+              key={id}
+              id={id}
+              ref={(el) => {
+                sectionRefs.current[id] = el
+              }}
+              className={cn('relative flex min-h-[92vh] flex-col justify-center py-24', i > 0 && 'block-divider')}
+            >
+              {node}
+            </section>
+          ))}
         </main>
+      </div>
+
+      {/* ===================== ENCERRAMENTO ===================== */}
+      <div
+        id="closing"
+        ref={(el) => {
+          sectionRefs.current.closing = el
+        }}
+        className="flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-12 text-center text-bone"
+        style={{
+          background:
+            'linear-gradient(180deg, var(--color-brand-dark), var(--color-brand-dark) 60%, var(--color-obsidian-alt))',
+        }}
+      >
+        <div className="mb-7 font-mono text-lg uppercase tracking-wider text-brand-light">Resili Sevenn</div>
+        <h1 className="mb-6 font-display text-[clamp(38px,6vw,84px)] leading-[0.98] tracking-tight">Obrigado</h1>
+        <p className="mx-auto mb-8 max-w-[640px] text-[clamp(16px,2vw,22px)] leading-relaxed text-bone/65">
+          Qualquer dúvida, fale com a gente no grupo dedicado no WhatsApp, vamos construir isso juntos.
+        </p>
+        <p className="font-mono text-xs text-bone/35">
+          Onboarding gerado em {new Date(generatedAt).toLocaleDateString('pt-BR')}
+        </p>
       </div>
     </div>
   )

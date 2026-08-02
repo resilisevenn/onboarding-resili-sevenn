@@ -80,22 +80,23 @@ export function OnboardingFormPage() {
   const b12 = payload.bloco12_primeiros30Dias
 
   return (
-    <div className="mx-auto min-h-screen max-w-3xl bg-gradient-to-b from-obsidian to-obsidian-deep px-4 py-10">
+    <div className="min-h-screen bg-brand-dark">
+    <div className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="mb-1 font-display text-2xl text-bone">Gerar onboarding</h1>
       <p className="mb-8 text-sm text-bone/60">
         Cole as respostas do formulário de briefing e o ICP/análise de território do gestor.
       </p>
 
-      <div className="mb-6 space-y-4 rounded-xl border border-white/10 bg-obsidian-alt p-6 shadow-lg shadow-black/20">
+      <div className="mb-6 space-y-4 rounded-xl border border-brand/30 bg-gradient-to-br from-brand/10 to-brand/5 p-6 shadow-lg shadow-brand/5">
         <TextField label="Nome da clínica" value={clientName} onChange={setClientName} />
         <TextField label="WhatsApp (para código de acesso — últimos 4 dígitos)" value={whatsapp} onChange={setWhatsapp} />
       </div>
 
       <TranscriptExtractor onExtracted={applyExtracted} />
 
-      <div className="rounded-xl border border-white/10 bg-obsidian-alt px-6 shadow-lg shadow-black/20">
+      <div>
         <ExpandableSection
-          title="1. O seu negócio, como eu entendi"
+          title="1. O retrato da sua operação"
           description="Preenchido com base nas respostas do Formulário de Briefing (serviços, diferencial, horários e sazonalidade)."
           defaultOpen
         >
@@ -232,6 +233,7 @@ export function OnboardingFormPage() {
       >
         {submitting ? 'Gerando…' : 'Gerar onboarding'}
       </button>
+    </div>
     </div>
   )
 }

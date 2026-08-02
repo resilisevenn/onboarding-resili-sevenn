@@ -13,7 +13,7 @@ export function Block05OndeVamosAnunciar({
 }) {
   return (
     <div>
-      <BlockHeading title="Onde vamos anunciar — e onde não vamos" />
+      <BlockHeading number={5} title="Onde vamos e onde não vamos anunciar" />
       <div className="grid gap-6 md:grid-cols-2">
         <div>
           <h3 className="mb-1 text-sm font-medium text-obsidian/50">Regiões incluídas</h3>
@@ -69,11 +69,10 @@ export function Block05OndeVamosAnunciar({
               )}
             </EditableListWrapper>
           ) : (
-            <ul className="space-y-2">
+            <ul className="list-inside list-disc space-y-1">
               {data.regioesExcluidas.map((r, i) => (
                 <li key={i}>
-                  <span className="font-medium">{r.regiao}</span>
-                  <span className="text-obsidian/60"> — {r.motivo}</span>
+                  <span className="font-bold">{r.regiao}:</span> <span className="text-obsidian/60">{r.motivo}</span>
                 </li>
               ))}
             </ul>

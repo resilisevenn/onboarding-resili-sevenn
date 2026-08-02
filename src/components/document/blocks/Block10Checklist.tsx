@@ -14,26 +14,23 @@ export function Block10Checklist({
 }) {
   return (
     <div>
-      <BlockHeading
-        title="O que precisa de você"
-        subtitle="O acesso ao Meta Ads é configurado ao vivo na call — isto só prepara para ser rápido."
-      />
-      <div className="overflow-x-auto">
+      <BlockHeading number={10} title="O que precisa de você" />
+      <div className="overflow-x-auto rounded-xl border border-obsidian/10 shadow-[0_1px_2px_rgba(11,19,16,0.04),0_4px_12px_rgba(11,19,16,0.05)]">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-obsidian/10 text-obsidian/50">
-              <th className="py-2 pr-4 font-medium">Item</th>
-              <th className="py-2 pr-4 font-medium">Prazo</th>
-              <th className="py-2 font-medium">Responsável</th>
-              {editable && <th className="py-2" />}
+            <tr className="bg-[var(--color-doc-dark)] text-bone">
+              <th className="px-3.5 py-3.5 text-[12.5px] font-medium uppercase tracking-wide">Item</th>
+              <th className="px-3.5 py-3.5 text-[12.5px] font-medium uppercase tracking-wide">Prazo</th>
+              <th className="px-3.5 py-3.5 text-[12.5px] font-medium uppercase tracking-wide">Responsável</th>
+              {editable && <th className="px-3.5 py-3.5" />}
             </tr>
           </thead>
           <tbody>
             {data.itens.map((item, i) => (
-              <tr key={i} className="border-b border-obsidian/5">
+              <tr key={i} className="border-b border-obsidian/5 last:border-b-0 even:bg-obsidian/[0.025] hover:bg-brand/[0.16]">
                 {editable && onChange ? (
                   <>
-                    <td className="py-2 pr-4">
+                    <td className="px-3.5 py-3.5">
                       <EditableText
                         value={item.item}
                         onChange={(v) => {
@@ -43,7 +40,7 @@ export function Block10Checklist({
                         }}
                       />
                     </td>
-                    <td className="py-2 pr-4">
+                    <td className="px-3.5 py-3.5">
                       <EditableText
                         value={item.prazo}
                         className="font-mono"
@@ -54,7 +51,7 @@ export function Block10Checklist({
                         }}
                       />
                     </td>
-                    <td className="py-2">
+                    <td className="px-3.5 py-3.5">
                       <EditableText
                         value={item.responsavel}
                         onChange={(v) => {
@@ -64,7 +61,7 @@ export function Block10Checklist({
                         }}
                       />
                     </td>
-                    <td className="py-2 pl-2">
+                    <td className="px-3.5 py-3.5">
                       <button
                         type="button"
                         onClick={() => onChange({ ...data, itens: data.itens.filter((_, idx) => idx !== i) })}
@@ -77,9 +74,9 @@ export function Block10Checklist({
                   </>
                 ) : (
                   <>
-                    <td className="py-2 pr-4">{item.item}</td>
-                    <td className="py-2 pr-4 font-mono">{item.prazo}</td>
-                    <td className="py-2">{item.responsavel}</td>
+                    <td className="px-3.5 py-3.5">{item.item}</td>
+                    <td className="px-3.5 py-3.5 font-mono">{item.prazo}</td>
+                    <td className="px-3.5 py-3.5">{item.responsavel}</td>
                   </>
                 )}
               </tr>

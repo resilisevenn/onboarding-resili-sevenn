@@ -2,7 +2,7 @@ import { Check } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { CITACAO_PADRAO_TEMPLATES, O_QUE_PODE_ESPERAR_TEMPLATES } from '../../lib/comoTrabalharTemplates'
 import type { Bloco11ComoTrabalhar } from '../../types/onboarding'
-import { TextAreaField, TextField } from './fields'
+import { StringListField, TextAreaField, TextField } from './fields'
 
 export function ComoTrabalharField({
   value,
@@ -34,22 +34,25 @@ export function ComoTrabalharField({
                 key={template.id}
                 type="button"
                 onClick={() =>
-                  onChange({ ...value, oQuePodeEsperarTemplateId: template.id, oQuePodeEsperar: template.texto })
+                  onChange({ ...value, oQuePodeEsperarTemplateId: template.id, oQuePodeEsperar: template.itens })
                 }
                 className={cn(
                   'flex items-start justify-between gap-2 rounded border p-3 text-left text-sm transition-colors',
                   selected ? 'border-brand bg-brand/10 text-bone' : 'border-white/10 text-bone/70 hover:border-white/30',
                 )}
               >
-                <span>{template.texto}</span>
+                <span>
+                  <span className="mb-1 block font-medium">{template.nome}</span>
+                  {template.itens.join(' · ')}
+                </span>
                 {selected && <Check className="h-4 w-4 shrink-0 text-brand" />}
               </button>
             )
           })}
         </div>
-        <TextAreaField
-          label="Texto final (editável)"
-          value={value.oQuePodeEsperar}
+        <StringListField
+          label="Itens finais (editável)"
+          values={value.oQuePodeEsperar}
           onChange={(v) => onChange({ ...value, oQuePodeEsperarTemplateId: null, oQuePodeEsperar: v })}
         />
       </div>

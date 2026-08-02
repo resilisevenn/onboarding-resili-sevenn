@@ -1,6 +1,6 @@
 import type { Bloco11ComoTrabalhar } from '../../../types/onboarding'
 import { BlockHeading } from '../BlockHeading'
-import { EditableText, EditableTextArea } from '../EditableField'
+import { EditableStringList, EditableText, EditableTextArea } from '../EditableField'
 
 export function Block11ComoTrabalhar({
   data,
@@ -13,45 +13,50 @@ export function Block11ComoTrabalhar({
 }) {
   return (
     <div>
-      <BlockHeading title="Como vamos trabalhar juntos" />
+      <BlockHeading number={11} title="Como vamos trabalhar juntos" />
       <div className="grid gap-6 md:grid-cols-2">
-        <div>
-          <h3 className="mb-1 text-sm font-medium text-obsidian/50">Canal de comunicação</h3>
+        <div className="rounded-2xl border border-brand/35 bg-gradient-to-br from-brand/10 to-brand/[0.04] p-5 shadow-[0_4px_14px_rgba(89,165,44,0.08)]">
+          <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-obsidian/60">Canal de comunicação</h3>
           {editable && onChange ? (
             <EditableText value={data.canalComunicacao} onChange={(v) => onChange({ ...data, canalComunicacao: v })} />
           ) : (
-            <p>{data.canalComunicacao}</p>
+            <p className="text-[16px] leading-[1.65]">{data.canalComunicacao}</p>
           )}
         </div>
-        <div>
-          <h3 className="mb-1 text-sm font-medium text-obsidian/50">Frequência de report</h3>
+        <div className="rounded-2xl border border-brand/35 bg-gradient-to-br from-brand/10 to-brand/[0.04] p-5 shadow-[0_4px_14px_rgba(89,165,44,0.08)]">
+          <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-obsidian/60">Frequência de report</h3>
           {editable && onChange ? (
             <EditableText value={data.frequenciaReport} onChange={(v) => onChange({ ...data, frequenciaReport: v })} />
           ) : (
-            <p>{data.frequenciaReport}</p>
+            <p className="text-[16px] leading-[1.65]">{data.frequenciaReport}</p>
           )}
         </div>
         <div className="md:col-span-2">
-          <h3 className="mb-1 text-sm font-medium text-obsidian/50">O que você pode esperar</h3>
+          <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-obsidian/60">O que você pode esperar</h3>
           {editable && onChange ? (
-            <EditableTextArea value={data.oQuePodeEsperar} onChange={(v) => onChange({ ...data, oQuePodeEsperar: v })} />
-          ) : (
-            <p>{data.oQuePodeEsperar}</p>
-          )}
-        </div>
-        <div className="md:col-span-2 rounded border border-brand/30 bg-brand/5 p-4">
-          <h3 className="mb-1 text-sm font-medium text-obsidian/50">
-            Na sua avaliação, o que precisa acontecer para a parceria valer a pena
-          </h3>
-          {editable && onChange ? (
-            <EditableTextArea
-              value={data.motivoParceriaValerAPena}
-              onChange={(v) => onChange({ ...data, motivoParceriaValerAPena: v })}
+            <EditableStringList
+              values={data.oQuePodeEsperar}
+              onChange={(v) => onChange({ ...data, oQuePodeEsperar: v })}
             />
           ) : (
-            <p className="italic">"{data.motivoParceriaValerAPena}"</p>
+            <ul className="list-inside list-disc space-y-1.5 text-[16px] leading-[1.65]">
+              {data.oQuePodeEsperar.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
           )}
         </div>
+      </div>
+      <div className="mt-8 border-l-4 border-brand bg-bone px-6 py-1">
+        <h3 className="mb-2.5 text-sm font-bold">Na sua avaliação, o que precisa acontecer para a parceria valer a pena</h3>
+        {editable && onChange ? (
+          <EditableTextArea
+            value={data.motivoParceriaValerAPena}
+            onChange={(v) => onChange({ ...data, motivoParceriaValerAPena: v })}
+          />
+        ) : (
+          <p className="text-[17px] italic">"{data.motivoParceriaValerAPena}"</p>
+        )}
       </div>
     </div>
   )

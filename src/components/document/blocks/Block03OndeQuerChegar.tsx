@@ -1,13 +1,21 @@
-import type { Bloco3OndeQuerChegar } from '../../../types/onboarding'
+import type { Bloco3OndeQuerChegar, NivelMeta } from '../../../types/onboarding'
 import { formatCurrency, formatNumber, formatPercent } from '../../../lib/format'
 import { calcNivelMeta } from '../../../lib/calculations'
 import { BlockHeading } from '../BlockHeading'
 import { EditableNumber, EditablePercent } from '../EditableField'
+import { cn } from '../../../lib/utils'
 
 const NIVEL_LABEL: Record<string, string> = {
   inicial: 'Meta inicial',
   intermediaria: 'Meta intermediária',
   super_meta: 'Super meta',
+}
+
+// Ordem de exibição: super_meta em destaque primeiro, depois os demais na ordem original.
+function orderNiveis(niveis: NivelMeta[]): NivelMeta[] {
+  const featured = niveis.filter((n) => n.nome === 'super_meta')
+  const rest = niveis.filter((n) => n.nome !== 'super_meta')
+  return [...featured, ...rest]
 }
 
 export function Block03OndeQuerChegar({
@@ -24,73 +32,106 @@ export function Block03OndeQuerChegar({
   return (
     <div>
       <BlockHeading
-        title="Onde você quer chegar — em pacientes, não só em reais"
+        number={3}
+        title="Onde você quer chegar"
         subtitle="A meta declarada traduzida em pacientes, leads e verba necessária."
       />
 
-      <div className="mb-6 grid gap-3 text-sm text-obsidian/60">
+      <div className="mb-8 text-sm text-obsidian/60">
         {editable && onChange ? (
           <p className="flex flex-wrap items-center gap-x-1.5 gap-y-2">
-            Taxas de conversão usadas (histórico/teórico): lead → agendamento
+            Taxas de conversão usadas (histórico/teórico):
+            <br />
+            lead → agendamento
             <EditablePercent value={data.taxaLeadParaAgendamento} onChange={(v) => onChange({ ...data, taxaLeadParaAgendamento: v })} />
-            , agendamento → comparecimento
+            ,
+            <br />
+            agendamento → comparecimento
             <EditablePercent
               value={data.taxaAgendamentoParaComparecimento}
               onChange={(v) => onChange({ ...data, taxaAgendamentoParaComparecimento: v })}
             />
-            , comparecimento → fechamento
+            ,
+            <br />
+            comparecimento → fechamento
             <EditablePercent
               value={data.taxaComparecimentoParaFechamento}
               onChange={(v) => onChange({ ...data, taxaComparecimentoParaFechamento: v })}
             />
-            . CPL estimado:
+            .
+            <br />
+            CPL estimado:
             <EditableNumber value={data.cplEstimado} step={0.01} prefix="R$" onChange={(v) => onChange({ ...data, cplEstimado: v })} />
           </p>
         ) : (
           <p>
-            Taxas de conversão usadas (histórico/teórico): lead → agendamento{' '}
-            <span className="font-mono text-obsidian">{formatPercent(data.taxaLeadParaAgendamento)}</span>, agendamento →
-            comparecimento <span className="font-mono text-obsidian">{formatPercent(data.taxaAgendamentoParaComparecimento)}</span>,
+            Taxas de conversão usadas (histórico/teórico):
+            <br />
+            lead → agendamento <span className="font-mono text-obsidian">{formatPercent(data.taxaLeadParaAgendamento)}</span>,
+            <br />
+            agendamento → comparecimento{' '}
+            <span className="font-mono text-obsidian">{formatPercent(data.taxaAgendamentoParaComparecimento)}</span>,
+            <br />
             comparecimento → fechamento{' '}
-            <span className="font-mono text-obsidian">{formatPercent(data.taxaComparecimentoParaFechamento)}</span>. CPL estimado:{' '}
-            <span className="font-mono text-obsidian">{formatCurrency(data.cplEstimado)}</span>.
+            <span className="font-mono text-obsidian">{formatPercent(data.taxaComparecimentoParaFechamento)}</span>.
+            <br />
+            CPL estimado: <span className="font-mono text-obsidian">{formatCurrency(data.cplEstimado)}</span>.
           </p>
         )}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        {data.niveis.map((nivel, i) => {
+      <div className="grid items-stretch gap-5 md:grid-cols-[1.4fr_1fr_1fr]">
+        {orderNiveis(data.niveis).map((nivel) => {
+          const originalIndex = data.niveis.findIndex((n) => n.nome === nivel.nome)
           const { numPacientes, numLeads, verbaNecessaria } = calcNivelMeta(nivel.metaFaturamento, ticketMedio, data)
+          const featured = nivel.nome === 'super_meta'
 
           return (
-            <div key={nivel.nome} className="rounded border border-obsidian/10 p-4">
-              <p className="mb-2 text-sm font-medium text-obsidian/50">{NIVEL_LABEL[nivel.nome] ?? nivel.nome}</p>
+            <div
+              key={nivel.nome}
+              className={cn(
+                'rounded-[18px] border p-6 transition-[box-shadow,transform,background,border-color] duration-150',
+                featured
+                  ? 'border-2 border-brand bg-gradient-to-br from-[var(--color-doc-dark)] to-obsidian-alt text-bone shadow-[0_12px_32px_rgba(89,165,44,0.25)]'
+                  : 'border-obsidian/10 bg-gradient-to-b from-obsidian/[0.015] to-transparent shadow-[0_1px_2px_rgba(11,19,16,0.04),0_4px_12px_rgba(11,19,16,0.05)] hover:-translate-y-0.5 hover:border-brand/60 hover:bg-gradient-to-b hover:from-brand/[0.28] hover:to-brand/10 hover:shadow-[0_2px_4px_rgba(11,19,16,0.06),0_10px_24px_rgba(89,165,44,0.22)]',
+              )}
+            >
+              <p
+                className={cn(
+                  'mb-2 text-sm font-bold uppercase tracking-wide',
+                  featured ? 'text-brand-light' : 'text-obsidian/70',
+                )}
+              >
+                {NIVEL_LABEL[nivel.nome] ?? nivel.nome}
+              </p>
               {editable && onChange ? (
                 <EditableNumber
                   value={nivel.metaFaturamento}
                   prefix="R$"
-                  className="text-xl"
+                  className={cn(featured ? 'text-2xl' : 'text-xl')}
                   onChange={(v) => {
                     const next = [...data.niveis]
-                    next[i] = { ...next[i], metaFaturamento: v }
+                    next[originalIndex] = { ...next[originalIndex], metaFaturamento: v }
                     onChange({ ...data, niveis: next })
                   }}
                 />
               ) : (
-                <p className="font-mono text-xl">{formatCurrency(nivel.metaFaturamento)}</p>
+                <p className={cn('font-mono font-bold', featured ? 'text-4xl text-brand-light' : 'text-2xl text-brand-hover')}>
+                  {formatCurrency(nivel.metaFaturamento)}
+                </p>
               )}
-              <dl className="mt-4 space-y-1 text-sm text-obsidian/70">
-                <div className="flex justify-between">
+              <dl className={cn('mt-4 space-y-1.5 text-[13.5px]', featured ? 'text-bone/70' : 'text-obsidian/55')}>
+                <div className={cn('flex justify-between border-t pt-1.5', featured ? 'border-bone/10' : 'border-obsidian/[0.06]')}>
                   <dt>Pacientes/mês</dt>
-                  <dd className="font-mono text-obsidian">{formatNumber(numPacientes)}</dd>
+                  <dd className={cn('font-mono font-semibold', featured ? 'text-bone' : 'text-obsidian')}>{formatNumber(numPacientes)}</dd>
                 </div>
-                <div className="flex justify-between">
+                <div className={cn('flex justify-between border-t pt-1.5', featured ? 'border-bone/10' : 'border-obsidian/[0.06]')}>
                   <dt>Leads necessários</dt>
-                  <dd className="font-mono text-obsidian">{formatNumber(numLeads)}</dd>
+                  <dd className={cn('font-mono font-semibold', featured ? 'text-bone' : 'text-obsidian')}>{formatNumber(numLeads)}</dd>
                 </div>
-                <div className="flex justify-between">
+                <div className={cn('flex justify-between border-t pt-1.5', featured ? 'border-bone/10' : 'border-obsidian/[0.06]')}>
                   <dt>Verba necessária</dt>
-                  <dd className="font-mono text-obsidian">{formatCurrency(verbaNecessaria)}</dd>
+                  <dd className={cn('font-mono font-semibold', featured ? 'text-bone' : 'text-obsidian')}>{formatCurrency(verbaNecessaria)}</dd>
                 </div>
               </dl>
             </div>

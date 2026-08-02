@@ -27,13 +27,13 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-obsidian px-4">
+    <div className="flex min-h-screen items-center justify-center bg-brand-dark px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex justify-center">
           <img src="/logo-resili-sevenn.png" alt="Resili Sevenn" className="h-10" />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-white/10 bg-obsidian-alt p-6">
+        <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-white/10 bg-black p-6">
           <h1 className="font-display text-xl text-bone">Onboarding — Acesso</h1>
 
           <div>

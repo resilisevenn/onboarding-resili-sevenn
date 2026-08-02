@@ -16,10 +16,44 @@
   --color-obsidian-deep: #050a08;
   --color-obsidian-field: #1e2e26;
   --color-bone: #fafafa;
+
+  /* Usada apenas no documento público de onboarding (src/components/document/**). */
+  --color-doc-dark: #021611;
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-obsidian);
+  background-color: var(--color-brand-dark);
   color: var(--color-bone);
+}
+
+/* Divisor entre blocos do documento de onboarding: gradiente com núcleo escuro central. */
+.block-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(89, 165, 44, 0.5) 35%,
+    var(--color-obsidian) 50%,
+    rgba(89, 165, 44, 0.5) 65%,
+    transparent
+  );
+}
+
+@keyframes onboarding-scroll-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+.animate-scroll-bob {
+  animation: onboarding-scroll-bob 2s ease-in-out infinite;
 }

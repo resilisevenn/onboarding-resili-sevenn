@@ -3,24 +3,37 @@ export const FREQUENCIA_REPORT_PADRAO = 'Relatório mensal + 1 reunião mensal d
 
 export interface OQuePodeEsperarTemplate {
   id: string
-  texto: string
+  nome: string
+  itens: string[]
 }
 
 export const O_QUE_PODE_ESPERAR_TEMPLATES: OQuePodeEsperarTemplate[] = [
   {
     id: 'consultiva',
-    texto:
-      'Transparência total sobre números, suporte de segunda a sexta das 9h às 19h com resposta em até 3 horas, e recomendações proativas — não vamos só executar, vamos pensar estrategicamente com você.',
+    nome: 'Consultiva',
+    itens: [
+      'Transparência total sobre números',
+      'Suporte de segunda a sexta das 9h às 19h com resposta em até 3 horas',
+      'Recomendações proativas: não vamos só executar, vamos pensar estrategicamente com você',
+    ],
   },
   {
     id: 'direta',
-    texto:
-      'Atualização constante do andamento das campanhas, clareza nos números e disponibilidade para dúvidas dentro do prazo combinado.',
+    nome: 'Direta',
+    itens: [
+      'Atualização constante do andamento das campanhas',
+      'Clareza nos números',
+      'Disponibilidade para dúvidas dentro do prazo combinado',
+    ],
   },
   {
     id: 'parceria',
-    texto:
-      'Acompanhamento próximo em cada etapa, com dados claros sobre o que está funcionando e ajustes explicados antes de serem feitos — você nunca fica no escuro sobre o próprio investimento.',
+    nome: 'Parceria',
+    itens: [
+      'Acompanhamento próximo em cada etapa',
+      'Dados claros sobre o que está funcionando',
+      'Ajustes explicados antes de serem feitos: você nunca fica no escuro sobre o próprio investimento',
+    ],
   },
 ]
 

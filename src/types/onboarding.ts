@@ -17,7 +17,7 @@ export interface OnboardingPayload {
   bloco12_primeiros30Dias: Bloco12Primeiros30Dias
 }
 
-// 1. O seu negócio, como eu entendi
+// 1. O retrato da sua operação
 export interface Bloco1Negocio {
   servicos: string[]
   diferencial: string
@@ -137,7 +137,7 @@ export interface Bloco11ComoTrabalhar {
   canalComunicacao: string
   frequenciaReport: string
   oQuePodeEsperarTemplateId: string | null
-  oQuePodeEsperar: string
+  oQuePodeEsperar: string[]
   motivoParceriaValerAPena: string // devolvido nas palavras da clínica
   usarCitacaoPadrao: boolean // true quando a clínica não disse nada no formulário
   citacaoPadraoId: string | null

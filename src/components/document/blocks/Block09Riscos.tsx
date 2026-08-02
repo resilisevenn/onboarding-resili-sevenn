@@ -19,10 +19,7 @@ export function Block09Riscos({
   if (editable && onChange) {
     return (
       <div>
-        <BlockHeading
-          title="Riscos que assumimos juntos"
-          subtitle="Escrito desde o dia 1 — se acontecer, já temos um plano combinado."
-        />
+        <BlockHeading number={9} title="Riscos que assumimos juntos" />
         <EditableListWrapper
           addLabel="Adicionar risco"
           onAdd={() => onChange({ ...data, riscos: [...data.riscos, { descricao: '', origem: 'clinica', planoDeAcao: '' }] })}
@@ -31,7 +28,7 @@ export function Block09Riscos({
           {(removeButton) => (
             <>
               {data.riscos.map((risco, i) => (
-                <div key={i} className="space-y-2 rounded border border-obsidian/10 p-4">
+                <div key={i} className="space-y-2 rounded-2xl border border-obsidian/10 p-5">
                   <div className="flex items-start justify-between gap-2">
                     <EditableTextArea
                       value={risco.descricao}
@@ -79,21 +76,27 @@ export function Block09Riscos({
 
   return (
     <div>
-      <BlockHeading
-        title="Riscos que assumimos juntos"
-        subtitle="Escrito desde o dia 1 — se acontecer, já temos um plano combinado."
-      />
-      <div className="space-y-4">
+      <BlockHeading number={9} title="Riscos que assumimos juntos" />
+      <div>
         {data.riscos.map((risco, i) => (
-          <div key={i} className="rounded border border-obsidian/10 p-4">
-            <div className="mb-2 flex items-center justify-between">
-              <p className="font-medium">{risco.descricao}</p>
-              <span className="shrink-0 rounded-full bg-obsidian/5 px-2 py-0.5 text-xs text-obsidian/60">
+          <div
+            key={i}
+            className="mb-3.5 rounded-2xl border border-obsidian/10 bg-gradient-to-b from-obsidian/[0.015] to-transparent px-6 py-5 shadow-[0_1px_2px_rgba(11,19,16,0.04),0_4px_12px_rgba(11,19,16,0.05)] transition-[box-shadow,transform,background,border-color] duration-150 last:mb-0 hover:-translate-y-px hover:border-brand/60 hover:bg-gradient-to-b hover:from-brand/[0.28] hover:to-brand/10 hover:shadow-[0_2px_4px_rgba(11,19,16,0.06),0_10px_24px_rgba(89,165,44,0.22)]"
+          >
+            <div className="mb-2.5 flex items-start justify-between gap-3">
+              <p className="text-[16px] font-bold">{risco.descricao}</p>
+              <span
+                className={
+                  risco.origem === 'clinica'
+                    ? 'shrink-0 whitespace-nowrap rounded-full bg-brand/15 px-2.5 py-1 text-[11.5px] font-bold text-brand-hover'
+                    : 'shrink-0 whitespace-nowrap rounded-full bg-obsidian/[0.08] px-2.5 py-1 text-[11.5px] font-bold text-obsidian/70'
+                }
+              >
                 {ORIGEM_LABEL[risco.origem] ?? risco.origem}
               </span>
             </div>
-            <p className="text-sm text-obsidian/60">
-              <span className="font-medium">Plano de ação:</span> {risco.planoDeAcao}
+            <p className="text-sm text-obsidian/70">
+              <span className="font-bold text-obsidian">Plano de ação:</span> {risco.planoDeAcao}
             </p>
           </div>
         ))}

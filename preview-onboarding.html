@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onboarding — Clínica Vitá Estética (Simulação)</title>
+<title>Onboarding, Clínica Vitá Estética (Simulação)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
@@ -98,7 +98,7 @@
     padding: 32px 24px 96px;
   }
 
-  /* Sidebar fixa, colada à esquerda da janela, recolhida — expande só no hover. */
+  /* Sidebar fixa, colada à esquerda da janela, recolhida; expande só no hover. */
   nav.sidebar {
     position: fixed;
     left: 0;
@@ -353,6 +353,63 @@
 
   a.ref-link { color: var(--brand-hover); text-decoration: underline; }
 
+  /* ---------- BLOCK 08 — redesign v2 (funil de camadas + frentes de mensagem) ---------- */
+  .layer-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
+  .layer-card {
+    border: 1px solid rgba(11,19,16,0.1);
+    border-radius: 12px;
+    padding: 16px 18px;
+    background: var(--bone);
+    position: relative;
+    overflow: hidden;
+  }
+  .layer-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--brand);
+  }
+  .layer-card:nth-child(2)::before { background: var(--brand-hover); }
+  .layer-card:nth-child(3)::before { background: var(--obsidian); }
+  .layer-card .layer-tag {
+    display: inline-block;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--brand-hover);
+    background: rgba(89,165,44,0.1);
+    border-radius: 999px;
+    padding: 3px 10px;
+    margin-bottom: 10px;
+  }
+  .layer-card .layer-desc { font-size: 14px; line-height: 1.55; color: rgba(11,19,16,0.75); }
+
+  .msg-front {
+    border: 1px solid rgba(11,19,16,0.1);
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    background: var(--bone);
+  }
+  .msg-front .front-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .msg-front .front-num {
+    flex: 0 0 28px; height: 28px; border-radius: 50%;
+    background: var(--obsidian); color: var(--bone);
+    display: flex; align-items: center; justify-content: center;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 700; font-size: 13px;
+  }
+  .msg-front .front-title { font-weight: 600; font-size: 15.5px; }
+  .msg-front .front-body { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .msg-front .angles-k { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; color: rgba(11,19,16,0.5); margin-bottom: 8px; font-weight: 600; }
+  .msg-front .angles-list { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.6; }
+  .msg-front .angles-list li { margin-bottom: 4px; }
+  .msg-front .narrative {
+    border-left: 3px solid var(--brand); border-radius: 0 10px 10px 0;
+    padding: 10px 14px; background: rgba(89,165,44,0.05);
+  }
+  .msg-front .narrative .k { font-size: 11px; color: rgba(11,19,16,0.5); margin-bottom: 4px; }
+  .msg-front .narrative p { margin: 0; font-style: italic; font-size: 13.5px; line-height: 1.5; }
+
   .banner {
     background: linear-gradient(90deg, var(--brand-dark), var(--obsidian-alt));
     color: var(--bone);
@@ -421,7 +478,7 @@
 
       <!-- BLOCK 01 -->
       <section class="block active" id="b1">
-        <h2 class="serif">O seu negócio, como eu entendi</h2>
+        <h2 class="serif">O retrato da sua operação</h2>
         <p class="block-sub">Confira se está tudo certo; se algo estiver errado, é só nos avisar.</p>
         <div class="grid2">
           <div class="field"><label>Serviços</label>
@@ -455,9 +512,9 @@
         <h2 class="serif">Onde você está hoje</h2>
         <p class="block-sub">A linha de base a partir da qual medimos o progresso.</p>
         <div class="month-grid">
-          <div class="box"><div class="k">Faturamento — Mês 1</div><div class="v mono">R$ 42.000</div></div>
-          <div class="box"><div class="k">Faturamento — Mês 2</div><div class="v mono">R$ 38.500</div></div>
-          <div class="box"><div class="k">Faturamento — Mês 3</div><div class="v mono">R$ 45.200</div></div>
+          <div class="box"><div class="k">Faturamento Mês 1</div><div class="v mono">R$ 42.000</div></div>
+          <div class="box"><div class="k">Faturamento Mês 2</div><div class="v mono">R$ 38.500</div></div>
+          <div class="box"><div class="k">Faturamento Mês 3</div><div class="v mono">R$ 45.200</div></div>
         </div>
         <div class="stat-grid">
           <div class="box"><div class="k">Ticket médio</div><div class="v mono">R$ 850</div></div>
@@ -470,7 +527,7 @@
 
       <!-- BLOCK 03 -->
       <section class="block" id="b3">
-        <h2 class="serif">Onde você quer chegar — em pacientes, não só em reais</h2>
+        <h2 class="serif">Onde você quer chegar</h2>
         <p class="block-sub">A meta declarada traduzida em pacientes, leads e verba necessária.</p>
         <p class="intro-note">Taxas de conversão usadas (histórico/teórico): lead → agendamento <b>32%</b>, agendamento → comparecimento <b>70%</b>, comparecimento → fechamento <b>45%</b>. CPL estimado: <b>R$ 28</b>.</p>
         <div class="level-grid">
@@ -526,14 +583,14 @@
             </ul>
           </div>
           <div class="field full"><label>Nível de consciência sobre o procedimento</label>
-            <p>Maioria já conhece os procedimentos (consciente do produto), mas ainda não decidiu por qual clínica/profissional optar — a decisão está em "qual marca escolher", não em "se devo fazer".</p>
+            <p>Maioria já conhece os procedimentos (consciente do produto), mas ainda não decidiu por qual clínica/profissional optar: a decisão está em "qual marca escolher", não em "se devo fazer".</p>
           </div>
         </div>
       </section>
 
       <!-- BLOCK 05 -->
       <section class="block" id="b5">
-        <h2 class="serif">Onde vamos anunciar — e onde não vamos</h2>
+        <h2 class="serif">Onde vamos e onde não vamos anunciar</h2>
         <div class="grid2">
           <div class="field"><label>Regiões incluídas</label>
             <ul>
@@ -544,8 +601,8 @@
           </div>
           <div class="field"><label>Regiões excluídas</label>
             <ul>
-              <li><b>Zona Norte</b> — <span style="color:rgba(11,19,16,0.6)">distância inviabiliza deslocamento até a clínica</span></li>
-              <li><b>Cidades vizinhas de baixa renda</b> — <span style="color:rgba(11,19,16,0.6)">ticket médio incompatível com o público-alvo</span></li>
+              <li><b>Zona Norte:</b> <span style="color:rgba(11,19,16,0.6)">distância inviabiliza deslocamento até a clínica</span></li>
+              <li><b>Cidades vizinhas de baixa renda:</b> <span style="color:rgba(11,19,16,0.6)">ticket médio incompatível com o público-alvo</span></li>
             </ul>
           </div>
         </div>
@@ -554,7 +611,7 @@
       <!-- BLOCK 06 -->
       <section class="block" id="b6">
         <h2 class="serif">O caminho do paciente</h2>
-        <p class="block-sub">Caminho 01 — WhatsApp direto</p>
+        <p class="block-sub">Caminho 01: WhatsApp direto</p>
         <ol class="journey">
           <li><span class="badge">1</span><div><div class="title">Anúncio Instagram</div></div></li>
           <li><span class="badge">2</span><div><div class="title">Clique no botão "WhatsApp"</div></div></li>
@@ -566,8 +623,7 @@
 
       <!-- BLOCK 07 -->
       <section class="block" id="b7">
-        <h2 class="serif">As fases</h2>
-        <p class="block-sub">Padrão — ritmo equilibrado</p>
+        <h2 class="serif">As fases dos anúncios</h2>
         <div class="phase-card">
           <div class="row"><span class="name">Aprendizado</span><span class="pct mono">Dias 1 a 14</span></div>
           <div class="obj">Validar públicos, criativos e ofertas.</div>
@@ -589,56 +645,76 @@
       <section class="block" id="b8">
         <h2 class="serif">O que os anúncios vão dizer</h2>
 
-        <div class="callout" style="margin-bottom:24px;">
-          <p style="margin:0 0 4px;font-weight:600;">Com Posicionamento — estrutura em 3 camadas</p>
-          <p style="margin:0;color:rgba(11,19,16,0.7);">
-            <b>Atração:</b> conteúdo educacional/lifestyle, sem oferta direta, para quem ainda não conhece a clínica.
-            <b>Confiança:</b> autoridade, bastidores, prova social, para quem já segue mas ainda não decidiu.
-            <b>Conversão:</b> quebra de objeção e urgência, levando direto para o WhatsApp.
-          </p>
+        <div class="layer-grid">
+          <div class="layer-card">
+            <span class="layer-tag">1. Atração</span>
+            <div class="layer-desc">Conteúdo educacional/lifestyle, sem oferta direta, para quem ainda não conhece a clínica.</div>
+          </div>
+          <div class="layer-card">
+            <span class="layer-tag">2. Confiança</span>
+            <div class="layer-desc">Autoridade, bastidores, prova social, para quem já segue mas ainda não decidiu.</div>
+          </div>
+          <div class="layer-card">
+            <span class="layer-tag">3. Conversão</span>
+            <div class="layer-desc">Quebra de objeção e urgência, levando direto para o WhatsApp.</div>
+          </div>
         </div>
 
         <div class="grid2">
           <div class="field"><label>Formatos de criativo</label>
             <ul>
-              <li>Vídeo depoimento de paciente (UGC)</li>
               <li>Antes/depois com autorização</li>
+              <li>Vídeo depoimento de paciente (UGC)</li>
               <li>Reels institucional da clínica e equipe</li>
             </ul>
           </div>
-          <div class="field full"><label>Copy de partida</label>
-            <p style="white-space:pre-wrap;">Resultado natural, sem exagero. Na Vitá Estética, cada procedimento é pensado para valorizar o que já é seu — com acompanhamento médico em todas as etapas. Agende sua avaliação.</p>
-          </div>
-          <div class="field full"><label>Referências</label>
+          <div class="field"><label>Referências</label>
             <p><a class="ref-link" href="#" onclick="return false;">https://drive.google.com/referencias-criativos-vita</a></p>
+          </div>
+          <div class="field full"><label>Copy de partida</label>
+            <p style="white-space:pre-wrap;">Resultado natural, sem exagero. Na Vitá Estética, cada procedimento é pensado para valorizar o que já é seu, com acompanhamento médico em todas as etapas. Agende sua avaliação.</p>
           </div>
         </div>
 
-        <div style="margin-top:24px;display:flex;flex-direction:column;gap:16px;">
-          <div class="box" style="text-align:left;">
-            <div style="font-weight:600;margin-bottom:10px;">Frente 1 — Harmonização Facial / Estética não invasiva</div>
-            <div class="k" style="margin-bottom:4px;">Ângulos de mensagem</div>
-            <ul style="margin:0 0 12px;">
-              <li>Naturalidade, "sem parecer mexido"</li>
-              <li>Envelhecer bem, realce sutil</li>
-              <li>Prova social e reputação local</li>
-            </ul>
-            <div style="border:1px solid rgba(11,19,16,0.1);border-radius:8px;padding:10px;background:rgba(11,19,16,0.03);">
-              <div class="k" style="margin-bottom:4px;">Exemplo de narrativa — referência de tom, não é copy pronta para publicar</div>
-              <p style="margin:0;font-style:italic;">"Resultado natural, sem exagero. Cada procedimento pensado para valorizar o que já é seu — com acompanhamento médico em todas as etapas. Agende sua avaliação."</p>
+        <div style="margin-top:28px;">
+          <div class="msg-front">
+            <div class="front-head">
+              <span class="front-num">1</span>
+              <span class="front-title">Harmonização Facial / Estética não invasiva</span>
+            </div>
+            <div class="front-body">
+              <div>
+                <div class="angles-k">Ângulos de mensagem</div>
+                <ul class="angles-list">
+                  <li>Naturalidade, "sem parecer mexido"</li>
+                  <li>Envelhecer bem, realce sutil</li>
+                  <li>Prova social e reputação local</li>
+                </ul>
+              </div>
+              <div class="narrative">
+                <div class="k">Exemplo de narrativa, referência de tom, não é copy pronta para publicar</div>
+                <p>"Resultado natural, sem exagero. Cada procedimento pensado para valorizar o que já é seu, com acompanhamento médico em todas as etapas. Agende sua avaliação."</p>
+              </div>
             </div>
           </div>
-          <div class="box" style="text-align:left;">
-            <div style="font-weight:600;margin-bottom:10px;">Frente 2 — Odontologia Estética (facetas, lentes em resina, clareamento)</div>
-            <div class="k" style="margin-bottom:4px;">Ângulos de mensagem</div>
-            <ul style="margin:0 0 12px;">
-              <li>Autoestima ao sorrir</li>
-              <li>Resolver de uma vez, sem tratamento longo</li>
-              <li>Confiança social, sorriso alinhado sem parecer falso</li>
-            </ul>
-            <div style="border:1px solid rgba(11,19,16,0.1);border-radius:8px;padding:10px;background:rgba(11,19,16,0.03);">
-              <div class="k" style="margin-bottom:4px;">Exemplo de narrativa — referência de tom, não é copy pronta para publicar</div>
-              <p style="margin:0;font-style:italic;">"Vergonha de sorrir em fotos? Recupere a confiança com Facetas em Resina — resultado em 1 sessão, sem desgastar os dentes. Agende sua avaliação."</p>
+          <div class="msg-front">
+            <div class="front-head">
+              <span class="front-num">2</span>
+              <span class="front-title">Odontologia Estética (facetas, lentes em resina, clareamento)</span>
+            </div>
+            <div class="front-body">
+              <div>
+                <div class="angles-k">Ângulos de mensagem</div>
+                <ul class="angles-list">
+                  <li>Autoestima ao sorrir</li>
+                  <li>Resolver de uma vez, sem tratamento longo</li>
+                  <li>Confiança social, sorriso alinhado sem parecer falso</li>
+                </ul>
+              </div>
+              <div class="narrative">
+                <div class="k">Exemplo de narrativa, referência de tom, não é copy pronta para publicar</div>
+                <p>"Vergonha de sorrir em fotos? Recupere a confiança com Facetas em Resina, resultado em 1 sessão, sem desgastar os dentes. Agende sua avaliação."</p>
+              </div>
             </div>
           </div>
         </div>
@@ -647,7 +723,7 @@
       <!-- BLOCK 09 -->
       <section class="block" id="b9">
         <h2 class="serif">Riscos que assumimos juntos</h2>
-        <p class="block-sub">Escrito desde o dia 1 — se acontecer, já temos um plano combinado.</p>
+        <p class="block-sub">Escrito desde o dia 1: se acontecer, já temos um plano combinado.</p>
         <div class="risk-card">
           <div class="row"><span class="desc">A recepção não responde rápido ao lead que chegou pelo anúncio (lead esfria em minutos, não em horas).</span><span class="pill clinica">Identificado pela clínica</span></div>
           <div class="plan"><b>Plano de ação:</b> definir um tempo máximo de resposta ao lead (ideal: minutos) e priorizar o atendimento a leads de anúncio na rotina da recepção.</div>
@@ -657,7 +733,7 @@
           <div class="plan"><b>Plano de ação:</b> implementar confirmação de agendamento (mensagem ou ligação) 1 dia antes da consulta.</div>
         </div>
         <div class="risk-card">
-          <div class="row"><span class="desc">Ninguém é claramente responsável por atender o lead — mensagens inconsistentes, contato perdido.</span><span class="pill clinica">Identificado pela clínica</span></div>
+          <div class="row"><span class="desc">Ninguém é claramente responsável por atender o lead, mensagens inconsistentes, contato perdido.</span><span class="pill clinica">Identificado pela clínica</span></div>
           <div class="plan"><b>Plano de ação:</b> definir uma única pessoa responsável por cada lead até o agendamento, evitando que a mensagem se perca entre a equipe.</div>
         </div>
         <div class="risk-card">
@@ -673,20 +749,19 @@
       <!-- BLOCK 10 -->
       <section class="block" id="b10">
         <h2 class="serif">O que precisa de você</h2>
-        <p class="block-sub">O acesso ao Meta Ads é configurado ao vivo na call — isto só prepara para ser rápido. Tráfego + Estruturação Comercial</p>
         <table class="access">
           <thead><tr><th>Item</th><th>Prazo</th><th>Responsável</th></tr></thead>
           <tbody>
             <tr><td>Acesso de administrador ao Business Manager (Meta)</td><td class="prazo">Imediato, máximo 2 dias</td><td>Cliente</td></tr>
             <tr><td>Acesso à página do Instagram/Facebook (ou convite como parceiro)</td><td class="prazo">Imediato, junto do acesso ao BM</td><td>Cliente</td></tr>
-            <tr><td>Forma de pagamento ativa na conta de anúncios</td><td class="prazo">Semana 1</td><td>Cliente</td></tr>
+            <tr><td>Definir responsável único por lead, configurado no CRM</td><td class="prazo">Imediato</td><td>Cliente</td></tr>
             <tr><td>Definir quem responde os leads no WhatsApp</td><td class="prazo">Antes de começar</td><td>Cliente</td></tr>
+            <tr><td>Definir e comunicar o tempo máximo de resposta ao lead (ideal: minutos) para a equipe de recepção</td><td class="prazo">Antes de começar</td><td>Cliente</td></tr>
             <tr><td>Enviar materiais/fotos/vídeos para os criativos iniciais</td><td class="prazo">Até 3 dias</td><td>Cliente</td></tr>
+            <tr><td>Forma de pagamento ativa na conta de anúncios</td><td class="prazo">Semana 1</td><td>Cliente</td></tr>
+            <tr><td>Acesso ao WhatsApp Business (número principal)</td><td class="prazo">Semana 1</td><td>Cliente</td></tr>
             <tr><td>Configurar Business Manager, pixel e públicos</td><td class="prazo">Semana 1</td><td>Agência</td></tr>
             <tr><td>Criar e subir os primeiros criativos</td><td class="prazo">Semana 1, até o 7º dia</td><td>Agência</td></tr>
-            <tr><td>Definir responsável único por lead, configurado no CRM</td><td class="prazo">Imediato</td><td>Cliente</td></tr>
-            <tr><td>Definir e comunicar o tempo máximo de resposta ao lead (ideal: minutos) para a equipe de recepção</td><td class="prazo">Antes de começar</td><td>Cliente</td></tr>
-            <tr><td>Acesso ao WhatsApp Business (número principal)</td><td class="prazo">Semana 1</td><td>Cliente</td></tr>
             <tr><td>Implementar CRM com processo de atendimento/objeções (inclui roteiro de objeções de preço e automação de confirmação de agendamento)</td><td class="prazo">10 a 15 dias</td><td>Agência</td></tr>
           </tbody>
         </table>
@@ -708,7 +783,7 @@
             <p>Relatório mensal + 1 reunião mensal de alinhamento.</p>
           </div>
           <div class="field full"><label>O que você pode esperar</label>
-            <p>Transparência total sobre números, suporte de segunda a sexta das 9h às 19h com resposta em até 3 horas, e recomendações proativas — não vamos só executar, vamos pensar estrategicamente com você.</p>
+            <p>Transparência total sobre números, suporte de segunda a sexta das 9h às 19h com resposta em até 3 horas, e recomendações proativas: não vamos só executar, vamos pensar estrategicamente com você.</p>
           </div>
         </div>
         <div class="partnership-box full">
@@ -721,11 +796,11 @@
       <section class="block" id="b12">
         <h2 class="serif">Os primeiros 30 dias</h2>
         <div class="timeline">
-          <div class="event"><div class="day mono">05/08</div><div class="date mono">(quarta-feira) — Dia 0</div><div class="desc">Início oficial da parceria: hoje, essa reunião e alinhamento de expectativas.</div></div>
-          <div class="event"><div class="day mono">07/08</div><div class="date mono">(sexta-feira) — Dia 2</div><div class="desc">Estruturação do Marketing: configuração da captação de leads (estratégia, conta de anúncios e anúncios) e estruturação do Posicionamento/Conteúdos (quando contratado).</div></div>
-          <div class="event"><div class="day mono">12/08</div><div class="date mono">(quarta-feira) — Dia 7</div><div class="desc">Lançamento das campanhas: início da geração de demanda.</div></div>
-          <div class="event"><div class="day mono">20/08</div><div class="date mono">(quinta-feira) — Dia 15</div><div class="desc">Primeiros leads e possíveis primeiros agendamentos: primeira leitura de dados, ajustes iniciais de segmentação e otimização dos resultados da primeira semana. Primeiro relatório de meio de período, com checagem de CPL e volume de leads.</div></div>
-          <div class="event"><div class="day mono">04/09</div><div class="date mono">(sexta-feira) — Dia 30</div><div class="desc">Fechamento do primeiro ciclo: resultados tendem a melhorar e estabilizar.</div></div>
+          <div class="event"><div class="day mono">05/08</div><div class="date mono">(quarta-feira), Dia 0</div><div class="desc">Início oficial da parceria: hoje, essa reunião e alinhamento de expectativas.</div></div>
+          <div class="event"><div class="day mono">07/08</div><div class="date mono">(sexta-feira), Dia 2</div><div class="desc">Estruturação do Marketing: configuração da captação de leads (estratégia, conta de anúncios e anúncios) e estruturação do Posicionamento/Conteúdos (quando contratado).</div></div>
+          <div class="event"><div class="day mono">12/08</div><div class="date mono">(quarta-feira), Dia 7</div><div class="desc">Lançamento das campanhas: início da geração de demanda.</div></div>
+          <div class="event"><div class="day mono">20/08</div><div class="date mono">(quinta-feira), Dia 15</div><div class="desc">Primeiros leads e possíveis primeiros agendamentos: primeira leitura de dados, ajustes iniciais de segmentação e otimização dos resultados da primeira semana. Primeiro relatório de meio de período, com checagem de CPL e volume de leads.</div></div>
+          <div class="event"><div class="day mono">04/09</div><div class="date mono">(sexta-feira), Dia 30</div><div class="desc">Fechamento do primeiro ciclo: resultados tendem a melhorar e estabilizar.</div></div>
         </div>
         <details class="not-happen">
           <summary>O que não vai acontecer</summary>

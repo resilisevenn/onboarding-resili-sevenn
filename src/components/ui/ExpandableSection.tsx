@@ -17,7 +17,7 @@ export function ExpandableSection({
   const match = /^(\d+\.)(\s*)(.*)$/s.exec(title)
 
   return (
-    <div className="border-b border-white/10 last:border-0">
+    <div className="mb-3 rounded-xl border border-brand/30 bg-gradient-to-br from-brand/10 to-brand/5 px-6 last:mb-0">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -40,7 +40,7 @@ export function ExpandableSection({
         <ChevronDown className={cn('h-5 w-5 transition-transform', open ? 'rotate-180 text-bone' : 'text-brand')} />
       </button>
       {description && <p className={cn('mt-1 text-sm', open ? '-mx-6 px-6 text-bone/50' : 'text-bone/50')}>{description}</p>}
-      {open && <div className="mt-4 space-y-4 pb-4">{children}</div>}
+      {open && <div className="mt-4 space-y-4 pb-6">{children}</div>}
     </div>
   )
 }

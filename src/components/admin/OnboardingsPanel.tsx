@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Copy, Eye } from 'lucide-react'
+import { Copy, Eye, LogOut } from 'lucide-react'
 import { listOnboardings, setOnboardingStatus, type OnboardingRow } from '../../lib/onboardings'
 import { fetchProfilesByIds, type Profile } from '../../lib/profiles'
 import { cn } from '../../lib/utils'
+import { useAuth } from '../../context/AuthContext'
 
 const PUBLIC_BASE_URL = window.location.origin
 
 export function OnboardingsPanel() {
+  const { signOut } = useAuth()
   const [rows, setRows] = useState<OnboardingRow[]>([])
   const [editors, setEditors] = useState<Record<string, Profile>>({})
   const [loading, setLoading] = useState(true)
@@ -55,12 +57,23 @@ export function OnboardingsPanel() {
   }
 
   return (
-    <div className="mx-auto min-h-screen max-w-6xl bg-obsidian px-4 py-10">
+    <div className="min-h-screen bg-brand-dark">
+    <div className="mx-auto max-w-6xl px-4 py-10">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="font-display text-2xl text-bone">Onboardings</h1>
-        <Link to="/novo" className="rounded bg-brand px-4 py-2 text-sm font-medium text-brand-dark hover:bg-brand-hover">
-          Gerar novo
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link to="/novo" className="rounded bg-brand px-4 py-2 text-sm font-medium text-brand-dark hover:bg-brand-hover">
+            Gerar novo
+          </Link>
+          <button
+            type="button"
+            onClick={signOut}
+            className="flex items-center gap-1.5 rounded border border-white/10 px-4 py-2 text-sm text-bone/70 hover:border-white/30 hover:text-bone"
+          >
+            <LogOut className="h-4 w-4" />
+            Sair
+          </button>
+        </div>
       </div>
 
       {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
@@ -138,6 +151,7 @@ export function OnboardingsPanel() {
           </table>
         </div>
       )}
+    </div>
     </div>
   )
 }

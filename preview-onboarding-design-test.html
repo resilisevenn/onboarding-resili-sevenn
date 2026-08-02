@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[TESTE DE LAYOUT] Onboarding, Clínica Vitá Estética</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --brand: #59a52c;
+      --brand-dark: #021611;
+      --brand-hover: #4c8f24;
+      --brand-light: #8fd45f;
+      --obsidian: #0b1310;
+      --obsidian-alt: #142019;
+      --obsidian-deep: #050a08;
+      --obsidian-field: #1e2e26;
+      --bone: #fafafa;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      background: var(--bone);
+      color: var(--obsidian);
+    }
+
+    .serif {
+      font-family: 'DM Serif Display', ui-serif, Georgia, serif;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .banner {
+      background: linear-gradient(90deg, var(--brand-dark), var(--obsidian-alt));
+      color: var(--bone);
+      text-align: center;
+      font-size: 13px;
+      padding: 8px;
+      position: relative;
+      z-index: 30;
+    }
+
+    /* ---------- PROGRESS BAR (Goal Gradient) ---------- */
+    #progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--brand), var(--brand-light));
+      z-index: 100;
+      transition: width 0.1s linear;
+    }
+
+    /* ---------- SIDEBAR (mantida do preview original: recolhida, expande no hover) ---------- */
+    nav.sidebar {
+      position: fixed;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 40;
+      width: 44px;
+      max-height: 80vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 10px 8px;
+      border-radius: 0 14px 14px 0;
+      background: rgba(250, 250, 250, 0.9);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(11, 19, 16, 0.08);
+      border-left: none;
+      box-shadow: 0 4px 20px rgba(11, 19, 16, 0.08);
+      transition: width 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    nav.sidebar:hover {
+      width: 270px;
+      box-shadow: 0 8px 30px rgba(11, 19, 16, 0.16);
+    }
+
+    nav.sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      text-decoration: none;
+      color: rgba(11, 19, 16, 0.6);
+      white-space: nowrap;
+      overflow: hidden;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    nav.sidebar a .num {
+      flex: 0 0 auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    nav.sidebar a .label {
+      flex: 0 0 auto;
+      max-width: 0;
+      opacity: 0;
+      transition: max-width 0.22s ease, opacity 0.15s ease;
+    }
+
+    nav.sidebar:hover a .label {
+      max-width: 220px;
+      opacity: 1;
+    }
+
+    nav.sidebar a:hover {
+      background: rgba(11, 19, 16, 0.05);
+      color: var(--obsidian);
+    }
+
+    nav.sidebar a.active {
+      background: linear-gradient(135deg, var(--obsidian), var(--obsidian-alt));
+      color: var(--bone);
+      box-shadow: 0 2px 8px rgba(11, 19, 16, 0.25);
+    }
+
+    /* ============================================================
+     COVER — capa de apresentação, tela cheia, impacto visceral
+     ============================================================ */
+    #cover,
+    #closing {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 48px 24px;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(89, 165, 44, 0.16), transparent 55%),
+        radial-gradient(circle at 80% 80%, rgba(89, 165, 44, 0.08), transparent 50%),
+        linear-gradient(180deg, var(--obsidian-deep), var(--obsidian) 60%, var(--obsidian-alt));
+      color: var(--bone);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #cover .eyebrow,
+    #closing .eyebrow {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand-light);
+      margin-bottom: 28px;
+    }
+
+    #cover h1,
+    #closing h1 {
+      font-size: clamp(48px, 8vw, 108px);
+      line-height: 0.98;
+      margin: 0 0 24px;
+      letter-spacing: -0.01em;
+    }
+
+    #cover h1,
+    #closing h1 {
+      font-size: clamp(38px, 6vw, 84px);
+    }
+
+    #cover p.tag,
+    #closing p.tag {
+      font-size: clamp(16px, 2vw, 22px);
+      color: rgba(250, 250, 250, 0.65);
+      max-width: 640px;
+      margin: 0 auto 56px;
+      line-height: 1.5;
+    }
+
+    #cover .stat-row {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 64px;
+    }
+
+    #cover .stat-row .stat {
+      text-align: center;
+    }
+
+    #cover .stat-row .stat .v {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      color: var(--brand-light);
+      line-height: 1;
+    }
+
+    #cover .stat-row .stat .k {
+      font-size: 12.5px;
+      color: rgba(250, 250, 250, 0.5);
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    #cover .scroll-cue {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(250, 250, 250, 0.4);
+      font-size: 12.5px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      animation: bob 2s ease-in-out infinite;
+      transition: color 0.15s ease;
+    }
+
+    #cover .scroll-cue:hover {
+      color: var(--brand-light);
+    }
+
+    @keyframes bob {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(6px);
+      }
+    }
+
+    /* ============================================================
+     LAYOUT / BLOCKS — cada bloco é uma "tela" de apresentação
+     ============================================================ */
+    .layout {
+      padding: 0 24px 0 68px;
+    }
+
+    main.content {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    section.block {
+      min-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 96px 0;
+      position: relative;
+      border-top: none;
+    }
+
+    section.block:first-child {
+      border-top: none;
+    }
+
+    section.block::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(89, 165, 44, 0.5) 35%, var(--obsidian) 50%, rgba(89, 165, 44, 0.5) 65%, transparent);
+    }
+
+    section.block:first-child::before {
+      display: none;
+    }
+
+    /* Número do bloco como marca d'água gigante, tipo capa de revista */
+    section.block .block-num {
+      position: absolute;
+      top: 48px;
+      right: 0;
+      width: clamp(80px, 14vw, 220px);
+      height: clamp(80px, 14vw, 220px);
+      object-fit: contain;
+      opacity: 0.1;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+
+    section.block .block-eyebrow {
+      align-self: flex-start;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1;
+      color: var(--bone);
+      background: var(--obsidian);
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    section.block h2 {
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.05;
+      margin: 0 0 16px;
+      max-width: 16ch;
+      color: var(--brand-hover);
+      position: relative;
+      z-index: 1;
+    }
+
+    section.block .block-sub {
+      color: rgba(11, 19, 16, 0.6);
+      margin: 0 0 48px;
+      font-size: 17px;
+      max-width: 60ch;
+      line-height: 1.5;
+      position: relative;
+      z-index: 1;
+    }
+
+    section.block .block-body {
+      position: relative;
+      z-index: 1;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(11, 19, 16, 0.6);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .field p,
+    .field ul {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .field ul {
+      padding-left: 18px;
+    }
+
+    .field ul li {
+      margin-bottom: 6px;
+    }
+
+    /* Card com borda só à esquerda, mesmo fundo da página (usado nos blocos 1 e 4) */
+    .field-card {
+      background: var(--bone);
+      border-left: 3px solid var(--brand);
+      padding: 4px 20px;
+    }
+
+    .field-card label {
+      transition: color 0.15s ease;
+    }
+
+    .field-card:hover label {
+      color: var(--brand-hover);
+    }
+
+    /* Estatística heroica: números grandes em vez de caber numa grade discreta */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .hero-stats .stat {
+      min-width: 0;
+    }
+
+    .hero-stats .stat .v {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: clamp(30px, 4vw, 46px);
+      font-weight: 700;
+      line-height: 1;
+      color: var(--obsidian);
+    }
+
+    .hero-stats .stat .k {
+      font-size: 12.5px;
+      color: rgba(11, 19, 16, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 8px;
+    }
+
+    /* Card do preview original (.box), reaproveitado no tamanho/disposição do hero-stats */
+    .hero-stats .box-stat {
+      min-width: 140px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(11, 19, 16, 0.1);
+      border-radius: 12px;
+      padding: 16px 20px;
+      background: linear-gradient(180deg, rgba(11, 19, 16, 0.015), rgba(11, 19, 16, 0));
+      box-shadow: 0 1px 2px rgba(11, 19, 16, 0.04), 0 4px 12px rgba(11, 19, 16, 0.05);
+      transition: box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .hero-stats .box-stat:hover {
+      box-shadow: 0 2px 4px rgba(11, 19, 16, 0.06), 0 10px 24px rgba(89, 165, 44, 0.22);
+      transform: translateY(-1px);
+      background: linear-gradient(180deg, rgba(89, 165, 44, 0.28), rgba(89, 165, 44, 0.1));
+      border-color: rgba(89, 165, 44, 0.6);
+    }
+
+    .hero-stats .box-stat .k {
+      font-size: 12.5px;
+      color: rgba(11, 19, 16, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      min-height: 2.4em;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .hero-stats .box-stat .v {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 400;
+      line-height: 1;
+      color: var(--obsidian);
+      margin-top: 16px;
+    }
+
+    .callout {
+      border: 1px solid rgba(89, 165, 44, 0.35);
+      background: linear-gradient(135deg, rgba(89, 165, 44, 0.1), rgba(89, 165, 44, 0.04));
+      border-radius: 16px;
+      padding: 24px 28px;
+      font-size: 16px;
+      box-shadow: 0 4px 14px rgba(89, 165, 44, 0.08);
+    }
+
+    .callout strong.mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: var(--brand-hover);
+      font-size: 1.3em;
+    }
+
+    /* Meta em destaque: uma no centro, grande; as demais menores ao lado */
+    .level-hero-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .level-card {
+      border: 1px solid rgba(11, 19, 16, 0.1);
+      border-radius: 18px;
+      padding: 28px 24px;
+      background: linear-gradient(180deg, rgba(11, 19, 16, 0.015), rgba(11, 19, 16, 0));
+      box-shadow: 0 1px 2px rgba(11, 19, 16, 0.04), 0 4px 12px rgba(11, 19, 16, 0.05);
+      transition: box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .level-card:hover {
+      box-shadow: 0 2px 4px rgba(11, 19, 16, 0.06), 0 10px 24px rgba(89, 165, 44, 0.22);
+      transform: translateY(-2px);
+      background: linear-gradient(180deg, rgba(89, 165, 44, 0.28), rgba(89, 165, 44, 0.1));
+      border-color: rgba(89, 165, 44, 0.6);
+    }
+
+    .level-card.featured {
+      border: 2px solid var(--brand);
+      background: linear-gradient(160deg, var(--obsidian), var(--obsidian-alt));
+      color: var(--bone);
+      box-shadow: 0 12px 32px rgba(89, 165, 44, 0.25);
+    }
+
+    .level-card .name {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      opacity: 0.7;
+    }
+
+    .level-card.featured .name {
+      color: var(--brand-light);
+      opacity: 1;
+    }
+
+    .level-card .amount {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: var(--brand-hover);
+    }
+
+    .level-card.featured .amount {
+      color: var(--brand-light);
+      font-size: 40px;
+    }
+
+    .level-card dl {
+      margin: 0;
+      font-size: 13.5px;
+    }
+
+    .level-card dl div {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-top: 1px solid rgba(11, 19, 16, 0.06);
+    }
+
+    .level-card.featured dl div {
+      border-top: 1px solid rgba(250, 250, 250, 0.1);
+    }
+
+    .level-card dl div:first-child {
+      border-top: none;
+    }
+
+    .level-card dl dt {
+      color: rgba(11, 19, 16, 0.55);
+    }
+
+    .level-card.featured dl dt {
+      color: rgba(250, 250, 250, 0.55);
+    }
+
+    .level-card dl dd {
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 700;
+    }
+
+    .intro-note {
+      font-size: 14px;
+      color: rgba(11, 19, 16, 0.6);
+      margin-bottom: 32px;
+    }
+
+    .intro-note b {
+      color: var(--obsidian);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    ol.journey {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ol.journey li {
+      position: relative;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding-bottom: 32px;
+    }
+
+    ol.journey li:last-child {
+      padding-bottom: 0;
+    }
+
+    ol.journey li::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 40px;
+      bottom: 4px;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(89, 165, 44, 0.5), rgba(89, 165, 44, 0.15));
+    }
+
+    ol.journey li:last-child::before {
+      display: none;
+    }
+
+    ol.journey .badge {
+      flex: 0 0 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand-hover), var(--obsidian) 85%);
+      color: var(--bone);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 700;
+      font-size: 16px;
+      box-shadow: 0 2px 8px rgba(89, 165, 44, 0.25);
+      position: relative;
+      z-index: 1;
+    }
+
+    ol.journey .title {
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    ol.journey .desc {
+      color: rgba(11, 19, 16, 0.6);
+      font-size: 15px;
+    }
+
+    .phase-card {
+      border: 1px solid rgba(11, 19, 16, 0.1);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 16px;
+      background: linear-gradient(180deg, rgba(11, 19, 16, 0.015), rgba(11, 19, 16, 0));
+      box-shadow: 0 1px 2px rgba(11, 19, 16, 0.04), 0 4px 12px rgba(11, 19, 16, 0.05);
+      transition: box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .phase-card:hover {
+      box-shadow: 0 2px 4px rgba(11, 19, 16, 0.06), 0 10px 24px rgba(89, 165, 44, 0.22);
+      transform: translateY(-1px);
+      background: linear-gradient(180deg, rgba(89, 165, 44, 0.28), rgba(89, 165, 44, 0.1));
+      border-color: rgba(89, 165, 44, 0.6);
+    }
+
+    .phase-card .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .phase-card .row .name {
+      font-weight: 700;
+      font-size: 19px;
+    }
+
+    .phase-card .row .pct {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: var(--brand-hover);
+      font-weight: 700;
+    }
+
+    .phase-card .obj {
+      font-size: 15.5px;
+      margin-bottom: 12px;
+    }
+
+    .phase-card .trigger {
+      font-size: 13px;
+      color: rgba(11, 19, 16, 0.6);
+    }
+
+    .phase-card .trigger b {
+      color: var(--obsidian);
+    }
+
+    .risk-card {
+      border: 1px solid rgba(11, 19, 16, 0.1);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 14px;
+      background: linear-gradient(180deg, rgba(11, 19, 16, 0.015), rgba(11, 19, 16, 0));
+      box-shadow: 0 1px 2px rgba(11, 19, 16, 0.04), 0 4px 12px rgba(11, 19, 16, 0.05);
+      transition: box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .risk-card:hover {
+      box-shadow: 0 2px 4px rgba(11, 19, 16, 0.06), 0 10px 24px rgba(89, 165, 44, 0.22);
+      transform: translateY(-1px);
+      background: linear-gradient(180deg, rgba(89, 165, 44, 0.28), rgba(89, 165, 44, 0.1));
+      border-color: rgba(89, 165, 44, 0.6);
+    }
+
+    .risk-card .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .risk-card .desc {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .pill {
+      flex: 0 0 auto;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .pill.clinica {
+      background: rgba(89, 165, 44, 0.15);
+      color: var(--brand-hover);
+    }
+
+    .pill.gestor {
+      background: rgba(11, 19, 16, 0.08);
+      color: rgba(11, 19, 16, 0.7);
+    }
+
+    .risk-card .plan {
+      font-size: 14px;
+      color: rgba(11, 19, 16, 0.7);
+    }
+
+    .risk-card .plan b {
+      color: var(--obsidian);
+    }
+
+    table.access {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 15px;
+      border: 1px solid rgba(11, 19, 16, 0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(11, 19, 16, 0.04), 0 4px 12px rgba(11, 19, 16, 0.05);
+    }
+
+    table.access th {
+      text-align: left;
+      padding: 14px;
+      background: var(--obsidian);
+      border-bottom: 1px solid rgba(11, 19, 16, 0.1);
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--bone);
+    }
+
+    table.access td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(11, 19, 16, 0.06);
+      transition: background 0.12s ease;
+    }
+
+    table.access tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.access td.prazo {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    table.access tbody tr:nth-child(even) td {
+      background: rgba(11, 19, 16, 0.025);
+    }
+
+    table.access tbody tr:hover td {
+      background: rgba(89, 165, 44, 0.16);
+    }
+
+    .partnership-box {
+      border-left: 4px solid var(--brand);
+      background: var(--bone);
+      padding: 4px 24px;
+      margin-top: 12px;
+    }
+
+    .partnership-box h3 {
+      font-size: 15px;
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+
+    .partnership-box p {
+      margin: 0;
+      font-style: italic;
+      font-size: 17px;
+    }
+
+    /* Mesmo efeito/cor do partnership-box, aplicado aos cards de comunicação (bloco 11) */
+    .comms-card {
+      border: 1px solid rgba(89, 165, 44, 0.35);
+      background: linear-gradient(135deg, rgba(89, 165, 44, 0.1), rgba(89, 165, 44, 0.04));
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 4px 14px rgba(89, 165, 44, 0.08);
+    }
+
+    .timeline {
+      position: relative;
+      margin-left: 104px;
+      padding-left: 28px;
+      border-left: 2px solid rgba(11, 19, 16, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .timeline .event {
+      position: relative;
+    }
+
+    .timeline .event::before {
+      content: '';
+      position: absolute;
+      left: -33px;
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 5px rgba(89, 165, 44, 0.15);
+    }
+
+    .timeline .day {
+      position: absolute;
+      left: -104px;
+      top: 1px;
+      width: 60px;
+      text-align: right;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--obsidian);
+    }
+
+    .timeline .date {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(11, 19, 16, 0.55);
+      margin-bottom: 6px;
+    }
+
+    .timeline .desc {
+      font-size: 15px;
+    }
+
+    .not-happen {
+      background: linear-gradient(180deg, rgba(11, 19, 16, 0.045), rgba(11, 19, 16, 0.025));
+      border: 1px solid rgba(11, 19, 16, 0.1);
+      border-radius: 16px;
+      padding: 4px 24px;
+      margin-top: 24px;
+      box-shadow: inset 0 1px 2px rgba(11, 19, 16, 0.03);
+    }
+
+    .not-happen summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--obsidian);
+    }
+
+    .not-happen summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .not-happen summary::after {
+      content: '›';
+      font-size: 22px;
+      color: rgba(11, 19, 16, 0.4);
+      transform: rotate(90deg);
+      transition: transform 0.2s ease;
+    }
+
+    .not-happen[open] summary::after {
+      transform: rotate(-90deg);
+    }
+
+    .not-happen ul {
+      margin: 0;
+      padding: 0 0 18px 18px;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    a.ref-link {
+      color: var(--brand-hover);
+      text-decoration: underline;
+    }
+
+    /* ---------- BLOCK 08 — redesign v2 (funil de camadas + frentes de mensagem) ---------- */
+    .layer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .layer-card {
+      border: 1px solid rgba(11, 19, 16, 0.1);
+      border-radius: 14px;
+      padding: 20px 22px;
+      background: var(--bone);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .layer-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--brand);
+    }
+
+    .layer-card:nth-child(2)::before {
+      background: var(--brand-hover);
+    }
+
+    .layer-card:nth-child(3)::before {
+      background: var(--obsidian);
+    }
+
+    .layer-card .layer-tag {
+      display: inline-block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--brand-hover);
+      background: rgba(89, 165, 44, 0.1);
+      border-radius: 999px;
+      padding: 4px 12px;
+      margin-bottom: 12px;
+    }
+
+    .layer-card .layer-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: rgba(11, 19, 16, 0.75);
+    }
+
+    .msg-front {
+      border: 1px solid rgba(11, 19, 16, 0.1);
+      border-radius: 16px;
+      padding: 24px 26px;
+      margin-bottom: 16px;
+      background: var(--bone);
+    }
+
+    .msg-front .front-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .msg-front .front-num {
+      flex: 0 0 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--obsidian);
+      color: var(--bone);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .msg-front .front-title {
+      font-weight: 700;
+      font-size: 17px;
+    }
+
+    .msg-front .front-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .msg-front .angles-k {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: rgba(11, 19, 16, 0.5);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .msg-front .angles-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .msg-front .angles-list li {
+      margin-bottom: 4px;
+    }
+
+    .msg-front .narrative {
+      border-left: 3px solid var(--brand);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      background: rgba(89, 165, 44, 0.05);
+    }
+
+    .msg-front .narrative .k {
+      font-size: 11.5px;
+      color: rgba(11, 19, 16, 0.5);
+      margin-bottom: 6px;
+    }
+
+    .msg-front .narrative p {
+      margin: 0;
+      font-style: italic;
+      font-size: 14.5px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 900px) {
+      nav.sidebar {
+        position: static;
+        transform: none;
+        width: 100%;
+        max-height: none;
+        overflow: visible;
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-radius: 12px;
+        border-left: 1px solid rgba(11, 19, 16, 0.08);
+        margin: 16px;
+        background: rgba(250, 250, 250, 0.9);
+      }
+
+      nav.sidebar:hover {
+        width: 100%;
+      }
+
+      nav.sidebar a .label {
+        max-width: none;
+        opacity: 1;
+      }
+
+      .layout {
+        padding: 0 16px;
+      }
+
+      section.block {
+        min-height: 0;
+        padding: 56px 0;
+      }
+
+      section.block .block-num {
+        display: none;
+      }
+
+      .grid2,
+      .level-hero-grid,
+      .hero-stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+
+      .grid2,
+      .level-hero-grid,
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline {
+        margin-left: 72px;
+      }
+
+      .timeline .day {
+        left: -72px;
+        width: 48px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="banner">🔧 TESTE DE LAYOUT — mesma identidade visual (paleta e tipografia), estrutura de apresentação em
+    vez de documento. Comparar com preview-onboarding.html</div>
+  <div id="progress"></div>
+
+  <!-- ===================== COVER ===================== -->
+  <div id="cover">
+    <div class="eyebrow">Onboarding Resili Sevenn</div>
+    <h1 class="serif">Bem-vindo ao<br>nosso Ecossistema</h1>
+    <p class="tag">O plano completo de como vamos levar sua clínica de onde está hoje até a meta que você definiu, passo
+      a passo.</p>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="v serif" style="color:var(--brand-light);">Clínica Vitá Estética</div>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#b1">
+      <span>Role para ver o plano</span>
+      <span>↓</span>
+    </a>
+  </div>
+
+  <div class="layout">
+    <nav class="sidebar">
+      <a href="#cover"><span class="num">0.</span><span class="label">&nbsp;Capa</span></a>
+      <a href="#b1" class="active"><span class="num">1.</span><span class="label">&nbsp;O retrato da sua
+          operação</span></a>
+      <a href="#b2"><span class="num">2.</span><span class="label">&nbsp;Onde você está hoje</span></a>
+      <a href="#b3"><span class="num">3.</span><span class="label">&nbsp;Onde você quer chegar</span></a>
+      <a href="#b4"><span class="num">4.</span><span class="label">&nbsp;Para quem vamos anunciar</span></a>
+      <a href="#b5"><span class="num">5.</span><span class="label">&nbsp;Onde vamos anunciar</span></a>
+      <a href="#b6"><span class="num">6.</span><span class="label">&nbsp;O caminho do paciente</span></a>
+      <a href="#b7"><span class="num">7.</span><span class="label">&nbsp;As fases dos anúncios</span></a>
+      <a href="#b8"><span class="num">8.</span><span class="label">&nbsp;O que os anúncios vão dizer</span></a>
+      <a href="#b9"><span class="num">9.</span><span class="label">&nbsp;Riscos que assumimos juntos</span></a>
+      <a href="#b10"><span class="num">10.</span><span class="label">&nbsp;O que precisa de você</span></a>
+      <a href="#b11"><span class="num">11.</span><span class="label">&nbsp;Como vamos trabalhar</span></a>
+      <a href="#b12"><span class="num">12.</span><span class="label">&nbsp;Os primeiros 30 dias</span></a>
+    </nav>
+
+    <main class="content">
+
+      <!-- BLOCK 01 -->
+      <section class="block active" id="b1">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 01</div>
+        <h2 class="serif">O retrato da sua operação</h2>
+        <p class="block-sub">Confira se está tudo certo; se algo estiver errado, é só nos avisar.</p>
+        <div class="block-body grid2">
+          <div class="field field-card"><label>Serviços</label>
+            <ul>
+              <li>Harmonização facial</li>
+              <li>Preenchimento labial</li>
+              <li>Botox terapêutico e estético</li>
+              <li>Bioestimuladores de colágeno</li>
+            </ul>
+          </div>
+          <div class="field field-card"><label>Diferencial</label>
+            <p>Atendimento médico especializado com protocolo de acompanhamento pós-procedimento em 7, 30 e 90 dias,
+              algo que a concorrência local não oferece.</p>
+          </div>
+          <div class="field field-card"><label>Público descrito</label>
+            <p>Mulheres de 28 a 50 anos, classe B/A, que já usam procedimentos estéticos mas buscam um profissional de
+              confiança para resultados mais naturais.</p>
+          </div>
+          <div class="field field-card"><label>Regiões atendidas</label>
+            <p>Zona Sul e Centro da cidade, com pacientes vindos também da região metropolitana.</p>
+          </div>
+          <div class="field field-card"><label>Horários de funcionamento</label>
+            <p>Segunda a sexta, das 9h às 19h. Sábados das 9h às 13h mediante agendamento.</p>
+          </div>
+          <div class="field field-card"><label>Sazonalidade</label>
+            <p>Aumento de demanda em outubro/novembro (temporada de festas) e queda em janeiro/fevereiro.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 02 -->
+      <section class="block" id="b2">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 02</div>
+        <h2 class="serif">Onde você está hoje</h2>
+        <p class="block-sub">A linha de base a partir da qual medimos o progresso.</p>
+        <div class="block-body">
+          <div class="hero-stats">
+            <div class="box-stat">
+              <div class="k">Faturamento médio (últimos 3 meses)</div>
+              <div class="v mono">R$ 41.900</div>
+            </div>
+            <div class="box-stat">
+              <div class="k">Ticket médio</div>
+              <div class="v mono">R$ 850</div>
+            </div>
+            <div class="box-stat">
+              <div class="k">Margem</div>
+              <div class="v mono">34%</div>
+            </div>
+            <div class="box-stat">
+              <div class="k">Verba de anúncio mensal</div>
+              <div class="v mono">R$ 3.000</div>
+            </div>
+          </div>
+          <div class="callout">Pacientes/mês necessários só para cobrir a operação: <strong class="mono">33</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 03 -->
+      <section class="block" id="b3">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 03</div>
+        <h2 class="serif">Onde você quer chegar</h2>
+        <p class="block-sub">A meta declarada traduzida em pacientes, leads e verba necessária.</p>
+        <div class="block-body">
+          <p class="intro-note">Taxas de conversão usadas (histórico/teórico):<br>lead → agendamento
+            <b>32%</b>,<br>agendamento → comparecimento <b>70%</b>,<br>comparecimento → fechamento <b>45%</b>.<br>CPL
+            estimado: <b>R$ 28</b>.</p>
+          <div class="level-hero-grid">
+            <div class="level-card featured">
+              <div class="name">Super meta</div>
+              <div class="amount">R$ 130.000</div>
+              <dl>
+                <div>
+                  <dt>Pacientes/mês</dt>
+                  <dd>153</dd>
+                </div>
+                <div>
+                  <dt>Leads necessários</dt>
+                  <dd>485</dd>
+                </div>
+                <div>
+                  <dt>Verba necessária</dt>
+                  <dd>R$ 13.580</dd>
+                </div>
+              </dl>
+            </div>
+            <div class="level-card">
+              <div class="name">Meta inicial</div>
+              <div class="amount">R$ 60.000</div>
+              <dl>
+                <div>
+                  <dt>Pacientes/mês</dt>
+                  <dd>71</dd>
+                </div>
+                <div>
+                  <dt>Leads necessários</dt>
+                  <dd>226</dd>
+                </div>
+                <div>
+                  <dt>Verba necessária</dt>
+                  <dd>R$ 6.328</dd>
+                </div>
+              </dl>
+            </div>
+            <div class="level-card">
+              <div class="name">Meta intermediária</div>
+              <div class="amount">R$ 90.000</div>
+              <dl>
+                <div>
+                  <dt>Pacientes/mês</dt>
+                  <dd>106</dd>
+                </div>
+                <div>
+                  <dt>Leads necessários</dt>
+                  <dd>336</dd>
+                </div>
+                <div>
+                  <dt>Verba necessária</dt>
+                  <dd>R$ 9.408</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 04 -->
+      <section class="block" id="b4">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 04</div>
+        <h2 class="serif">Para quem vamos anunciar</h2>
+        <div class="block-body grid2">
+          <div class="field field-card full"><label>Perfil demográfico</label>
+            <p>Mulheres, 28–50 anos, classe A/B, moradoras da Zona Sul e Centro, ativas em redes sociais, que seguem
+              influenciadoras de estética e bem-estar.</p>
+          </div>
+          <div class="field field-card"><label>Dores</label>
+            <ul>
+              <li>Medo de resultado artificial ("cara de boneca")</li>
+              <li>Insegurança sobre a reputação do profissional</li>
+              <li>Falta de tempo para pesquisar clínicas</li>
+            </ul>
+          </div>
+          <div class="field field-card"><label>Desejos</label>
+            <ul>
+              <li>Resultado natural e discreto</li>
+              <li>Autoestima e confiança no dia a dia</li>
+              <li>Atendimento humanizado, sem julgamento</li>
+            </ul>
+          </div>
+          <div class="field field-card full"><label>Nível de consciência sobre o procedimento</label>
+            <p>Maioria já conhece os procedimentos (consciente do produto), mas ainda não decidiu por qual
+              clínica/profissional optar: a decisão está em "qual marca escolher", não em "se devo fazer".</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 05 -->
+      <section class="block" id="b5">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 05</div>
+        <h2 class="serif" style="margin-bottom:48px;">Onde vamos e onde não vamos anunciar</h2>
+        <div class="block-body grid2">
+          <div class="field"><label>Regiões incluídas</label>
+            <ul>
+              <li>Zona Sul</li>
+              <li>Centro</li>
+              <li>Região metropolitana (raio de 25km)</li>
+            </ul>
+          </div>
+          <div class="field"><label>Regiões excluídas</label>
+            <ul>
+              <li><b>Zona Norte:</b> <span style="color:rgba(11,19,16,0.6)">distância inviabiliza deslocamento até a
+                  clínica</span></li>
+              <li><b>Cidades vizinhas de baixa renda:</b> <span style="color:rgba(11,19,16,0.6)">ticket médio
+                  incompatível com o público-alvo</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 06 -->
+      <section class="block" id="b6">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 06</div>
+        <h2 class="serif">O caminho do paciente</h2>
+        <p class="block-sub">Caminho 01: WhatsApp direto</p>
+        <div class="block-body">
+          <ol class="journey">
+            <li><span class="badge">1</span>
+              <div>
+                <div class="title">Anúncio Instagram</div>
+              </div>
+            </li>
+            <li><span class="badge">2</span>
+              <div>
+                <div class="title">Clique no botão "WhatsApp"</div>
+              </div>
+            </li>
+            <li><span class="badge">3</span>
+              <div>
+                <div class="title">Conversa com atendente/recepção</div>
+              </div>
+            </li>
+            <li><span class="badge">4</span>
+              <div>
+                <div class="title">Qualificação</div>
+                <div class="desc">Dúvidas, convênio, disponibilidade.</div>
+              </div>
+            </li>
+            <li><span class="badge">5</span>
+              <div>
+                <div class="title">Agendamento confirmado</div>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- BLOCK 07 -->
+      <section class="block" id="b7">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 07</div>
+        <h2 class="serif">As fases dos anúncios</h2>
+        <div class="block-body">
+          <div class="phase-card">
+            <div class="row"><span class="name">Aprendizado</span><span class="pct mono">Dias 1 a 14</span></div>
+            <div class="obj">Validar públicos, criativos e ofertas.</div>
+            <div class="trigger"><b>Gatilho de mudança de fase:</b> CPL estável e mínimo de 40 leads.</div>
+          </div>
+          <div class="phase-card">
+            <div class="row"><span class="name">Otimização</span><span class="pct mono">Dias 15 a 30</span></div>
+            <div class="obj">Escalar vencedores, cortar low performers.</div>
+            <div class="trigger"><b>Gatilho de mudança de fase:</b> CPL dentro da meta por 7 dias seguidos.</div>
+          </div>
+          <div class="phase-card">
+            <div class="row"><span class="name">Escala</span><span class="pct mono">A partir do dia 31 (contínua)</span>
+            </div>
+            <div class="obj">Aumentar verba nos melhores conjuntos.</div>
+            <div class="trigger"><b>Gatilho de mudança de fase:</b> Reavaliação mensal de saturação de público.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 08 -->
+      <section class="block" id="b8">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 08</div>
+        <h2 class="serif" style="margin-bottom:48px;">O que os anúncios vão dizer</h2>
+        <div class="block-body">
+          <div class="layer-grid">
+            <div class="layer-card">
+              <span class="layer-tag">1. Atração</span>
+              <div class="layer-desc">Conteúdo educacional/lifestyle, sem oferta direta, para quem ainda não conhece a
+                clínica.</div>
+            </div>
+            <div class="layer-card">
+              <span class="layer-tag">2. Confiança</span>
+              <div class="layer-desc">Autoridade, bastidores, prova social, para quem já segue mas ainda não decidiu.
+              </div>
+            </div>
+            <div class="layer-card">
+              <span class="layer-tag">3. Conversão</span>
+              <div class="layer-desc">Quebra de objeção e urgência, levando direto para o WhatsApp.</div>
+            </div>
+          </div>
+
+          <div class="grid2">
+            <div class="field"><label>Formatos de criativo</label>
+              <ul>
+                <li>Antes/depois com autorização</li>
+                <li>Vídeo depoimento de paciente (UGC)</li>
+                <li>Reels institucional da clínica e equipe</li>
+              </ul>
+            </div>
+            <div class="field"><label>Referências</label>
+              <p><a class="ref-link" href="#"
+                  onclick="return false;">https://drive.google.com/referencias-criativos-vita</a></p>
+            </div>
+            <div class="field full"><label>Copy de partida</label>
+              <p style="white-space:pre-wrap;">Resultado natural, sem exagero. Na Vitá Estética, cada procedimento é
+                pensado para valorizar o que já é seu, com acompanhamento médico em todas as etapas. Agende sua
+                avaliação.</p>
+            </div>
+          </div>
+
+          <div style="margin-top:32px;">
+            <div class="msg-front">
+              <div class="front-head">
+                <span class="front-num">1</span>
+                <span class="front-title">Harmonização Facial / Estética não invasiva</span>
+              </div>
+              <div class="front-body">
+                <div>
+                  <div class="angles-k">Ângulos de mensagem</div>
+                  <ul class="angles-list">
+                    <li>Naturalidade, "sem parecer mexido"</li>
+                    <li>Envelhecer bem, realce sutil</li>
+                    <li>Prova social e reputação local</li>
+                  </ul>
+                </div>
+                <div class="narrative">
+                  <div class="k">Exemplo de narrativa, referência de tom, não é copy pronta para publicar</div>
+                  <p>"Resultado natural, sem exagero. Cada procedimento pensado para valorizar o que já é seu, com
+                    acompanhamento médico em todas as etapas. Agende sua avaliação."</p>
+                </div>
+              </div>
+            </div>
+            <div class="msg-front">
+              <div class="front-head">
+                <span class="front-num">2</span>
+                <span class="front-title">Odontologia Estética (facetas, lentes em resina, clareamento)</span>
+              </div>
+              <div class="front-body">
+                <div>
+                  <div class="angles-k">Ângulos de mensagem</div>
+                  <ul class="angles-list">
+                    <li>Autoestima ao sorrir</li>
+                    <li>Resolver de uma vez, sem tratamento longo</li>
+                    <li>Confiança social, sorriso alinhado sem parecer falso</li>
+                  </ul>
+                </div>
+                <div class="narrative">
+                  <div class="k">Exemplo de narrativa, referência de tom, não é copy pronta para publicar</div>
+                  <p>"Vergonha de sorrir em fotos? Recupere a confiança com Facetas em Resina, resultado em 1 sessão,
+                    sem desgastar os dentes. Agende sua avaliação."</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 09 -->
+      <section class="block" id="b9">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 09</div>
+        <h2 class="serif" style="margin-bottom:48px;">Riscos que assumimos juntos</h2>
+        <div class="block-body">
+          <div class="risk-card">
+            <div class="row"><span class="desc">A recepção não responde rápido ao lead que chegou pelo anúncio (lead
+                esfria em minutos, não em horas).</span><span class="pill clinica">Identificado pela clínica</span>
+            </div>
+            <div class="plan"><b>Plano de ação:</b> definir um tempo máximo de resposta ao lead (ideal: minutos) e
+              priorizar o atendimento a leads de anúncio na rotina da recepção.</div>
+          </div>
+          <div class="risk-card">
+            <div class="row"><span class="desc">Falta de confirmação de agendamento, gerando falta do paciente no
+                dia.</span><span class="pill clinica">Identificado pela clínica</span></div>
+            <div class="plan"><b>Plano de ação:</b> implementar confirmação de agendamento (mensagem ou ligação) 1 dia
+              antes da consulta.</div>
+          </div>
+          <div class="risk-card">
+            <div class="row"><span class="desc">Ninguém é claramente responsável por atender o lead, mensagens
+                inconsistentes, contato perdido.</span><span class="pill clinica">Identificado pela clínica</span></div>
+            <div class="plan"><b>Plano de ação:</b> definir uma única pessoa responsável por cada lead até o
+              agendamento, evitando que a mensagem se perca entre a equipe.</div>
+          </div>
+          <div class="risk-card">
+            <div class="row"><span class="desc">O anúncio é genérico demais e atrai gente só curiosa ou pesquisando
+                preço, não paciente pronto para agendar.</span><span class="pill gestor">Identificado pelo gestor</span>
+            </div>
+            <div class="plan"><b>Plano de ação:</b> refinar segmentação e criativos ao longo da fase de aprendizado para
+              qualificar melhor quem chega pelo anúncio.</div>
+          </div>
+          <div class="risk-card">
+            <div class="row"><span class="desc">Sazonalidade do negócio não é avisada com antecedência, e o cliente
+                estranha quando o resultado varia.</span><span class="pill clinica">Identificado pela clínica</span>
+            </div>
+            <div class="plan"><b>Plano de ação:</b> a clínica avisa com antecedência os períodos de sazonalidade
+              (feriados, alta/baixa temporada) para ajustar a expectativa de resultado.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 10 -->
+      <section class="block" id="b10">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 10</div>
+        <h2 class="serif">O que precisa de você</h2>
+        <div class="block-body">
+          <table class="access">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Prazo</th>
+                <th>Responsável</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Acesso de administrador ao Business Manager (Meta)</td>
+                <td class="prazo">Imediato, máximo 2 dias</td>
+                <td>Cliente</td>
+              </tr>
+              <tr>
+                <td>Acesso à página do Instagram/Facebook (ou convite como parceiro)</td>
+                <td class="prazo">Imediato, junto do acesso ao BM</td>
+                <td>Cliente</td>
+              </tr>
+              <tr>
+                <td>Definir responsável único por lead, configurado no CRM</td>
+                <td class="prazo">Imediato</td>
+                <td>Cliente</td>
+              </tr>
+              <tr>
+                <td>Definir quem responde os leads no WhatsApp</td>
+                <td class="prazo">Antes de começar</td>
+                <td>Cliente</td>
+              </tr>
+              <tr>
+                <td>Definir e comunicar o tempo máximo de resposta ao lead (ideal: minutos) para a equipe de recepção
+                </td>
+                <td class="prazo">Antes de começar</td>
+                <td>Cliente</td>
+              </tr>
+              <tr>
+                <td>Enviar materiais/fotos/vídeos para os criativos iniciais</td>
+                <td class="prazo">Até 3 dias</td>
+                <td>Cliente</td>
+              </tr>
+              <tr>
+                <td>Forma de pagamento ativa na conta de anúncios</td>
+                <td class="prazo">Semana 1</td>
+                <td>Cliente</td>
+              </tr>
+              <tr>
+                <td>Acesso ao WhatsApp Business (número principal)</td>
+                <td class="prazo">Semana 1</td>
+                <td>Cliente</td>
+              </tr>
+              <tr>
+                <td>Configurar Business Manager, pixel e públicos</td>
+                <td class="prazo">Semana 1</td>
+                <td>Agência</td>
+              </tr>
+              <tr>
+                <td>Criar e subir os primeiros criativos</td>
+                <td class="prazo">Semana 1, até o 7º dia</td>
+                <td>Agência</td>
+              </tr>
+              <tr>
+                <td>Implementar CRM com processo de atendimento/objeções (inclui roteiro de objeções de preço e
+                  automação de confirmação de agendamento)</td>
+                <td class="prazo">10 a 15 dias</td>
+                <td>Agência</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- BLOCK 11 -->
+      <section class="block" id="b11">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 11</div>
+        <h2 class="serif" style="margin-bottom:48px;">Como vamos trabalhar juntos</h2>
+        <div class="block-body grid2">
+          <div class="field comms-card"><label>Canal de comunicação</label>
+            <p style="display:flex;align-items:center;gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366" style="flex:0 0 auto;" aria-hidden="true">
+                <path
+                  d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.71.45 3.38 1.3 4.85L2.05 22l5.36-1.4a9.9 9.9 0 0 0 4.63 1.18h.01c5.46 0 9.9-4.45 9.9-9.9 0-2.65-1.03-5.13-2.9-7-1.88-1.88-4.37-2.88-7.01-2.88Zm0 18.13h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.18.83.85-3.1-.2-.32a8.2 8.2 0 0 1-1.26-4.4c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.55-3.7 8.24-8.21 8.24Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.24-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.24-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.24-.86.85-.86 2.07s.89 2.4 1.01 2.56c.12.17 1.75 2.67 4.24 3.74.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.28Z" />
+              </svg>
+              <span>Grupo dedicado no WhatsApp entre clínica<br>e gestor de tráfego.</span>
+            </p>
+          </div>
+          <div class="field comms-card"><label>Frequência de report</label>
+            <p>Relatório mensal + 1 reunião mensal de alinhamento.</p>
+          </div>
+          <div class="field full"><label>O que você pode esperar</label>
+            <ul>
+              <li>Transparência total sobre números</li>
+              <li>Suporte de segunda a sexta das 9h às 19h com resposta em até 3 horas</li>
+              <li>Recomendações proativas: não vamos só executar, vamos pensar estrategicamente com você</li>
+            </ul>
+          </div>
+        </div>
+        <div class="block-body" style="margin-top:32px;">
+          <div class="partnership-box full">
+            <h3>Na sua avaliação, o que precisa acontecer para a parceria valer a pena</h3>
+            <p>"Ver a agenda cheia de forma previsível, sem eu precisar me preocupar com marketing no dia a dia."</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOCK 12 -->
+      <section class="block" id="b12">
+        <img class="block-num" src="public/logo-simbolo águia-resili-fundo-transparente.png" alt="">
+        <div class="block-eyebrow">Bloco 12</div>
+        <h2 class="serif" style="margin-bottom:48px;">Os primeiros 30 dias</h2>
+        <div class="block-body">
+          <div class="timeline">
+            <div class="event">
+              <div class="day mono">05/08</div>
+              <div class="date mono">(quarta-feira), Dia 0</div>
+              <div class="desc">Início oficial da parceria: hoje, essa reunião e alinhamento de expectativas.</div>
+            </div>
+            <div class="event">
+              <div class="day mono">07/08</div>
+              <div class="date mono">(sexta-feira), Dia 2</div>
+              <div class="desc">Estruturação do Marketing: configuração da captação de leads (estratégia, conta de
+                anúncios e anúncios) e estruturação do Posicionamento/Conteúdos (quando contratado).</div>
+            </div>
+            <div class="event">
+              <div class="day mono">12/08</div>
+              <div class="date mono">(quarta-feira), Dia 7</div>
+              <div class="desc">Lançamento das campanhas: início da geração de demanda.</div>
+            </div>
+            <div class="event">
+              <div class="day mono">20/08</div>
+              <div class="date mono">(quinta-feira), Dia 15</div>
+              <div class="desc">Primeiros leads e possíveis primeiros agendamentos: primeira leitura de dados, ajustes
+                iniciais de segmentação e otimização dos resultados da primeira semana. Primeiro relatório de meio de
+                período, com checagem de CPL e volume de leads.</div>
+            </div>
+            <div class="event">
+              <div class="day mono">04/09</div>
+              <div class="date mono">(sexta-feira), Dia 30</div>
+              <div class="desc">Fechamento do primeiro ciclo: resultados tendem a melhorar e estabilizar.</div>
+            </div>
+          </div>
+          <details class="not-happen">
+            <summary>O que NÃO vai acontecer</summary>
+            <ul>
+              <li>Resultado explosivo imediato, pois o algoritmo ainda está aprendendo.</li>
+              <li>Mudança de estratégia a cada poucos dias, pois testes precisam de tempo pra gerar dado confiável.</li>
+              <li>Não podemos deixar a verba acabar em hipótese alguma, pois perde performance na campanha.</li>
+            </ul>
+          </details>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===================== CLOSING ===================== -->
+  <div id="closing">
+    <div class="eyebrow">Resili Sevenn</div>
+    <h1 class="serif">Obrigado</h1>
+    <p class="tag">Qualquer dúvida, fale com a gente no grupo dedicado no WhatsApp, vamos construir isso juntos.</p>
+  </div>
+
+  <script>
+    (function () {
+      var sections = Array.prototype.slice.call(document.querySelectorAll('main.content section.block'));
+      var links = Array.prototype.slice.call(document.querySelectorAll('nav.sidebar a'));
+      var progress = document.getElementById('progress');
+
+      window.addEventListener('scroll', function () {
+        var h = document.documentElement;
+        var scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+        progress.style.width = scrolled + '%';
+      });
+
+      if (!sections.length || !links.length) return;
+
+      var linkById = {};
+      links.forEach(function (link) {
+        linkById[link.getAttribute('href').slice(1)] = link;
+      });
+
+      var sectionById = {};
+      sections.forEach(function (section) {
+        sectionById[section.id] = section;
+      });
+
+      var current = null;
+      function setActive(id) {
+        if (id === current) return;
+        current = id;
+        links.forEach(function (link) { link.classList.remove('active'); });
+        sections.forEach(function (section) { section.classList.remove('active'); });
+        var link = linkById[id];
+        if (link) link.classList.add('active');
+        var section = sectionById[id];
+        if (section) section.classList.add('active');
+      }
+
+      var observer = new IntersectionObserver(
+        function (entries) {
+          var visible = entries.filter(function (e) { return e.isIntersecting && e.intersectionRatio >= 0.5; });
+          if (!visible.length) return;
+          visible.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+          setActive(visible[0].target.id);
+        },
+        { rootMargin: '0px', threshold: 0.5 }
+      );
+
+      sections.forEach(function (section) { observer.observe(section); });
+    })();
+  </script>
+
+</body>
+
+</html>

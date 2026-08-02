@@ -104,7 +104,7 @@ export function OnboardingView() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-obsidian px-4">
+    <div className="flex min-h-screen items-center justify-center bg-brand-dark px-4">
       <div className="w-full max-w-sm text-center">
         <img src="/logo-resili-sevenn.png" alt="Resili Sevenn" className="mx-auto mb-6 h-8" />
 

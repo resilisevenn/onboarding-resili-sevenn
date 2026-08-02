@@ -68,7 +68,7 @@ export function emptyPayload(): OnboardingPayload {
       canalComunicacao: CANAL_COMUNICACAO_PADRAO,
       frequenciaReport: FREQUENCIA_REPORT_PADRAO,
       oQuePodeEsperarTemplateId: null,
-      oQuePodeEsperar: '',
+      oQuePodeEsperar: [],
       motivoParceriaValerAPena: '',
       usarCitacaoPadrao: false,
       citacaoPadraoId: null,
