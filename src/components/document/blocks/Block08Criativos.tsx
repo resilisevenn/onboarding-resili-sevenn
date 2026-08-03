@@ -37,18 +37,6 @@ export function Block08Criativos({
     <div>
       <BlockHeading number={8} title="O que os anúncios vão dizer" />
 
-      {editable && onChange && (
-        <label className="mb-6 flex items-start gap-2 rounded-xl border border-brand/30 bg-brand/5 p-4 text-sm text-obsidian/80">
-          <input
-            type="checkbox"
-            checked={data.temPosicionamento}
-            onChange={(e) => onChange({ ...data, temPosicionamento: e.target.checked })}
-            className="mt-0.5 h-4 w-4 shrink-0 accent-brand"
-          />
-          <span>Cliente já tem conteúdo/presença digital aquecendo o público (Posicionamento com a gente ou com outra equipe)</span>
-        </label>
-      )}
-
       {data.temPosicionamento ? (
         <div className="mb-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
           {LAYERS.map((layer, i) => (
@@ -69,7 +57,7 @@ export function Block08Criativos({
           <p className="mb-1 font-bold">Sem Posicionamento: conversão direta</p>
           <p className="text-[15px] leading-relaxed text-obsidian/75">
             Não existe conteúdo orgânico aquecendo o público antes do anúncio. O anúncio precisa fazer esse trabalho sozinho: o
-            formato principal tende a ser Quebra de Objeção ou CTA Direta, indo direto ao ponto com o lead frio.
+            formato principal tende a ser Resultado final, Antes ou depois, ou CTA Direta, indo direto ao ponto com o lead frio.
           </p>
         </div>
       )}

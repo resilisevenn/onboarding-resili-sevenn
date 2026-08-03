@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { createOnboarding } from '../../lib/onboardings'
+import { createOnboarding, garantirSessaoValida } from '../../lib/onboardings'
 import type { OnboardingPayload } from '../../types/onboarding'
 import { ExpandableSection } from '../ui/ExpandableSection'
 import { CurrencyField, ObjectListField, PercentField, StringListField, TextAreaField, TextField } from './fields'
@@ -34,7 +34,10 @@ export function OnboardingFormPage() {
   }
 
   async function handleSubmit() {
-    if (!session) return
+    if (!session) {
+      setError('Sua sessão expirou. Faça login novamente para gerar o onboarding.')
+      return
+    }
     if (!clientName.trim() || whatsapp.replace(/\D/g, '').length < 4) {
       setError('Preencha nome da clínica e WhatsApp (mínimo 4 dígitos).')
       return
@@ -42,6 +45,10 @@ export function OnboardingFormPage() {
     setError(null)
     setSubmitting(true)
     try {
+      if (!(await garantirSessaoValida())) {
+        setError('Sua sessão expirou. Faça login novamente para gerar o onboarding.')
+        return
+      }
       const row = await createOnboarding({
         clientName,
         whatsapp,

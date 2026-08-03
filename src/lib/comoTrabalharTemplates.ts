@@ -1,4 +1,4 @@
-export const CANAL_COMUNICACAO_PADRAO = 'Grupo dedicado no WhatsApp entre clínica e gestor de tráfego.'
+export const CANAL_COMUNICACAO_PADRAO = 'Grupo dedicado no WhatsApp entre clínica e equipe.'
 export const FREQUENCIA_REPORT_PADRAO = 'Relatório mensal + 1 reunião mensal de alinhamento.'
 
 export interface OQuePodeEsperarTemplate {

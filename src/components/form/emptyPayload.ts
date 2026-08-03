@@ -28,9 +28,9 @@ export function emptyPayload(): OnboardingPayload {
         { nome: 'intermediaria', metaFaturamento: 0 },
         { nome: 'super_meta', metaFaturamento: 0 },
       ],
-      taxaLeadParaAgendamento: 0.3,
+      taxaLeadParaAgendamento: 0.15,
       taxaAgendamentoParaComparecimento: 0.7,
-      taxaComparecimentoParaFechamento: 0.3,
+      taxaComparecimentoParaFechamento: 0.7,
       cplEstimado: 0,
     },
     bloco4_paraQuemAnunciar: {

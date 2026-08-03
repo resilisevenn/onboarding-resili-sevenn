@@ -1,10 +1,9 @@
 import type { ReactNode } from 'react'
 import type { Bloco2OndeVoceEsta } from '../../../types/onboarding'
 import { formatCurrency, formatNumber, formatPercent } from '../../../lib/format'
-import { calcPacientesCobertura } from '../../../lib/calculations'
+import { calcFaturamentoMedio, calcPacientesCobertura } from '../../../lib/calculations'
 import { BlockHeading } from '../BlockHeading'
 import { EditableNumber, EditablePercent } from '../EditableField'
-import { AlocacaoVerbaField } from '../../form/AlocacaoVerbaField'
 
 export function Block02OndeVoceEsta({
   data,
@@ -16,30 +15,23 @@ export function Block02OndeVoceEsta({
   onChange?: (data: Bloco2OndeVoceEsta) => void
 }) {
   const pacientesCobertura = calcPacientesCobertura(data)
-  const faturamentoMedio = data.faturamentoUltimos3Meses.reduce((sum, v) => sum + v, 0) / data.faturamentoUltimos3Meses.length
+  const faturamentoMedio = calcFaturamentoMedio(data)
 
   return (
     <div>
       <BlockHeading number={2} title="Onde você está hoje" subtitle="A linha de base a partir da qual medimos o progresso." />
 
-      <div className="mb-8 grid grid-cols-2 gap-5 md:grid-cols-4">
+      <div className="mb-8 grid grid-cols-2 gap-5 md:grid-cols-5">
         <Stat label="Faturamento médio (últimos 3 meses)">
           {editable && onChange ? (
-            <div className="flex flex-wrap gap-2">
-              {data.faturamentoUltimos3Meses.map((v, i) => (
-                <EditableNumber
-                  key={i}
-                  value={v}
-                  prefix="R$"
-                  className="w-28 font-normal"
-                  onChange={(next) => {
-                    const copy = [...data.faturamentoUltimos3Meses] as [number, number, number]
-                    copy[i] = next
-                    onChange({ ...data, faturamentoUltimos3Meses: copy })
-                  }}
-                />
-              ))}
-            </div>
+            <EditableNumber
+              value={faturamentoMedio}
+              prefix="R$"
+              className="font-normal"
+              // Editar a média grava o mesmo valor nos 3 meses: a média de três valores iguais
+              // é o próprio valor, então o número exibido é exatamente o que foi digitado.
+              onChange={(v) => onChange({ ...data, faturamentoUltimos3Meses: [v, v, v] })}
+            />
           ) : (
             <p className="font-mono text-[clamp(22px,3vw,32px)] font-normal leading-none text-obsidian">
               {formatCurrency(faturamentoMedio)}
@@ -85,15 +77,6 @@ export function Block02OndeVoceEsta({
           )}
         </Stat>
       </div>
-
-      {editable && onChange && (
-        <div className="mb-8 max-w-sm">
-          <AlocacaoVerbaField
-            value={data.percentualCaptacaoLeads}
-            onChange={(v) => onChange({ ...data, percentualCaptacaoLeads: v })}
-          />
-        </div>
-      )}
 
       <div className="rounded-2xl border border-brand/35 bg-gradient-to-br from-brand/10 to-brand/[0.04] p-6 shadow-[0_4px_14px_rgba(89,165,44,0.08)]">
         <p className="text-base text-obsidian">

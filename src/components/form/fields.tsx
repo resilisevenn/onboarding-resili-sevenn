@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
 import { cn } from '../../lib/utils'
+import { formatPtBrNumber, parsePtBrNumber } from '../../lib/format'
 
 const inputClass =
   'w-full rounded border border-white/10 bg-obsidian-field px-3 py-2 text-bone outline-none focus:border-brand'
@@ -103,17 +104,6 @@ export function PercentField({
       </div>
     </label>
   )
-}
-
-function parsePtBrNumber(text: string): number {
-  const normalized = text.replace(/\./g, '').replace(',', '.')
-  const parsed = Number(normalized)
-  return Number.isFinite(parsed) ? parsed : NaN
-}
-
-function formatPtBrNumber(value: number): string {
-  if (Number.isNaN(value)) return ''
-  return value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })
 }
 
 /** Campo monetário: exibe/aceita formato pt-BR (ex: 20.000,50), armazena número puro (20000.5). */

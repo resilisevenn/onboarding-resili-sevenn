@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import {
+  garantirSessaoValida,
   getOnboardingBySlug,
   getOnboardingPublic,
   updateOnboardingPayload,
@@ -51,7 +52,10 @@ export function OnboardingView() {
   }, [canEdit, slug])
 
   async function handleSave(payload: OnboardingPayload) {
-    if (!editorRow || !session) return
+    if (!editorRow || !session) throw new Error('Sua sessão expirou. Faça login novamente para salvar.')
+    if (!(await garantirSessaoValida())) {
+      throw new Error('Sua sessão expirou. Faça login novamente para salvar.')
+    }
     await updateOnboardingPayload(editorRow.id, payload, session.user.id)
     setEditorRow({ ...editorRow, payload, last_edited_at: new Date().toISOString(), last_edited_by: session.user.id })
   }

@@ -48,9 +48,17 @@ const RISCO_RESPONSAVEL_INDEFINIDO = {
 }
 
 const RISCO_ANUNCIO_GENERICO = {
-  descricao: 'O anúncio é genérico demais e atrai gente só curiosa ou pesquisando preço, não paciente pronto para agendar.',
+  descricao:
+    'Sem posicionamento, quem chega pelo anúncio ainda não conhece o profissional: nível de confiança e consciência baixos, muitas vezes é o primeiro contato e a pessoa ainda compara por preço.',
   origem: 'gestor' as const,
   planoDeAcao: 'Refinar segmentação e criativos ao longo da fase de aprendizado para qualificar melhor quem chega pelo anúncio.',
+}
+
+const RISCO_SEM_CONTEUDO_ATIVO = {
+  descricao:
+    'Não existe presença orgânica (Instagram, conteúdo educativo, prova social contínua) para o lead consultar antes ou depois de ver o anúncio: quem chega ainda não conhece o profissional, nível de confiança e consciência baixos, muitas vezes é o primeiro contato e a pessoa ainda compara por preço.',
+  origem: 'clinica' as const,
+  planoDeAcao: 'Recomendar a clínica manter um mínimo de conteúdo orgânico ativo, mesmo sem a frente de Posicionamento contratada.',
 }
 
 export const RISCOS_TEMPLATES: RiscoTemplate[] = [
@@ -58,13 +66,27 @@ export const RISCOS_TEMPLATES: RiscoTemplate[] = [
     id: 'so_trafego',
     nome: 'Cliente só contratou Tráfego Pago',
     frentesContratadas: 'Sem Posicionamento, sem Estruturação Comercial, sem Atendimento Ouro (CRC).',
-    riscos: [RISCO_RECEPCAO_LENTA, RISCO_NO_SHOW, RISCO_SEM_RASTREIO, RISCO_OBJECAO_PRECO, RISCO_SAZONALIDADE],
+    riscos: [
+      RISCO_RECEPCAO_LENTA,
+      RISCO_NO_SHOW,
+      RISCO_SEM_RASTREIO,
+      RISCO_OBJECAO_PRECO,
+      RISCO_SEM_CONTEUDO_ATIVO,
+      RISCO_SAZONALIDADE,
+    ],
   },
   {
     id: 'trafego_comercial',
     nome: 'Cliente contratou Tráfego + Estruturação Comercial',
     frentesContratadas: 'Tem CRM/processo comercial, mas sem Posicionamento e sem Atendimento Ouro (CRC).',
-    riscos: [RISCO_RECEPCAO_LENTA, RISCO_NO_SHOW, RISCO_RESPONSAVEL_INDEFINIDO, RISCO_ANUNCIO_GENERICO, RISCO_SAZONALIDADE],
+    riscos: [
+      RISCO_RECEPCAO_LENTA,
+      RISCO_NO_SHOW,
+      RISCO_RESPONSAVEL_INDEFINIDO,
+      RISCO_ANUNCIO_GENERICO,
+      RISCO_SEM_CONTEUDO_ATIVO,
+      RISCO_SAZONALIDADE,
+    ],
   },
   {
     id: 'trafego_posicionamento_comercial',

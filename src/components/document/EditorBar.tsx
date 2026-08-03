@@ -15,7 +15,7 @@ export function EditorBar({
   onSave: () => void
 }) {
   return (
-    <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-brand/30 bg-obsidian px-6 py-2.5 text-sm text-bone md:px-12">
+    <div className="sticky top-0 z-50 flex items-center justify-between gap-4 border-b border-brand/30 bg-obsidian px-6 py-2.5 text-sm text-bone md:px-12">
       <div className="flex items-center gap-2">
         <Pencil className="h-4 w-4 text-brand" />
         <span>Modo edição — visível apenas para você</span>

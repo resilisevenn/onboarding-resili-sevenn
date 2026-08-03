@@ -42,51 +42,77 @@ export function Block03OndeQuerChegar({
       />
 
       <div className="mb-8 text-sm text-obsidian/60">
+        <p className="mb-2">Taxas de conversão usadas (histórico/teórico):</p>
         {editable && onChange ? (
-          <p className="flex flex-wrap items-center gap-x-1.5 gap-y-2">
-            Taxas de conversão usadas (histórico/teórico):
-            <br />
-            lead → agendamento
-            <EditablePercent value={data.taxaLeadParaAgendamento} onChange={(v) => onChange({ ...data, taxaLeadParaAgendamento: v })} />
-            ,
-            <br />
-            agendamento → comparecimento
-            <EditablePercent
-              value={data.taxaAgendamentoParaComparecimento}
-              onChange={(v) => onChange({ ...data, taxaAgendamentoParaComparecimento: v })}
-            />
-            ,
-            <br />
-            comparecimento → fechamento
-            <EditablePercent
-              value={data.taxaComparecimentoParaFechamento}
-              onChange={(v) => onChange({ ...data, taxaComparecimentoParaFechamento: v })}
-            />
-            .
-            <br />
-            Taxa conv. leads → fechamento (calculada automaticamente):{' '}
-            <span className="font-mono text-obsidian">{formatPercent(taxaLeadParaFechamento)}</span>.
-            <br />
-            CPL estimado:
-            <EditableNumber value={data.cplEstimado} step={0.01} prefix="R$" onChange={(v) => onChange({ ...data, cplEstimado: v })} />
-          </p>
+          <ul className="list-disc space-y-2 pl-5 marker:text-brand">
+            <li>
+              <span className="flex flex-wrap items-center gap-x-1.5">
+                lead → agendamento
+                <EditablePercent
+                  value={data.taxaLeadParaAgendamento}
+                  className="w-14"
+                  onChange={(v) => onChange({ ...data, taxaLeadParaAgendamento: v })}
+                />
+              </span>
+            </li>
+            <li>
+              <span className="flex flex-wrap items-center gap-x-1.5">
+                agendamento → comparecimento
+                <EditablePercent
+                  value={data.taxaAgendamentoParaComparecimento}
+                  className="w-14"
+                  onChange={(v) => onChange({ ...data, taxaAgendamentoParaComparecimento: v })}
+                />
+              </span>
+            </li>
+            <li>
+              <span className="flex flex-wrap items-center gap-x-1.5">
+                comparecimento → fechamento
+                <EditablePercent
+                  value={data.taxaComparecimentoParaFechamento}
+                  className="w-14"
+                  onChange={(v) => onChange({ ...data, taxaComparecimentoParaFechamento: v })}
+                />
+              </span>
+            </li>
+            <li>
+              Taxa conv. leads → fechamento (calculada automaticamente):{' '}
+              <span className="font-mono text-obsidian">{formatPercent(taxaLeadParaFechamento)}</span>
+            </li>
+            <li>
+              <span className="flex flex-wrap items-center gap-x-1.5">
+                CPL estimado:
+                <EditableNumber
+                  value={data.cplEstimado}
+                  step={0.01}
+                  prefix="R$"
+                  className="w-20"
+                  onChange={(v) => onChange({ ...data, cplEstimado: v })}
+                />
+              </span>
+            </li>
+          </ul>
         ) : (
-          <p>
-            Taxas de conversão usadas (histórico/teórico):
-            <br />
-            lead → agendamento <span className="font-mono text-obsidian">{formatPercent(data.taxaLeadParaAgendamento)}</span>,
-            <br />
-            agendamento → comparecimento{' '}
-            <span className="font-mono text-obsidian">{formatPercent(data.taxaAgendamentoParaComparecimento)}</span>,
-            <br />
-            comparecimento → fechamento{' '}
-            <span className="font-mono text-obsidian">{formatPercent(data.taxaComparecimentoParaFechamento)}</span>.
-            <br />
-            Taxa conv. leads → fechamento (calculada automaticamente):{' '}
-            <span className="font-mono text-obsidian">{formatPercent(taxaLeadParaFechamento)}</span>.
-            <br />
-            CPL estimado: <span className="font-mono text-obsidian">{formatCurrency(data.cplEstimado)}</span>.
-          </p>
+          <ul className="list-disc space-y-1 pl-5 marker:text-brand">
+            <li>
+              lead → agendamento <span className="font-mono text-obsidian">{formatPercent(data.taxaLeadParaAgendamento)}</span>
+            </li>
+            <li>
+              agendamento → comparecimento{' '}
+              <span className="font-mono text-obsidian">{formatPercent(data.taxaAgendamentoParaComparecimento)}</span>
+            </li>
+            <li>
+              comparecimento → fechamento{' '}
+              <span className="font-mono text-obsidian">{formatPercent(data.taxaComparecimentoParaFechamento)}</span>
+            </li>
+            <li>
+              Taxa conv. leads → fechamento (calculada automaticamente):{' '}
+              <span className="font-mono text-obsidian">{formatPercent(taxaLeadParaFechamento)}</span>
+            </li>
+            <li>
+              CPL estimado: <span className="font-mono text-obsidian">{formatCurrency(data.cplEstimado)}</span>
+            </li>
+          </ul>
         )}
       </div>
 
@@ -94,9 +120,6 @@ export function Block03OndeQuerChegar({
         <p>
           Ponto de partida (faturamento médio atual): <span className="font-mono text-obsidian">{formatCurrency(faturamentoAtual)}</span>.
           As metas abaixo representam o quanto falta faturar a mais para sair desse patamar.
-          <br />
-          Alocação da verba: <span className="font-mono text-obsidian">{formatPercent(bloco2.percentualCaptacaoLeads)}</span> em
-          captação de leads, o restante em geração de base/audiência.
         </p>
       </div>
 

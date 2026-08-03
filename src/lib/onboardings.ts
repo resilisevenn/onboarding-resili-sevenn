@@ -3,6 +3,25 @@ import type { OnboardingPayload } from '../types/onboarding'
 
 export type OnboardingStatus = 'active' | 'paused'
 
+/**
+ * Falha a promise se ela não assentar no prazo. Sem isso, uma request pendurada
+ * (refresh de token travado, rede caída) deixa a UI presa em estado de carregando
+ * para sempre, porque o finally que reabilita o botão nunca roda.
+ */
+async function withTimeout<T>(promise: PromiseLike<T>, ms: number, mensagemErro: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error(mensagemErro)), ms)
+      }),
+    ])
+  } finally {
+    if (timer) clearTimeout(timer)
+  }
+}
+
 export interface OnboardingRow {
   id: string
   slug: string
@@ -41,6 +60,34 @@ export function extractAccessCode(whatsapp: string): string {
   return digits.slice(-4)
 }
 
+/**
+ * Confirma que ainda existe sessão válida antes de gravar. A sessão no contexto do React
+ * pode estar em memória com o token já expirado, e nesse caso o insert espera um refresh
+ * que nem sempre completa.
+ *
+ * Importante: só retorna false quando o Supabase respondeu e confirmou que não há sessão.
+ * Se getSession() der timeout ou erro de rede, isso NÃO significa sessão expirada — trata
+ * como "não deu para confirmar" e deixa a chamada seguinte (o insert/update real) decidir,
+ * em vez de bloquear o usuário com uma mensagem errada.
+ */
+export async function garantirSessaoValida(): Promise<boolean> {
+  try {
+    const { data, error } = await withTimeout(
+      supabase.auth.getSession(),
+      10000,
+      'timeout ao confirmar sessão',
+    )
+    if (error) {
+      console.warn('garantirSessaoValida: erro ao consultar sessão, seguindo mesmo assim', error)
+      return true
+    }
+    return !!data.session
+  } catch (e) {
+    console.warn('garantirSessaoValida: getSession não respondeu a tempo, seguindo mesmo assim', e)
+    return true
+  }
+}
+
 export async function createOnboarding(params: {
   clientName: string
   whatsapp: string
@@ -50,17 +97,21 @@ export async function createOnboarding(params: {
   const slug = generateSlug(params.clientName)
   const accessCode = extractAccessCode(params.whatsapp)
 
-  const { data, error } = await supabase
-    .from('onboardings')
-    .insert({
-      slug,
-      access_code: accessCode,
-      client_name: params.clientName,
-      payload: params.payload,
-      created_by: params.createdBy,
-    })
-    .select()
-    .single()
+  const { data, error } = await withTimeout(
+    supabase
+      .from('onboardings')
+      .insert({
+        slug,
+        access_code: accessCode,
+        client_name: params.clientName,
+        payload: params.payload,
+        created_by: params.createdBy,
+      })
+      .select()
+      .single(),
+    20000,
+    'A criação demorou demais e foi cancelada. Verifique sua conexão e tente novamente.',
+  )
 
   if (error) throw error
   return data as OnboardingRow
@@ -89,10 +140,14 @@ export async function getOnboardingBySlug(slug: string): Promise<OnboardingRow |
 }
 
 export async function updateOnboardingPayload(id: string, payload: OnboardingPayload, editedBy: string): Promise<void> {
-  const { error } = await supabase
-    .from('onboardings')
-    .update({ payload, last_edited_at: new Date().toISOString(), last_edited_by: editedBy })
-    .eq('id', id)
+  const { error } = await withTimeout(
+    supabase
+      .from('onboardings')
+      .update({ payload, last_edited_at: new Date().toISOString(), last_edited_by: editedBy })
+      .eq('id', id),
+    20000,
+    'O salvamento demorou demais e foi cancelado. Verifique sua conexão e tente novamente.',
+  )
   if (error) throw error
 }
 

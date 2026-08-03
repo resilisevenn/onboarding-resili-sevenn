@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
 import { cn } from '../../lib/utils'
+import { formatPtBrNumber, parsePtBrNumber } from '../../lib/format'
 
 const editableClass =
   'w-full rounded border border-brand/30 bg-brand/5 px-2 py-1 outline-none focus:border-brand focus:bg-brand/10'
@@ -61,11 +62,13 @@ export function EditableNumber({
   step?: number
   prefix?: string
 }) {
-  const [text, setText] = useState(String(value))
+  const [text, setText] = useState(() => formatPtBrNumber(value))
+  const [focused, setFocused] = useState(false)
 
+  // Enquanto o campo está em foco o texto digitado manda, para não reformatar no meio da digitação.
   useEffect(() => {
-    setText(String(value))
-  }, [value])
+    if (!focused) setText(formatPtBrNumber(value))
+  }, [value, focused])
 
   return (
     <span className="inline-flex items-center gap-1">
@@ -75,14 +78,18 @@ export function EditableNumber({
         inputMode="decimal"
         value={text}
         step={step}
+        onFocus={() => setFocused(true)}
         onChange={(e) => {
           const next = e.target.value
-          if (!/^-?\d*\.?\d*$/.test(next)) return
+          if (!/^-?[\d.,]*$/.test(next)) return
           setText(next)
-          const parsed = Number.parseFloat(next)
+          const parsed = parsePtBrNumber(next)
           if (Number.isFinite(parsed)) onChange(parsed)
         }}
-        onBlur={() => setText(String(value))}
+        onBlur={() => {
+          setFocused(false)
+          setText(formatPtBrNumber(value))
+        }}
         className={cn(editableClass, 'font-mono', className)}
       />
     </span>

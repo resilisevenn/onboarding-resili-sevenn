@@ -52,6 +52,7 @@ export function OnboardingDocument({
   const [savedAt, setSavedAt] = useState<Date | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
+  const [showSavedBadge, setShowSavedBadge] = useState(false)
 
   useEffect(() => {
     function onScroll() {
@@ -119,6 +120,8 @@ export function OnboardingDocument({
       await onSave(draft)
       setDirty(false)
       setSavedAt(new Date())
+      setShowSavedBadge(true)
+      setTimeout(() => setShowSavedBadge(false), 4000)
     } catch (e) {
       setSaveError(e instanceof Error ? e.message : 'Erro ao salvar.')
     } finally {
@@ -126,11 +129,13 @@ export function OnboardingDocument({
     }
   }
 
+  const showEditorBar = editable && (dirty || saving || !!saveError || showSavedBadge)
+
   const data = editable ? draft : payload
 
   return (
     <div className="min-h-screen bg-bone text-obsidian">
-      {editable && <EditorBar dirty={dirty} saving={saving} savedAt={savedAt} error={saveError} onSave={handleSave} />}
+      {showEditorBar && <EditorBar dirty={dirty} saving={saving} savedAt={savedAt} error={saveError} onSave={handleSave} />}
 
       <div className="fixed left-0 top-0 z-[100] h-[3px] bg-gradient-to-r from-brand to-brand-light transition-[width] duration-100 ease-linear" style={{ width: `${progress}%` }} />
 

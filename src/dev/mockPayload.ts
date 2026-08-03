@@ -132,9 +132,16 @@ export const MOCK_PAYLOAD: OnboardingPayload = {
         planoDeAcao: 'Definir uma única pessoa responsável por cada lead até o agendamento, evitando que a mensagem se perca entre a equipe.',
       },
       {
-        descricao: 'O anúncio é genérico demais e atrai gente só curiosa ou pesquisando preço, não paciente pronto para agendar.',
+        descricao:
+          'Sem posicionamento, quem chega pelo anúncio ainda não conhece o profissional: nível de confiança e consciência baixos, muitas vezes é o primeiro contato e a pessoa ainda compara por preço.',
         origem: 'gestor',
         planoDeAcao: 'Refinar segmentação e criativos ao longo da fase de aprendizado para qualificar melhor quem chega pelo anúncio.',
+      },
+      {
+        descricao:
+          'Não existe presença orgânica (Instagram, conteúdo educativo, prova social contínua) para o lead consultar antes ou depois de ver o anúncio: quem chega ainda não conhece o profissional, nível de confiança e consciência baixos, muitas vezes é o primeiro contato e a pessoa ainda compara por preço.',
+        origem: 'clinica',
+        planoDeAcao: 'Recomendar a clínica manter um mínimo de conteúdo orgânico ativo, mesmo sem a frente de Posicionamento contratada.',
       },
       {
         descricao: 'Sazonalidade do negócio não é avisada com antecedência, e o cliente estranha quando o resultado varia.',
@@ -168,7 +175,7 @@ export const MOCK_PAYLOAD: OnboardingPayload = {
     ],
   },
   bloco11_comoTrabalhar: {
-    canalComunicacao: 'Grupo dedicado no WhatsApp entre clínica e gestor de tráfego.',
+    canalComunicacao: 'Grupo dedicado no WhatsApp entre clínica e equipe.',
     frequenciaReport: 'Relatório mensal + 1 reunião mensal de alinhamento.',
     oQuePodeEsperarTemplateId: 'consultiva',
     oQuePodeEsperar: [

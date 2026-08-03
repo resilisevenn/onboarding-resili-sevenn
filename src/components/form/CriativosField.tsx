@@ -131,7 +131,7 @@ export function CriativosField({
               <p className="mb-1 font-medium text-bone">Sem Posicionamento — conversão direta</p>
               <p>
                 Não existe conteúdo orgânico aquecendo o público antes. O anúncio precisa fazer esse trabalho sozinho: o
-                formato principal tende a ser Quebra de Objeção ou CTA Direta, indo direto ao ponto com o lead frio.
+                formato principal tende a ser Resultado final, Antes ou depois, ou CTA Direta, indo direto ao ponto com o lead frio.
               </p>
             </>
           )}
