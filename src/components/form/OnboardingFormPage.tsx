@@ -15,8 +15,6 @@ import { Primeiros30DiasField } from './Primeiros30DiasField'
 import { emptyPayload } from './emptyPayload'
 import { calcNivelMeta, calcPacientesCobertura } from '../../lib/calculations'
 import { formatCurrency, formatNumber } from '../../lib/format'
-import { TranscriptExtractor } from './TranscriptExtractor'
-import type { ExtractedFields } from '../../lib/extractOnboarding'
 
 export function OnboardingFormPage() {
   const { session } = useAuth()
@@ -30,17 +28,6 @@ export function OnboardingFormPage() {
 
   function patch<K extends keyof OnboardingPayload>(key: K, value: OnboardingPayload[K]) {
     setPayload((p) => ({ ...p, [key]: value }))
-  }
-
-  function applyExtracted(fields: ExtractedFields) {
-    setPayload((p) => ({
-      ...p,
-      bloco1_negocio: { ...p.bloco1_negocio, ...fields.bloco1_negocio },
-      bloco6_caminhoPaciente: { ...p.bloco6_caminhoPaciente, ...fields.bloco6_caminhoPaciente },
-      bloco10_checklist: { ...p.bloco10_checklist, ...fields.bloco10_checklist },
-      bloco11_comoTrabalhar: { ...p.bloco11_comoTrabalhar, ...fields.bloco11_comoTrabalhar },
-      bloco12_primeiros30Dias: { ...p.bloco12_primeiros30Dias, ...fields.bloco12_primeiros30Dias },
-    }))
   }
 
   async function handleSubmit() {
@@ -91,8 +78,6 @@ export function OnboardingFormPage() {
         <TextField label="Nome da clínica" value={clientName} onChange={setClientName} />
         <TextField label="WhatsApp (para código de acesso — últimos 4 dígitos)" value={whatsapp} onChange={setWhatsapp} />
       </div>
-
-      <TranscriptExtractor onExtracted={applyExtracted} />
 
       <div>
         <ExpandableSection
