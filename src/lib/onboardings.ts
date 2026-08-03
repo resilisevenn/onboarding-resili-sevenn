@@ -3,6 +3,11 @@ import type { OnboardingPayload } from '../types/onboarding'
 
 export type OnboardingStatus = 'active' | 'paused'
 
+/** Log temporário de diagnóstico do travamento em "Gerando.../Salvando...". Remover depois de identificar a causa. */
+function logTiming(label: string, inicio: number) {
+  console.log(`[timing] ${label}: ${(performance.now() - inicio).toFixed(0)}ms`)
+}
+
 /**
  * Falha a promise se ela não assentar no prazo. Sem isso, uma request pendurada
  * (refresh de token travado, rede caída) deixa a UI presa em estado de carregando
@@ -71,18 +76,22 @@ export function extractAccessCode(whatsapp: string): string {
  * em vez de bloquear o usuário com uma mensagem errada.
  */
 export async function garantirSessaoValida(): Promise<boolean> {
+  const inicio = performance.now()
+  console.log('[timing] garantirSessaoValida: chamando getSession()...')
   try {
     const { data, error } = await withTimeout(
       supabase.auth.getSession(),
       10000,
       'timeout ao confirmar sessão',
     )
+    logTiming('garantirSessaoValida: getSession respondeu', inicio)
     if (error) {
       console.warn('garantirSessaoValida: erro ao consultar sessão, seguindo mesmo assim', error)
       return true
     }
     return !!data.session
   } catch (e) {
+    logTiming('garantirSessaoValida: getSession NÃO respondeu (timeout/erro)', inicio)
     console.warn('garantirSessaoValida: getSession não respondeu a tempo, seguindo mesmo assim', e)
     return true
   }
@@ -94,9 +103,21 @@ export async function createOnboarding(params: {
   payload: OnboardingPayload
   createdBy: string
 }): Promise<OnboardingRow> {
+  const inicioTotal = performance.now()
+  console.log('[timing] createOnboarding: iniciado')
+
   const slug = generateSlug(params.clientName)
   const accessCode = extractAccessCode(params.whatsapp)
 
+  const payloadJson = JSON.stringify(params.payload)
+  console.log(`[createOnboarding] payload total: ${(payloadJson.length / 1024).toFixed(1)} KB, ${payloadJson.length} caracteres`)
+  for (const [bloco, valor] of Object.entries(params.payload)) {
+    const tamanho = JSON.stringify(valor).length
+    console.log(`[createOnboarding]   - ${bloco}: ${(tamanho / 1024).toFixed(1)} KB`)
+  }
+
+  console.log('[timing] createOnboarding: chamando insert()...')
+  const inicioInsert = performance.now()
   const { data, error } = await withTimeout(
     supabase
       .from('onboardings')
@@ -111,7 +132,13 @@ export async function createOnboarding(params: {
       .single(),
     20000,
     'A criação demorou demais e foi cancelada. Verifique sua conexão e tente novamente.',
-  )
+  ).catch((e) => {
+    logTiming('createOnboarding: insert() FALHOU/timeout', inicioInsert)
+    logTiming('createOnboarding: total até falhar', inicioTotal)
+    throw e
+  })
+  logTiming('createOnboarding: insert() respondeu', inicioInsert)
+  logTiming('createOnboarding: total', inicioTotal)
 
   if (error) throw error
   return data as OnboardingRow

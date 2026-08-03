@@ -34,6 +34,8 @@ export function OnboardingFormPage() {
   }
 
   async function handleSubmit() {
+    const inicio = performance.now()
+    console.log('[timing] handleSubmit: clique recebido')
     if (!session) {
       setError('Sua sessão expirou. Faça login novamente para gerar o onboarding.')
       return
@@ -45,19 +47,23 @@ export function OnboardingFormPage() {
     setError(null)
     setSubmitting(true)
     try {
+      console.log(`[timing] handleSubmit: antes de garantirSessaoValida, +${(performance.now() - inicio).toFixed(0)}ms`)
       if (!(await garantirSessaoValida())) {
         setError('Sua sessão expirou. Faça login novamente para gerar o onboarding.')
         return
       }
+      console.log(`[timing] handleSubmit: antes de createOnboarding, +${(performance.now() - inicio).toFixed(0)}ms`)
       const row = await createOnboarding({
         clientName,
         whatsapp,
         payload,
         createdBy: session.user.id,
       })
+      console.log(`[timing] handleSubmit: createOnboarding concluído, +${(performance.now() - inicio).toFixed(0)}ms`)
       window.open(`/o/${row.slug}`, '_blank', 'noopener,noreferrer')
       navigate(`/?created=${row.slug}`)
     } catch (e) {
+      console.log(`[timing] handleSubmit: erro/exceção, +${(performance.now() - inicio).toFixed(0)}ms`, e)
       setError(e instanceof Error ? e.message : 'Erro ao criar onboarding.')
     } finally {
       setSubmitting(false)
