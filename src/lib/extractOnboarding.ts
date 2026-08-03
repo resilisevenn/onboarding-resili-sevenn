@@ -32,9 +32,21 @@ export async function extractOnboardingFromTranscript(transcript: string): Promi
     body: JSON.stringify({ transcript }),
   })
 
-  const result = await res.json()
+  const raw = await res.text()
+  let result: unknown
+  try {
+    result = raw ? JSON.parse(raw) : null
+  } catch {
+    throw new Error(
+      res.ok
+        ? 'O servidor retornou uma resposta inesperada. Tente novamente com um texto mais curto.'
+        : `Falha ao extrair dados (HTTP ${res.status}). Tente novamente com um texto mais curto.`,
+    )
+  }
+
   if (!res.ok) {
-    throw new Error(result.error ?? 'Falha ao extrair dados da transcrição')
+    const message = (result as { error?: string } | null)?.error ?? 'Falha ao extrair dados da transcrição'
+    throw new Error(message)
   }
   return result as ExtractedFields
 }

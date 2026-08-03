@@ -58,6 +58,10 @@ ${kb || 'Metodologia padrão da agência não fornecida nesta chamada — extrai
 Não extraia dados financeiros (faturamento, ticket, custo, margem, metas) nem ICP/persona/território — esses são preenchidos manualmente pelo gestor por decisão de produto.`
 }
 
+export const config = {
+  maxDuration: 60,
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' })
