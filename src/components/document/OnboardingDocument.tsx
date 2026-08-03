@@ -53,6 +53,27 @@ export function OnboardingDocument({
   const [saveError, setSaveError] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
   const [showSavedBadge, setShowSavedBadge] = useState(false)
+  const [fullscreen, setFullscreen] = useState(false)
+
+  useEffect(() => {
+    function onChange() {
+      setFullscreen(!!document.fullscreenElement)
+    }
+    document.addEventListener('fullscreenchange', onChange)
+    return () => document.removeEventListener('fullscreenchange', onChange)
+  }, [])
+
+  async function toggleFullscreen() {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen()
+      } else {
+        await document.documentElement.requestFullscreen()
+      }
+    } catch {
+      /* navegador pode bloquear, mantém o estado atual */
+    }
+  }
 
   useEffect(() => {
     function onScroll() {
@@ -138,6 +159,24 @@ export function OnboardingDocument({
       {showEditorBar && <EditorBar dirty={dirty} saving={saving} savedAt={savedAt} error={saveError} onSave={handleSave} />}
 
       <div className="fixed left-0 top-0 z-[100] h-[3px] bg-gradient-to-r from-brand to-brand-light transition-[width] duration-100 ease-linear" style={{ width: `${progress}%` }} />
+
+      <button
+        type="button"
+        onClick={toggleFullscreen}
+        title={fullscreen ? 'Sair da tela cheia' : 'Ver em tela cheia'}
+        aria-label={fullscreen ? 'Sair da tela cheia' : 'Ver em tela cheia'}
+        className="fixed right-4 top-4 z-[110] flex h-10 w-10 items-center justify-center rounded-full border border-bone/25 bg-obsidian/35 text-bone/80 backdrop-blur-md transition-colors hover:border-bone/50 hover:bg-obsidian/55 hover:text-bone"
+      >
+        {fullscreen ? (
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" />
+          </svg>
+        ) : (
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9V3h6M21 9V3h-6M3 15v6h6M21 15v6h-6" />
+          </svg>
+        )}
+      </button>
 
       {/* ===================== CAPA ===================== */}
       <div

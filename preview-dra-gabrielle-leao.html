@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onboarding, Clínica Vitá Estética (Simulação)</title>
+<title>Onboarding, Dra. Gabrielle Leão (Simulação)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
@@ -176,8 +176,9 @@
   .field p, .field ul { margin: 0; font-size: 15px; line-height: 1.6; }
   .field ul { padding-left: 18px; }
   .field ul li { margin-bottom: 4px; }
+  .field ul.green li::marker { color: var(--brand); }
 
-  .stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 20px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 16px; margin-bottom: 20px; }
   .month-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
   .box {
     border: 1px solid rgba(11,19,16,0.1);
@@ -206,7 +207,7 @@
   }
   .callout strong.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--brand-hover); }
 
-  .level-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  .level-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 16px; }
   .level-card {
     border: 1px solid rgba(11,19,16,0.1);
     border-radius: 12px;
@@ -221,13 +222,25 @@
     background: linear-gradient(180deg, rgba(89,165,44,0.28), rgba(89,165,44,0.1));
     border-color: rgba(89,165,44,0.6);
   }
-  .level-card .name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .level-card.featured {
+    border: 2px solid var(--brand);
+    background: linear-gradient(135deg, var(--brand-dark), var(--obsidian-alt));
+    color: var(--bone);
+    box-shadow: 0 12px 32px rgba(89,165,44,0.25);
+  }
+  .level-card .name { font-weight: 600; font-size: 14px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.02em; }
+  .level-card.featured .name { color: var(--brand-light); }
+  .level-card:not(.featured) .name { color: rgba(11,19,16,0.7); }
   .level-card .amount { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 24px; font-weight: 700; margin-bottom: 12px; color: var(--brand-hover); }
+  .level-card.featured .amount { font-size: 34px; color: var(--brand-light); }
   .level-card dl { margin: 0; font-size: 13.5px; }
   .level-card dl div { display: flex; justify-content: space-between; padding: 4px 0; border-top: 1px solid rgba(11,19,16,0.06); }
+  .level-card.featured dl div { border-top: 1px solid rgba(250,250,250,0.1); }
   .level-card dl div:first-child { border-top: none; }
   .level-card dl dt { color: rgba(11,19,16,0.55); }
+  .level-card.featured dl dt { color: rgba(250,250,250,0.7); }
   .level-card dl dd { margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 600; }
+  .level-card.featured dl dd { color: var(--bone); }
 
   .intro-note { font-size: 13.5px; color: rgba(11,19,16,0.6); margin-bottom: 20px; }
   .intro-note b { color: var(--obsidian); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
@@ -301,10 +314,11 @@
     border: 1px solid rgba(11,19,16,0.1); border-radius: 12px; overflow: hidden;
     box-shadow: 0 1px 2px rgba(11,19,16,0.04), 0 4px 12px rgba(11,19,16,0.05);
   }
-  table.access th { text-align: left; padding: 12px; background: rgba(11,19,16,0.03); border-bottom: 1px solid rgba(11,19,16,0.1); font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; color: rgba(11,19,16,0.55); }
+  table.access thead tr { background: var(--brand-dark); }
+  table.access th { text-align: left; padding: 12px; color: var(--bone); font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; font-weight: 500; }
   table.access td { padding: 12px; border-bottom: 1px solid rgba(11,19,16,0.06); transition: background 0.12s ease; }
   table.access tr:last-child td { border-bottom: none; }
-  table.access td.prazo { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  table.access td.prazo { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--brand-hover); }
   table.access tbody tr:nth-child(even) td { background: rgba(11,19,16,0.025); }
   table.access tbody tr:hover td { background: rgba(89,165,44,0.16); }
 
@@ -353,39 +367,19 @@
 
   a.ref-link { color: var(--brand-hover); text-decoration: underline; }
 
-  /* ---------- BLOCK 08 — redesign v2 (funil de camadas + frentes de mensagem) ---------- */
-  .layer-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
-  .layer-card {
-    border: 1px solid rgba(11,19,16,0.1);
-    border-radius: 12px;
-    padding: 16px 18px;
-    background: var(--bone);
-    position: relative;
-    overflow: hidden;
+  /* ---------- BLOCK 08 — sem posicionamento + formatos em coluna única ---------- */
+  .no-posicionamento {
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 24px;
+    background: var(--brand-dark);
+    color: var(--bone);
   }
-  .layer-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: var(--brand);
-  }
-  .layer-card:nth-child(2)::before { background: var(--brand-hover); }
-  .layer-card:nth-child(3)::before { background: var(--obsidian); }
-  .layer-card .layer-tag {
-    display: inline-block;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--brand-hover);
-    background: rgba(89,165,44,0.1);
-    border-radius: 999px;
-    padding: 3px 10px;
-    margin-bottom: 10px;
-  }
-  .layer-card .layer-desc { font-size: 14px; line-height: 1.55; color: rgba(11,19,16,0.75); }
+  .no-posicionamento h3 { margin: 0 0 4px; font-size: 15px; font-weight: 700; }
+  .no-posicionamento p { margin: 0; font-size: 14px; line-height: 1.6; color: rgba(250,250,250,0.75); }
 
   .msg-front {
-    border: 1px solid rgba(11,19,16,0.1);
+    border: 2px solid var(--brand);
     border-radius: 14px;
     padding: 20px 22px;
     margin-bottom: 14px;
@@ -394,7 +388,7 @@
   .msg-front .front-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
   .msg-front .front-num {
     flex: 0 0 28px; height: 28px; border-radius: 50%;
-    background: var(--obsidian); color: var(--bone);
+    background: var(--brand); color: var(--bone);
     display: flex; align-items: center; justify-content: center;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 700; font-size: 13px;
   }
@@ -427,6 +421,7 @@
     nav.sidebar:hover { width: 100%; }
     nav.sidebar a .label { max-width: none; opacity: 1; }
     .grid2, .stat-grid, .month-grid, .level-grid { grid-template-columns: 1fr 1fr; }
+    .msg-front .front-body { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
     .grid2, .stat-grid, .month-grid, .level-grid { grid-template-columns: 1fr; }
@@ -453,14 +448,14 @@
   <header class="doc-header">
     <div class="inner">
       <img class="logo" src="public/logo-resili-sevenn.png" alt="Resili Sevenn" onerror="this.style.display='none'">
-      <h1 class="serif">Clínica Vitá Estética</h1>
+      <h1 class="serif">Dra. Gabrielle Leão</h1>
       <p class="sub">Onboarding gerado em 03/08/2026</p>
     </div>
   </header>
 
   <div class="layout">
     <nav class="sidebar">
-      <a href="#b1" class="active"><span class="num">1.</span><span class="label">&nbsp;O seu negócio</span></a>
+      <a href="#b1" class="active"><span class="num">1.</span><span class="label">&nbsp;O retrato da sua operação</span></a>
       <a href="#b2"><span class="num">2.</span><span class="label">&nbsp;Onde você está hoje</span></a>
       <a href="#b3"><span class="num">3.</span><span class="label">&nbsp;Onde você quer chegar</span></a>
       <a href="#b4"><span class="num">4.</span><span class="label">&nbsp;Para quem vamos anunciar</span></a>
@@ -483,26 +478,20 @@
         <div class="grid2">
           <div class="field"><label>Serviços</label>
             <ul>
-              <li>Harmonização facial</li>
-              <li>Preenchimento labial</li>
-              <li>Botox terapêutico e estético</li>
-              <li>Bioestimuladores de colágeno</li>
+              <li>Lentes em Resina</li>
             </ul>
           </div>
           <div class="field"><label>Diferencial</label>
-            <p>Atendimento médico especializado com protocolo de acompanhamento pós-procedimento em 7, 30 e 90 dias, algo que a concorrência local não oferece.</p>
+            <p>Lentes em resina naturais, prezando sempre pela saúde do paciente em primeiro lugar.</p>
           </div>
-          <div class="field"><label>Público descrito</label>
-            <p>Mulheres de 28 a 50 anos, classe B/A, que já usam procedimentos estéticos mas buscam um profissional de confiança para resultados mais naturais.</p>
+          <div class="field full"><label>Público descrito</label>
+            <p>Homens e mulheres entre 25 e 50 anos insatisfeitos com a estética do sorriso, que tem vergonha de sorrir e que desejam aumentar a autoestima de forma definitiva. São principalmente mulheres que tem vergonha do próprio sorriso e sonham com um sorriso mais alinhado e harmônico.</p>
           </div>
           <div class="field"><label>Regiões atendidas</label>
-            <p>Zona Sul e Centro da cidade, com pacientes vindos também da região metropolitana.</p>
+            <p>Águas Claras, Taguatinga, Plano Piloto, Gama, Samambaia, todas as regiões satélites do DF.</p>
           </div>
           <div class="field"><label>Horários de funcionamento</label>
-            <p>Segunda a sexta, das 9h às 19h. Sábados das 9h às 13h mediante agendamento.</p>
-          </div>
-          <div class="field"><label>Sazonalidade</label>
-            <p>Aumento de demanda em outubro/novembro (temporada de festas) e queda em janeiro/fevereiro.</p>
+            <p>Segundas (8h às 12h), Terças (13h às 18h), Quartas (8h às 18h). Horários extras disponíveis a combinar.</p>
           </div>
         </div>
       </section>
@@ -511,51 +500,48 @@
       <section class="block" id="b2">
         <h2 class="serif">Onde você está hoje</h2>
         <p class="block-sub">A linha de base a partir da qual medimos o progresso.</p>
-        <div class="month-grid">
-          <div class="box"><div class="k">Faturamento Mês 1</div><div class="v mono">R$ 42.000</div></div>
-          <div class="box"><div class="k">Faturamento Mês 2</div><div class="v mono">R$ 38.500</div></div>
-          <div class="box"><div class="k">Faturamento Mês 3</div><div class="v mono">R$ 45.200</div></div>
-        </div>
         <div class="stat-grid">
-          <div class="box"><div class="k">Ticket médio</div><div class="v mono">R$ 850</div></div>
-          <div class="box"><div class="k">Custo operacional/mês</div><div class="v mono">R$ 28.000</div></div>
-          <div class="box"><div class="k">Margem</div><div class="v mono">34%</div></div>
-          <div class="box"><div class="k">Verba de anúncio mensal</div><div class="v mono">R$ 3.000</div></div>
+          <div class="box"><div class="k">Faturamento médio (últimos 3 meses)</div><div class="v mono">R$ 7.667</div></div>
+          <div class="box"><div class="k">Ticket médio</div><div class="v mono">R$ 4.000</div></div>
+          <div class="box"><div class="k">Margem</div><div class="v mono">70%</div></div>
+          <div class="box"><div class="k">Verba de anúncio mensal</div><div class="v mono">R$ 1.200</div></div>
+          <div class="box"><div class="k">Custo operacional mensal</div><div class="v mono">R$ 1.600</div></div>
         </div>
-        <div class="callout">Pacientes/mês necessários só para cobrir a operação: <strong class="mono">33</strong></div>
+        <div class="callout">Pacientes/mês necessários só para cobrir a operação: <strong class="mono">1</strong></div>
       </section>
 
       <!-- BLOCK 03 -->
       <section class="block" id="b3">
         <h2 class="serif">Onde você quer chegar</h2>
         <p class="block-sub">A meta declarada traduzida em pacientes, leads e verba necessária.</p>
-        <p class="intro-note">Taxas de conversão usadas (histórico/teórico): lead → agendamento <b>32%</b>, agendamento → comparecimento <b>70%</b>, comparecimento → fechamento <b>45%</b>. CPL estimado: <b>R$ 28</b>.</p>
+        <p class="intro-note">Taxas de conversão usadas (histórico/teórico): lead → agendamento <b>10%</b>, agendamento → comparecimento <b>70%</b>, comparecimento → fechamento <b>70%</b>. Taxa conv. leads → fechamento (calculada automaticamente): <b>4,9%</b>. CPL estimado: <b>R$ 12</b>.</p>
+        <p class="intro-note">Ponto de partida (faturamento médio atual): <b>R$ 7.667</b>. As metas abaixo representam o quanto falta faturar a mais para sair desse patamar.</p>
         <div class="level-grid">
+          <div class="level-card featured">
+            <div class="name">Super meta</div>
+            <div class="amount">R$ 20.000</div>
+            <dl>
+              <div><dt>Pacientes/mês</dt><dd>3</dd></div>
+              <div><dt>Leads necessários</dt><dd>74</dd></div>
+              <div><dt>Verba necessária</dt><dd>R$ 755</dd></div>
+            </dl>
+          </div>
           <div class="level-card">
             <div class="name">Meta inicial</div>
-            <div class="amount">R$ 60.000</div>
+            <div class="amount">R$ 15.000</div>
             <dl>
-              <div><dt>Pacientes/mês</dt><dd>71</dd></div>
-              <div><dt>Leads necessários</dt><dd>226</dd></div>
-              <div><dt>Verba necessária</dt><dd>R$ 6.328</dd></div>
+              <div><dt>Pacientes/mês</dt><dd>2</dd></div>
+              <div><dt>Leads necessários</dt><dd>44</dd></div>
+              <div><dt>Verba necessária</dt><dd>R$ 449</dd></div>
             </dl>
           </div>
           <div class="level-card">
             <div class="name">Meta intermediária</div>
-            <div class="amount">R$ 90.000</div>
+            <div class="amount">R$ 17.000</div>
             <dl>
-              <div><dt>Pacientes/mês</dt><dd>106</dd></div>
-              <div><dt>Leads necessários</dt><dd>336</dd></div>
-              <div><dt>Verba necessária</dt><dd>R$ 9.408</dd></div>
-            </dl>
-          </div>
-          <div class="level-card">
-            <div class="name">Super meta</div>
-            <div class="amount">R$ 130.000</div>
-            <dl>
-              <div><dt>Pacientes/mês</dt><dd>153</dd></div>
-              <div><dt>Leads necessários</dt><dd>485</dd></div>
-              <div><dt>Verba necessária</dt><dd>R$ 13.580</dd></div>
+              <div><dt>Pacientes/mês</dt><dd>2</dd></div>
+              <div><dt>Leads necessários</dt><dd>56</dd></div>
+              <div><dt>Verba necessária</dt><dd>R$ 571</dd></div>
             </dl>
           </div>
         </div>
@@ -566,24 +552,28 @@
         <h2 class="serif">Para quem vamos anunciar</h2>
         <div class="grid2">
           <div class="field full"><label>Perfil demográfico</label>
-            <p>Mulheres, 28–50 anos, classe A/B, moradoras da Zona Sul e Centro, ativas em redes sociais, que seguem influenciadoras de estética e bem-estar.</p>
+            <p>Mulheres de 25 a 45 anos, insatisfeitas com a estética do sorriso, que tem vergonha de sorrir e que desejam aumentar a autoestima de forma definitiva. São principalmente mulheres que tem vergonha do próprio sorriso e sonham com um sorriso mais alinhado e harmônico.</p>
           </div>
           <div class="field"><label>Dores</label>
-            <ul>
-              <li>Medo de resultado artificial ("cara de boneca")</li>
-              <li>Insegurança sobre a reputação do profissional</li>
-              <li>Falta de tempo para pesquisar clínicas</li>
+            <ul class="green">
+              <li>Evitar fotos e vídeos por vergonha do sorriso.</li>
+              <li>Rir "com a boca fechada" mesmo se divertindo de verdade.</li>
+              <li>Comparar o próprio sorriso com o de outras pessoas nas redes sociais.</li>
+              <li>Sentir que a aparência dos dentes passa uma imagem de descuido.</li>
+              <li>Adiar o problema há anos por medo ou falta de tempo.</li>
             </ul>
           </div>
           <div class="field"><label>Desejos</label>
-            <ul>
-              <li>Resultado natural e discreto</li>
-              <li>Autoestima e confiança no dia a dia</li>
-              <li>Atendimento humanizado, sem julgamento</li>
+            <ul class="green">
+              <li>Sorrir livremente sem pensar em esconder nada.</li>
+              <li>Sentir orgulho ao se ver em fotos e vídeos.</li>
+              <li>Ter mais confiança em ambientes sociais e profissionais.</li>
+              <li>Ser vista como alguém cuidada e com autoestima elevada.</li>
+              <li>Resolver esse incômodo de forma definitiva, sem depender de manutenção constante.</li>
             </ul>
           </div>
           <div class="field full"><label>Nível de consciência sobre o procedimento</label>
-            <p>Maioria já conhece os procedimentos (consciente do produto), mas ainda não decidiu por qual clínica/profissional optar: a decisão está em "qual marca escolher", não em "se devo fazer".</p>
+            <p>Consciente do Problema → Consciente da Solução (a maior parte do público está nessa transição). Ela já sabe muito bem qual é o problema (vergonha do sorriso, insatisfação estética) e já ouviu falar de lentes em resina como uma solução possível, seja por indicação, redes sociais ou pesquisa própria. O que ainda não está resolvido pra ela é: qual é exatamente a diferença entre lentes de resina, facetas e lentes de porcelana (ela mistura os conceitos); se essa é realmente a solução certa pro caso dela especificamente; qual profissional ou clínica é confiável o suficiente pra fazer esse investimento.</p>
           </div>
         </div>
       </section>
@@ -594,15 +584,22 @@
         <div class="grid2">
           <div class="field"><label>Regiões incluídas</label>
             <ul>
-              <li>Zona Sul</li>
-              <li>Centro</li>
-              <li>Região metropolitana (raio de 25km)</li>
+              <li>Brasília (Plano Piloto) e cidades satélites num raio de até 15 km do centro, região com forte concentração de servidores públicos, profissionais liberais e classe média/média alta, público exigente com atendimento e resultado estético natural.</li>
+              <li>Guará</li>
+              <li>Vicente Pires</li>
+              <li>Águas Claras</li>
+              <li>Park Way</li>
+              <li>Arniqueira</li>
+              <li>Jardim Botânico</li>
             </ul>
           </div>
           <div class="field"><label>Regiões excluídas</label>
             <ul>
-              <li><b>Zona Norte:</b> <span style="color:rgba(11,19,16,0.6)">distância inviabiliza deslocamento até a clínica</span></li>
-              <li><b>Cidades vizinhas de baixa renda:</b> <span style="color:rgba(11,19,16,0.6)">ticket médio incompatível com o público-alvo</span></li>
+              <li>Estrutural</li>
+              <li>Taguatinga</li>
+              <li>Ceilândia</li>
+              <li>Gama</li>
+              <li>Samambaia</li>
             </ul>
           </div>
         </div>
@@ -611,13 +608,14 @@
       <!-- BLOCK 06 -->
       <section class="block" id="b6">
         <h2 class="serif">O caminho do paciente</h2>
-        <p class="block-sub">Caminho 01: WhatsApp direto</p>
+        <p class="block-sub">Caminho 02: Instagram + WhatsApp</p>
         <ol class="journey">
-          <li><span class="badge">1</span><div><div class="title">Anúncio Instagram</div></div></li>
-          <li><span class="badge">2</span><div><div class="title">Clique no botão "WhatsApp"</div></div></li>
-          <li><span class="badge">3</span><div><div class="title">Conversa com atendente/recepção</div></div></li>
-          <li><span class="badge">4</span><div><div class="title">Qualificação</div><div class="desc">Dúvidas, convênio, disponibilidade.</div></div></li>
-          <li><span class="badge">5</span><div><div class="title">Agendamento confirmado</div></div></li>
+          <li><span class="badge">1</span><div><div class="title">Anúncio (perfil Instagram + WhatsApp)</div></div></li>
+          <li><span class="badge">2</span><div><div class="title">Lead se torna seguidor ou consome os conteúdos</div></div></li>
+          <li><span class="badge">3</span><div><div class="title">Recebe anúncio com o botão de enviar mensagem WhatsApp</div></div></li>
+          <li><span class="badge">4</span><div><div class="title">Conversa com atendente/recepção</div></div></li>
+          <li><span class="badge">5</span><div><div class="title">Qualificação</div><div class="desc">Dúvidas, convênio, disponibilidade.</div></div></li>
+          <li><span class="badge">6</span><div><div class="title">Agendamento confirmado</div></div></li>
         </ol>
       </section>
 
@@ -645,59 +643,32 @@
       <section class="block" id="b8">
         <h2 class="serif">O que os anúncios vão dizer</h2>
 
-        <div class="layer-grid">
-          <div class="layer-card">
-            <span class="layer-tag">1. Atração</span>
-            <div class="layer-desc">Conteúdo educacional/lifestyle, sem oferta direta, para quem ainda não conhece a clínica.</div>
-          </div>
-          <div class="layer-card">
-            <span class="layer-tag">2. Confiança</span>
-            <div class="layer-desc">Autoridade, bastidores, prova social, para quem já segue mas ainda não decidiu.</div>
-          </div>
-          <div class="layer-card">
-            <span class="layer-tag">3. Conversão</span>
-            <div class="layer-desc">Quebra de objeção e urgência, levando direto para o WhatsApp.</div>
-          </div>
+        <div class="no-posicionamento">
+          <h3>Sem Posicionamento: conversão direta</h3>
+          <p>Não existe conteúdo orgânico aquecendo o público antes do anúncio. O anúncio precisa fazer esse trabalho sozinho: o formato principal tende a ser Resultado final, Antes ou depois, ou CTA Direta, indo direto ao ponto com o lead frio.</p>
         </div>
 
         <div class="field"><label>Formatos de criativo</label>
-          <ul>
+          <ul class="green">
             <li>Antes/depois com autorização</li>
-            <li>Vídeo depoimento de paciente (UGC)</li>
             <li>Reels institucional da clínica e equipe</li>
+            <li>Resultado com benefício + chamada (narrado ou sem narração)</li>
+            <li>Tela dividida (cima/baixo) com antes e depois simultâneo, narrado</li>
+            <li>Quebra de objeção — vídeo ou estático respondendo diretamente à dúvida/medo mais comum do público (dor do procedimento, preço, tempo de resultado, "vai parecer natural?"). Normalmente usado na camada de Conversão, ou como formato principal quando a clínica não tem Posicionamento.</li>
+            <li>CTA direta — anúncio sem aquecimento, oferta e botão de ação já nos primeiros segundos. Usado para público frio, ou quando toda a verba está concentrada em conversão direta (típico de cliente sem Posicionamento).</li>
           </ul>
         </div>
         <div class="field" style="margin-top:24px;"><label>Referências</label>
-          <p><a class="ref-link" href="#" onclick="return false;">https://drive.google.com/referencias-criativos-vita</a></p>
+          <p><a class="ref-link" href="https://drive.google.com/drive/folders/1eFdEPA9FiayoBVcLdOvRzPW8SAQeupCW?usp=drive_link" target="_blank" rel="noreferrer">https://drive.google.com/drive/folders/1eFdEPA9FiayoBVcLdOvRzPW8SAQeupCW?usp=drive_link</a></p>
         </div>
         <div class="field" style="margin-top:24px;"><label>Copy de partida</label>
-          <p style="white-space:pre-wrap;">Resultado natural, sem exagero. Na Vitá Estética, cada procedimento é pensado para valorizar o que já é seu, com acompanhamento médico em todas as etapas. Agende sua avaliação.</p>
+          <p style="white-space:pre-wrap;">Slogan: "Proporcionando a melhor versão de cada sorriso!"</p>
         </div>
 
         <div style="margin-top:28px;">
           <div class="msg-front">
             <div class="front-head">
               <span class="front-num">1</span>
-              <span class="front-title">Harmonização Facial / Estética não invasiva</span>
-            </div>
-            <div class="front-body">
-              <div>
-                <div class="angles-k">Ângulos de mensagem</div>
-                <ul class="angles-list">
-                  <li>Naturalidade, "sem parecer mexido"</li>
-                  <li>Envelhecer bem, realce sutil</li>
-                  <li>Prova social e reputação local</li>
-                </ul>
-              </div>
-              <div class="narrative">
-                <div class="k">Exemplo de narrativa, referência de tom, não é copy pronta para publicar</div>
-                <p>"Resultado natural, sem exagero. Cada procedimento pensado para valorizar o que já é seu, com acompanhamento médico em todas as etapas. Agende sua avaliação."</p>
-              </div>
-            </div>
-          </div>
-          <div class="msg-front">
-            <div class="front-head">
-              <span class="front-num">2</span>
               <span class="front-title">Odontologia Estética (facetas, lentes em resina, clareamento)</span>
             </div>
             <div class="front-body">
@@ -723,24 +694,12 @@
         <h2 class="serif">Riscos que assumimos juntos</h2>
         <p class="block-sub">Escrito desde o dia 1: se acontecer, já temos um plano combinado.</p>
         <div class="risk-card">
-          <div class="row"><span class="desc">A recepção não responde rápido ao lead que chegou pelo anúncio (lead esfria em minutos, não em horas).</span><span class="pill clinica">Identificado pela clínica</span></div>
-          <div class="plan"><b>Plano de ação:</b> definir um tempo máximo de resposta ao lead (ideal: minutos) e priorizar o atendimento a leads de anúncio na rotina da recepção.</div>
+          <div class="row"><span class="desc">Não existe presença orgânica (Instagram, conteúdo educativo, prova social contínua) para o lead consultar antes ou depois de ver o anúncio: quem chega ainda não conhece o profissional, nível de confiança e consciência baixos, muitas vezes é o primeiro contato e a pessoa ainda compara por preço.</span><span class="pill clinica">Identificado pela clínica</span></div>
+          <div class="plan"><b>Plano de ação:</b> manter um mínimo de conteúdo orgânico ativo, mesmo sem a frente de Posicionamento contratada.</div>
         </div>
         <div class="risk-card">
-          <div class="row"><span class="desc">Falta de confirmação de agendamento, gerando falta do paciente no dia.</span><span class="pill clinica">Identificado pela clínica</span></div>
-          <div class="plan"><b>Plano de ação:</b> implementar confirmação de agendamento (mensagem ou ligação) 1 dia antes da consulta.</div>
-        </div>
-        <div class="risk-card">
-          <div class="row"><span class="desc">Ninguém é claramente responsável por atender o lead, mensagens inconsistentes, contato perdido.</span><span class="pill clinica">Identificado pela clínica</span></div>
-          <div class="plan"><b>Plano de ação:</b> definir uma única pessoa responsável por cada lead até o agendamento, evitando que a mensagem se perca entre a equipe.</div>
-        </div>
-        <div class="risk-card">
-          <div class="row"><span class="desc">O anúncio é genérico demais e atrai gente só curiosa ou pesquisando preço, não paciente pronto para agendar.</span><span class="pill gestor">Identificado pelo gestor</span></div>
-          <div class="plan"><b>Plano de ação:</b> refinar segmentação e criativos ao longo da fase de aprendizado para qualificar melhor quem chega pelo anúncio.</div>
-        </div>
-        <div class="risk-card">
-          <div class="row"><span class="desc">Sazonalidade do negócio não é avisada com antecedência, e o cliente estranha quando o resultado varia.</span><span class="pill clinica">Identificado pela clínica</span></div>
-          <div class="plan"><b>Plano de ação:</b> a clínica avisa com antecedência os períodos de sazonalidade (feriados, alta/baixa temporada) para ajustar a expectativa de resultado.</div>
+          <div class="row"><span class="desc">Sem posicionamento, quem chega pelo anúncio ainda não conhece o profissional: nível de confiança e consciência baixos, muitas vezes é o primeiro contato e a pessoa ainda compara por preço.</span><span class="pill clinica">Identificado pela clínica</span></div>
+          <div class="plan"><b>Plano de ação:</b> sem posicionamento, quem chega pelo anúncio ainda não conhece o profissional: nível de confiança e consciência baixos, muitas vezes é o primeiro contato e a pessoa ainda compara por preço.</div>
         </div>
       </section>
 
@@ -752,14 +711,14 @@
           <tbody>
             <tr><td>Acesso de administrador ao Business Manager (Meta)</td><td class="prazo">Imediato, máximo 2 dias</td><td>Cliente</td></tr>
             <tr><td>Acesso à página do Instagram/Facebook (ou convite como parceiro)</td><td class="prazo">Imediato, junto do acesso ao BM</td><td>Cliente</td></tr>
-            <tr><td>Definir responsável único por lead, configurado no CRM</td><td class="prazo">Imediato</td><td>Cliente</td></tr>
-            <tr><td>Definir quem responde os leads no WhatsApp</td><td class="prazo">Antes de começar</td><td>Cliente</td></tr>
-            <tr><td>Definir e comunicar o tempo máximo de resposta ao lead (ideal: minutos) para a equipe de recepção</td><td class="prazo">Antes de começar</td><td>Cliente</td></tr>
-            <tr><td>Enviar materiais/fotos/vídeos para os criativos iniciais</td><td class="prazo">Até 3 dias</td><td>Cliente</td></tr>
             <tr><td>Forma de pagamento ativa na conta de anúncios</td><td class="prazo">Semana 1</td><td>Cliente</td></tr>
-            <tr><td>Acesso ao WhatsApp Business (número principal)</td><td class="prazo">Semana 1</td><td>Cliente</td></tr>
+            <tr><td>Definir quem responde os leads no WhatsApp</td><td class="prazo">Antes de começar</td><td>Cliente</td></tr>
+            <tr><td>Enviar materiais/fotos/vídeos para os criativos iniciais</td><td class="prazo">Até 3 dias</td><td>Cliente</td></tr>
             <tr><td>Configurar Business Manager, pixel e públicos</td><td class="prazo">Semana 1</td><td>Agência</td></tr>
             <tr><td>Criar e subir os primeiros criativos</td><td class="prazo">Semana 1, até o 7º dia</td><td>Agência</td></tr>
+            <tr><td>Definir responsável único por lead, configurado no CRM</td><td class="prazo">Imediato</td><td>Cliente</td></tr>
+            <tr><td>Definir e comunicar o tempo máximo de resposta ao lead (ideal: minutos) para a equipe de recepção</td><td class="prazo">Antes de começar</td><td>Cliente</td></tr>
+            <tr><td>Acesso ao WhatsApp Business (número principal)</td><td class="prazo">Semana 1</td><td>Cliente</td></tr>
             <tr><td>Implementar CRM com processo de atendimento/objeções (inclui roteiro de objeções de preço e automação de confirmação de agendamento)</td><td class="prazo">10 a 15 dias</td><td>Agência</td></tr>
           </tbody>
         </table>
@@ -774,7 +733,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366" style="flex:0 0 auto;" aria-hidden="true">
                 <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.71.45 3.38 1.3 4.85L2.05 22l5.36-1.4a9.9 9.9 0 0 0 4.63 1.18h.01c5.46 0 9.9-4.45 9.9-9.9 0-2.65-1.03-5.13-2.9-7-1.88-1.88-4.37-2.88-7.01-2.88Zm0 18.13h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.18.83.85-3.1-.2-.32a8.2 8.2 0 0 1-1.26-4.4c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.55-3.7 8.24-8.21 8.24Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.24-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.24-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.24-.86.85-.86 2.07s.89 2.4 1.01 2.56c.12.17 1.75 2.67 4.24 3.74.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.28Z"/>
               </svg>
-              <span>Grupo dedicado no WhatsApp entre clínica e gestor de tráfego.</span>
+              <span>Grupo dedicado no WhatsApp entre clínica e equipe.</span>
             </p>
           </div>
           <div class="field full"><label>Frequência de report</label>
@@ -786,7 +745,7 @@
         </div>
         <div class="partnership-box full">
           <h3>Na sua avaliação, o que precisa acontecer para a parceria valer a pena</h3>
-          <p>"Ver a agenda cheia de forma previsível, sem eu precisar me preocupar com marketing no dia a dia."</p>
+          <p>"Aumentar o número de pacientes particulares. Ter um crescimento consistente da agenda e do faturamento. Fortalecer a presença nas redes sociais (próxima etapa). Construir uma autoridade cada vez maior em Brasília (próxima etapa + consequência)."</p>
         </div>
       </section>
 
@@ -794,11 +753,11 @@
       <section class="block" id="b12">
         <h2 class="serif">Os primeiros 30 dias</h2>
         <div class="timeline">
-          <div class="event"><div class="day mono">05/08</div><div class="date mono">(quarta-feira), Dia 0</div><div class="desc">Início oficial da parceria: hoje, essa reunião e alinhamento de expectativas.</div></div>
-          <div class="event"><div class="day mono">07/08</div><div class="date mono">(sexta-feira), Dia 2</div><div class="desc">Estruturação do Marketing: configuração da captação de leads (estratégia, conta de anúncios e anúncios) e estruturação do Posicionamento/Conteúdos (quando contratado).</div></div>
-          <div class="event"><div class="day mono">12/08</div><div class="date mono">(quarta-feira), Dia 7</div><div class="desc">Lançamento das campanhas: início da geração de demanda.</div></div>
-          <div class="event"><div class="day mono">20/08</div><div class="date mono">(quinta-feira), Dia 15</div><div class="desc">Primeiros leads e possíveis primeiros agendamentos: primeira leitura de dados, ajustes iniciais de segmentação e otimização dos resultados da primeira semana. Primeiro relatório de meio de período, com checagem de CPL e volume de leads.</div></div>
-          <div class="event"><div class="day mono">04/09</div><div class="date mono">(sexta-feira), Dia 30</div><div class="desc">Fechamento do primeiro ciclo: resultados tendem a melhorar e estabilizar.</div></div>
+          <div class="event"><div class="day mono">03/08</div><div class="date mono">(segunda-feira), Dia 0</div><div class="desc">Início oficial da parceria: hoje, essa reunião e alinhamento de expectativas.</div></div>
+          <div class="event"><div class="day mono">06/08</div><div class="date mono">(quinta-feira), Dia 3</div><div class="desc">Estruturação do Marketing: configuração da captação de leads (estratégia, conta de anúncios e anúncios) e estruturação do Posicionamento/Conteúdos (quando contratado).</div></div>
+          <div class="event"><div class="day mono">09/08</div><div class="date mono">(domingo), Dia 6</div><div class="desc">Lançamento das campanhas: início da geração de demanda.</div></div>
+          <div class="event"><div class="day mono">16/08</div><div class="date mono">(domingo), Dia 13</div><div class="desc">Primeiros leads e possíveis primeiros agendamentos: primeira leitura de dados, ajustes iniciais de segmentação e otimização dos resultados da primeira semana. Primeiro relatório de meio de período, com checagem de CPL e volume de leads.</div></div>
+          <div class="event"><div class="day mono">03/09</div><div class="date mono">(quinta-feira), Dia 31</div><div class="desc">Fechamento do primeiro ciclo: resultados tendem a melhorar e estabilizar.</div></div>
         </div>
         <details class="not-happen">
           <summary>O que não vai acontecer</summary>
@@ -844,7 +803,6 @@
 
     var observer = new IntersectionObserver(
       function (entries) {
-        // Ativa assim que >= 60% da seção estiver visível; entre várias, prioriza a mais no topo.
         var visible = entries.filter(function (e) { return e.isIntersecting && e.intersectionRatio >= 0.6; });
         if (!visible.length) return;
         visible.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
@@ -855,8 +813,6 @@
 
     sections.forEach(function (section) { observer.observe(section); });
 
-    // Última seção: garante que o menu bata em "12" mesmo se ela terminar antes
-    // da linha de leitura (pouco conteúdo + fim de página).
     window.addEventListener('scroll', function () {
       var doc = document.getElementById('document');
       if (!doc || doc.style.display === 'none') return;

@@ -43,7 +43,7 @@ export function Block10Checklist({
                     <td className="px-3.5 py-3.5">
                       <EditableText
                         value={item.prazo}
-                        className="font-mono"
+                        className="font-mono text-brand-hover"
                         onChange={(v) => {
                           const next = [...data.itens]
                           next[i] = { ...next[i], prazo: v }
@@ -75,7 +75,7 @@ export function Block10Checklist({
                 ) : (
                   <>
                     <td className="px-3.5 py-3.5">{item.item}</td>
-                    <td className="px-3.5 py-3.5 font-mono">{item.prazo}</td>
+                    <td className="px-3.5 py-3.5 font-mono text-brand-hover">{item.prazo}</td>
                     <td className="px-3.5 py-3.5">{item.responsavel}</td>
                   </>
                 )}

@@ -6,6 +6,7 @@ import { OnboardingFormPage } from './components/form/OnboardingFormPage'
 import { OnboardingsPanel } from './components/admin/OnboardingsPanel'
 import { OnboardingView } from './components/public/OnboardingView'
 import { DevPreviewPage } from './dev/DevPreviewPage'
+import { GabriellePreviewPage } from './dev/GabriellePreviewPage'
 
 export default function App() {
   const { session, profile, loading } = useAuth()
@@ -15,6 +16,12 @@ export default function App() {
   // migração de design dos 12 blocos com dados fictícios. Remover ao final da migração.
   if (location.pathname === '/dev-preview') {
     return <DevPreviewPage />
+  }
+
+  // Preview do onboarding da Dra. Gabrielle Leão, montado bloco a bloco antes de virar
+  // um registro real no Supabase.
+  if (location.pathname === '/preview/dra-gabrielle-leao') {
+    return <GabriellePreviewPage />
   }
 
   // Rota pública do onboarding — acessível sem login. Se o visitante estiver logado
