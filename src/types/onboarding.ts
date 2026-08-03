@@ -32,6 +32,12 @@ export interface Bloco2OndeVoceEsta {
   faturamentoUltimos3Meses: [number, number, number]
   ticketMedio: number
   custoOperacionalMensal: number
+  // Modo de preenchimento do custo operacional: 'mensal' = valor fixo direto; 'porDia' = calculado
+  // a partir de custoPorDiaAtendimento × diasAtendimentoMes (ex: aluguel de consultório por dia).
+  // custoOperacionalMensal sempre reflete o valor final usado nos cálculos, independente do modo.
+  modoCustoOperacional: 'mensal' | 'porDia'
+  custoPorDiaAtendimento: number
+  diasAtendimentoMes: number
   margem: number // 0-1, ex: 0.4 = 40%
   verbaAnuncioAtual: number
   percentualCaptacaoLeads: number // 0-1, fração da verba de anúncio destinada a captação de leads (resto = geração de base/audiência). Default 0.85

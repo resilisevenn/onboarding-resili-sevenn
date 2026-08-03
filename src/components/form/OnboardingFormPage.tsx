@@ -13,6 +13,7 @@ import { ChecklistField } from './ChecklistField'
 import { ComoTrabalharField } from './ComoTrabalharField'
 import { CplBenchmarkInfo } from './CplBenchmarkInfo'
 import { AlocacaoVerbaField } from './AlocacaoVerbaField'
+import { CustoOperacionalField } from './CustoOperacionalField'
 import { Primeiros30DiasField } from './Primeiros30DiasField'
 import { emptyPayload } from './emptyPayload'
 import { calcFaturamentoMedio, calcNivelMeta, calcPacientesCobertura, calcTaxaLeadParaFechamento } from '../../lib/calculations'
@@ -100,7 +101,7 @@ export function OnboardingFormPage() {
           title="2. Onde você está hoje"
           description="Preenchido com base nas respostas financeiras do Formulário de Briefing (faturamento, ticket médio, custo operacional e margem)."
         >
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-4 gap-3">
             {[0, 1, 2].map((i) => (
               <CurrencyField
                 key={i}
@@ -113,17 +114,30 @@ export function OnboardingFormPage() {
                 }}
               />
             ))}
+            <div>
+              <span className="mb-1 block text-sm text-bone/70">Faturamento médio</span>
+              <div className="rounded border border-brand/30 bg-brand/5 px-3 py-2 font-mono text-brand">
+                {formatCurrency(calcFaturamentoMedio(b2))}
+              </div>
+            </div>
           </div>
           <CurrencyField label="Ticket médio" value={b2.ticketMedio} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, ticketMedio: v })} />
-          <CurrencyField label="Custo operacional mensal" value={b2.custoOperacionalMensal} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, custoOperacionalMensal: v })} />
+          <CustoOperacionalField value={b2} onChange={(v) => patch('bloco2_ondeVoceEsta', v)} />
           <PercentField label="Margem" value={b2.margem} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, margem: v })} />
           <CurrencyField label="Verba de anúncio mensal" value={b2.verbaAnuncioAtual} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, verbaAnuncioAtual: v })} />
           <AlocacaoVerbaField value={b2.percentualCaptacaoLeads} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, percentualCaptacaoLeads: v })} />
 
-          <div className="rounded border border-brand/30 bg-brand/5 p-3 text-sm text-bone/70">
-            Pacientes/mês necessários só para cobrir a operação:{' '}
-            <span className="font-mono font-medium text-bone">{formatNumber(calcPacientesCobertura(b2))}</span>
-          </div>
+          {b2.custoOperacionalMensal <= 0 && b2.ticketMedio > 0 && b2.margem > 0 ? (
+            <div className="rounded border border-yellow-500/40 bg-yellow-500/10 p-3 text-sm text-yellow-200">
+              Custo operacional mensal está zerado — confirme se é intencional (sem custo fixo) ou se falta preencher
+              (inclusive pelo modo "Custo por dia de atendimento" acima).
+            </div>
+          ) : (
+            <div className="rounded border border-brand/30 bg-brand/5 p-3 text-sm text-bone/70">
+              Pacientes/mês necessários só para cobrir a operação:{' '}
+              <span className="font-mono font-medium text-bone">{formatNumber(calcPacientesCobertura(b2))}</span>
+            </div>
+          )}
         </ExpandableSection>
 
         <ExpandableSection title="3. Onde você quer chegar">
