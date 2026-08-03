@@ -34,6 +34,7 @@ export interface Bloco2OndeVoceEsta {
   custoOperacionalMensal: number
   margem: number // 0-1, ex: 0.4 = 40%
   verbaAnuncioAtual: number
+  percentualCaptacaoLeads: number // 0-1, fração da verba de anúncio destinada a captação de leads (resto = geração de base/audiência). Default 0.85
   // pacientesNecessariosCobertura = custoOperacionalMensal / (ticketMedio * margem) — calculado na UI, não armazenado
 }
 

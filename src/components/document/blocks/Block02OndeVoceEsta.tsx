@@ -4,6 +4,7 @@ import { formatCurrency, formatNumber, formatPercent } from '../../../lib/format
 import { calcPacientesCobertura } from '../../../lib/calculations'
 import { BlockHeading } from '../BlockHeading'
 import { EditableNumber, EditablePercent } from '../EditableField'
+import { AlocacaoVerbaField } from '../../form/AlocacaoVerbaField'
 
 export function Block02OndeVoceEsta({
   data,
@@ -84,6 +85,15 @@ export function Block02OndeVoceEsta({
           )}
         </Stat>
       </div>
+
+      {editable && onChange && (
+        <div className="mb-8 max-w-sm">
+          <AlocacaoVerbaField
+            value={data.percentualCaptacaoLeads}
+            onChange={(v) => onChange({ ...data, percentualCaptacaoLeads: v })}
+          />
+        </div>
+      )}
 
       <div className="rounded-2xl border border-brand/35 bg-gradient-to-br from-brand/10 to-brand/[0.04] p-6 shadow-[0_4px_14px_rgba(89,165,44,0.08)]">
         <p className="text-base text-obsidian">

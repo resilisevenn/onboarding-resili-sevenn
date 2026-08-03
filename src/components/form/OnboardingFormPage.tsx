@@ -4,17 +4,19 @@ import { useAuth } from '../../context/AuthContext'
 import { createOnboarding } from '../../lib/onboardings'
 import type { OnboardingPayload } from '../../types/onboarding'
 import { ExpandableSection } from '../ui/ExpandableSection'
-import { NumberField, ObjectListField, StringListField, TextAreaField, TextField } from './fields'
+import { CurrencyField, ObjectListField, PercentField, StringListField, TextAreaField, TextField } from './fields'
 import { CaminhoPacienteField } from './CaminhoPacienteField'
 import { FasesField } from './FasesField'
 import { RiscosField } from './RiscosField'
 import { CriativosField } from './CriativosField'
 import { ChecklistField } from './ChecklistField'
 import { ComoTrabalharField } from './ComoTrabalharField'
+import { CplBenchmarkInfo } from './CplBenchmarkInfo'
+import { AlocacaoVerbaField } from './AlocacaoVerbaField'
 import { Primeiros30DiasField } from './Primeiros30DiasField'
 import { emptyPayload } from './emptyPayload'
-import { calcNivelMeta, calcPacientesCobertura } from '../../lib/calculations'
-import { formatCurrency, formatNumber } from '../../lib/format'
+import { calcFaturamentoMedio, calcNivelMeta, calcPacientesCobertura, calcTaxaLeadParaFechamento } from '../../lib/calculations'
+import { formatCurrency, formatNumber, formatPercent } from '../../lib/format'
 
 export function OnboardingFormPage() {
   const { session } = useAuth()
@@ -45,6 +47,7 @@ export function OnboardingFormPage() {
         payload,
         createdBy: session.user.id,
       })
+      window.open(`/o/${row.slug}`, '_blank', 'noopener,noreferrer')
       navigate(`/?created=${row.slug}`)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro ao criar onboarding.')
@@ -99,7 +102,7 @@ export function OnboardingFormPage() {
         >
           <div className="grid grid-cols-3 gap-3">
             {[0, 1, 2].map((i) => (
-              <NumberField
+              <CurrencyField
                 key={i}
                 label={`Faturamento mês ${i + 1}`}
                 value={b2.faturamentoUltimos3Meses[i]}
@@ -111,10 +114,11 @@ export function OnboardingFormPage() {
               />
             ))}
           </div>
-          <NumberField label="Ticket médio" value={b2.ticketMedio} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, ticketMedio: v })} />
-          <NumberField label="Custo operacional mensal" value={b2.custoOperacionalMensal} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, custoOperacionalMensal: v })} />
-          <NumberField label="Margem (0 a 1, ex: 0.4 = 40%)" step={0.01} value={b2.margem} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, margem: v })} />
-          <NumberField label="Verba de anúncio mensal" value={b2.verbaAnuncioAtual} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, verbaAnuncioAtual: v })} />
+          <CurrencyField label="Ticket médio" value={b2.ticketMedio} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, ticketMedio: v })} />
+          <CurrencyField label="Custo operacional mensal" value={b2.custoOperacionalMensal} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, custoOperacionalMensal: v })} />
+          <PercentField label="Margem" value={b2.margem} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, margem: v })} />
+          <CurrencyField label="Verba de anúncio mensal" value={b2.verbaAnuncioAtual} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, verbaAnuncioAtual: v })} />
+          <AlocacaoVerbaField value={b2.percentualCaptacaoLeads} onChange={(v) => patch('bloco2_ondeVoceEsta', { ...b2, percentualCaptacaoLeads: v })} />
 
           <div className="rounded border border-brand/30 bg-brand/5 p-3 text-sm text-bone/70">
             Pacientes/mês necessários só para cobrir a operação:{' '}
@@ -124,19 +128,21 @@ export function OnboardingFormPage() {
 
         <ExpandableSection title="3. Onde você quer chegar">
           {b3.niveis.map((nivel, i) => {
-            const preview = calcNivelMeta(nivel.metaFaturamento, b2.ticketMedio, b3)
+            const preview = calcNivelMeta(nivel.metaFaturamento, b2.ticketMedio, b3, calcFaturamentoMedio(b2), b2.percentualCaptacaoLeads)
             return (
-              <div key={nivel.nome} className="space-y-2">
-                <NumberField
-                  label={`Meta de faturamento — ${nivel.nome}`}
-                  value={nivel.metaFaturamento}
-                  onChange={(v) => {
-                    const next = [...b3.niveis]
-                    next[i] = { ...next[i], metaFaturamento: v }
-                    patch('bloco3_ondeQuerChegar', { ...b3, niveis: next })
-                  }}
-                />
-                <div className="rounded border border-white/10 p-3 text-sm text-bone/60">
+              <div key={nivel.nome} className="flex items-end gap-3">
+                <div className="flex-1">
+                  <CurrencyField
+                    label={`Meta de faturamento — ${nivel.nome}`}
+                    value={nivel.metaFaturamento}
+                    onChange={(v) => {
+                      const next = [...b3.niveis]
+                      next[i] = { ...next[i], metaFaturamento: v }
+                      patch('bloco3_ondeQuerChegar', { ...b3, niveis: next })
+                    }}
+                  />
+                </div>
+                <div className="flex-1 rounded border border-white/10 p-3 text-sm text-bone/60">
                   <span className="font-mono text-bone">{formatNumber(preview.numPacientes)}</span> pacientes ·{' '}
                   <span className="font-mono text-bone">{formatNumber(preview.numLeads)}</span> leads ·{' '}
                   <span className="font-mono text-bone">{formatCurrency(preview.verbaNecessaria)}</span> de verba
@@ -144,10 +150,19 @@ export function OnboardingFormPage() {
               </div>
             )
           })}
-          <NumberField label="Taxa lead → agendamento" step={0.01} value={b3.taxaLeadParaAgendamento} onChange={(v) => patch('bloco3_ondeQuerChegar', { ...b3, taxaLeadParaAgendamento: v })} />
-          <NumberField label="Taxa agendamento → comparecimento" step={0.01} value={b3.taxaAgendamentoParaComparecimento} onChange={(v) => patch('bloco3_ondeQuerChegar', { ...b3, taxaAgendamentoParaComparecimento: v })} />
-          <NumberField label="Taxa comparecimento → fechamento" step={0.01} value={b3.taxaComparecimentoParaFechamento} onChange={(v) => patch('bloco3_ondeQuerChegar', { ...b3, taxaComparecimentoParaFechamento: v })} />
-          <NumberField label="CPL estimado" step={0.01} value={b3.cplEstimado} onChange={(v) => patch('bloco3_ondeQuerChegar', { ...b3, cplEstimado: v })} />
+          <PercentField label="Taxa lead → agendamento" value={b3.taxaLeadParaAgendamento} onChange={(v) => patch('bloco3_ondeQuerChegar', { ...b3, taxaLeadParaAgendamento: v })} />
+          <PercentField label="Taxa agendamento → comparecimento" value={b3.taxaAgendamentoParaComparecimento} onChange={(v) => patch('bloco3_ondeQuerChegar', { ...b3, taxaAgendamentoParaComparecimento: v })} />
+          <PercentField label="Taxa comparecimento → fechamento" value={b3.taxaComparecimentoParaFechamento} onChange={(v) => patch('bloco3_ondeQuerChegar', { ...b3, taxaComparecimentoParaFechamento: v })} />
+          <div className="rounded border border-white/10 p-3 text-sm text-bone/60">
+            Taxa conv. leads → fechamento (calculada automaticamente):{' '}
+            <span className="font-mono text-lg font-semibold text-brand">{formatPercent(calcTaxaLeadParaFechamento(b3))}</span>
+          </div>
+          <CurrencyField
+            label="CPL estimado"
+            value={b3.cplEstimado}
+            onChange={(v) => patch('bloco3_ondeQuerChegar', { ...b3, cplEstimado: v })}
+            labelExtra={<CplBenchmarkInfo />}
+          />
         </ExpandableSection>
 
         <ExpandableSection

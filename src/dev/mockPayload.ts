@@ -20,6 +20,7 @@ export const MOCK_PAYLOAD: OnboardingPayload = {
     custoOperacionalMensal: 28000,
     margem: 0.34,
     verbaAnuncioAtual: 3000,
+    percentualCaptacaoLeads: 0.85,
   },
   bloco3_ondeQuerChegar: {
     niveis: [

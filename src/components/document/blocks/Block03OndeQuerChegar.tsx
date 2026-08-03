@@ -1,6 +1,6 @@
-import type { Bloco3OndeQuerChegar, NivelMeta } from '../../../types/onboarding'
+import type { Bloco2OndeVoceEsta, Bloco3OndeQuerChegar, NivelMeta } from '../../../types/onboarding'
 import { formatCurrency, formatNumber, formatPercent } from '../../../lib/format'
-import { calcNivelMeta } from '../../../lib/calculations'
+import { calcFaturamentoMedio, calcNivelMeta, calcTaxaLeadParaFechamento } from '../../../lib/calculations'
 import { BlockHeading } from '../BlockHeading'
 import { EditableNumber, EditablePercent } from '../EditableField'
 import { cn } from '../../../lib/utils'
@@ -21,14 +21,18 @@ function orderNiveis(niveis: NivelMeta[]): NivelMeta[] {
 export function Block03OndeQuerChegar({
   data,
   ticketMedio,
+  bloco2,
   editable = false,
   onChange,
 }: {
   data: Bloco3OndeQuerChegar
   ticketMedio: number
+  bloco2: Bloco2OndeVoceEsta
   editable?: boolean
   onChange?: (data: Bloco3OndeQuerChegar) => void
 }) {
+  const faturamentoAtual = calcFaturamentoMedio(bloco2)
+  const taxaLeadParaFechamento = calcTaxaLeadParaFechamento(data)
   return (
     <div>
       <BlockHeading
@@ -60,6 +64,9 @@ export function Block03OndeQuerChegar({
             />
             .
             <br />
+            Taxa conv. leads → fechamento (calculada automaticamente):{' '}
+            <span className="font-mono text-obsidian">{formatPercent(taxaLeadParaFechamento)}</span>.
+            <br />
             CPL estimado:
             <EditableNumber value={data.cplEstimado} step={0.01} prefix="R$" onChange={(v) => onChange({ ...data, cplEstimado: v })} />
           </p>
@@ -75,15 +82,34 @@ export function Block03OndeQuerChegar({
             comparecimento → fechamento{' '}
             <span className="font-mono text-obsidian">{formatPercent(data.taxaComparecimentoParaFechamento)}</span>.
             <br />
+            Taxa conv. leads → fechamento (calculada automaticamente):{' '}
+            <span className="font-mono text-obsidian">{formatPercent(taxaLeadParaFechamento)}</span>.
+            <br />
             CPL estimado: <span className="font-mono text-obsidian">{formatCurrency(data.cplEstimado)}</span>.
           </p>
         )}
       </div>
 
+      <div className="mb-8 text-sm text-obsidian/60">
+        <p>
+          Ponto de partida (faturamento médio atual): <span className="font-mono text-obsidian">{formatCurrency(faturamentoAtual)}</span>.
+          As metas abaixo representam o quanto falta faturar a mais para sair desse patamar.
+          <br />
+          Alocação da verba: <span className="font-mono text-obsidian">{formatPercent(bloco2.percentualCaptacaoLeads)}</span> em
+          captação de leads, o restante em geração de base/audiência.
+        </p>
+      </div>
+
       <div className="grid items-stretch gap-5 md:grid-cols-[1.4fr_1fr_1fr]">
         {orderNiveis(data.niveis).map((nivel) => {
           const originalIndex = data.niveis.findIndex((n) => n.nome === nivel.nome)
-          const { numPacientes, numLeads, verbaNecessaria } = calcNivelMeta(nivel.metaFaturamento, ticketMedio, data)
+          const { numPacientes, numLeads, verbaNecessaria } = calcNivelMeta(
+            nivel.metaFaturamento,
+            ticketMedio,
+            data,
+            faturamentoAtual,
+            bloco2.percentualCaptacaoLeads,
+          )
           const featured = nivel.nome === 'super_meta'
 
           return (

@@ -218,6 +218,7 @@ export function OnboardingDocument({
                 <Block03OndeQuerChegar
                   data={data.bloco3_ondeQuerChegar}
                   ticketMedio={data.bloco2_ondeVoceEsta.ticketMedio}
+                  bloco2={data.bloco2_ondeVoceEsta}
                   editable={editable}
                   onChange={(v) => patch('bloco3_ondeQuerChegar', v)}
                 />

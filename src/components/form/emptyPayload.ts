@@ -17,6 +17,7 @@ export function emptyPayload(): OnboardingPayload {
       custoOperacionalMensal: 0,
       margem: 0.4,
       verbaAnuncioAtual: 0,
+      percentualCaptacaoLeads: 0.85,
     },
     bloco3_ondeQuerChegar: {
       niveis: [

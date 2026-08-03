@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
 import { cn } from '../../lib/utils'
 
@@ -48,15 +48,20 @@ export function NumberField({
   value,
   onChange,
   step,
+  labelExtra,
 }: {
   label: string
   value: number
   onChange: (v: number) => void
   step?: number
+  labelExtra?: ReactNode
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm text-bone/70">{label}</span>
+      <span className="mb-1 flex items-center gap-1.5 text-sm text-bone/70">
+        {label}
+        {labelExtra}
+      </span>
       <input
         type="number"
         step={step ?? 'any'}
@@ -64,6 +69,97 @@ export function NumberField({
         onChange={(e) => onChange(e.target.valueAsNumber)}
         className={inputClass}
       />
+    </label>
+  )
+}
+
+/** Edita uma taxa 0-1 exibindo/aceitando o valor em porcentagem (ex: 30 -> 0.3). */
+export function PercentField({
+  label,
+  value,
+  onChange,
+  labelExtra,
+}: {
+  label: string
+  value: number
+  onChange: (v: number) => void
+  labelExtra?: ReactNode
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1 flex items-center gap-1.5 text-sm text-bone/70">
+        {label}
+        {labelExtra}
+      </span>
+      <div className="flex items-center gap-2">
+        <input
+          type="number"
+          step={0.1}
+          value={Number.isNaN(value) ? '' : Math.round((value || 0) * 1000) / 10}
+          onChange={(e) => onChange((e.target.valueAsNumber || 0) / 100)}
+          className={inputClass}
+        />
+        <span className="shrink-0 text-bone/60">%</span>
+      </div>
+    </label>
+  )
+}
+
+function parsePtBrNumber(text: string): number {
+  const normalized = text.replace(/\./g, '').replace(',', '.')
+  const parsed = Number(normalized)
+  return Number.isFinite(parsed) ? parsed : NaN
+}
+
+function formatPtBrNumber(value: number): string {
+  if (Number.isNaN(value)) return ''
+  return value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })
+}
+
+/** Campo monetário: exibe/aceita formato pt-BR (ex: 20.000,50), armazena número puro (20000.5). */
+export function CurrencyField({
+  label,
+  value,
+  onChange,
+  labelExtra,
+}: {
+  label: string
+  value: number
+  onChange: (v: number) => void
+  labelExtra?: ReactNode
+}) {
+  const [text, setText] = useState(() => formatPtBrNumber(value))
+  const [focused, setFocused] = useState(false)
+
+  useEffect(() => {
+    if (!focused) setText(formatPtBrNumber(value))
+  }, [value, focused])
+
+  return (
+    <label className="block">
+      <span className="mb-1 flex items-center gap-1.5 text-sm text-bone/70">
+        {label}
+        {labelExtra}
+      </span>
+      <div className="flex items-center gap-2">
+        <span className="text-bone/60">R$</span>
+        <input
+          type="text"
+          inputMode="decimal"
+          value={text}
+          onFocus={() => setFocused(true)}
+          onChange={(e) => {
+            setText(e.target.value)
+            const parsed = parsePtBrNumber(e.target.value)
+            if (!Number.isNaN(parsed)) onChange(parsed)
+          }}
+          onBlur={() => {
+            setFocused(false)
+            setText(formatPtBrNumber(value))
+          }}
+          className={inputClass}
+        />
+      </div>
     </label>
   )
 }
