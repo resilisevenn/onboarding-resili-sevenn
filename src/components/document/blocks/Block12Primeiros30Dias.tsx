@@ -7,7 +7,7 @@ export function Block12Primeiros30Dias({ data }: { data: Bloco12Primeiros30Dias 
     <div>
       <BlockHeading number={12} title="Os primeiros 30 dias" />
 
-      <ol className="relative ml-14 mb-8 flex flex-col gap-6 border-l-2 border-obsidian/[0.12] pl-5 md:ml-[104px] md:pl-7">
+      <ol className="relative ml-0 mb-8 flex flex-col gap-6 border-l-2 border-obsidian/[0.12] pl-5 sm:ml-14 md:ml-[104px] md:pl-7">
         {data.cronograma.map((evento, i) => {
           const primeiraData = data.cronograma[0]?.data
           const diaRelativo =
@@ -23,7 +23,7 @@ export function Block12Primeiros30Dias({ data }: { data: Bloco12Primeiros30Dias 
           return (
             <li key={i} className="relative">
               <span className="absolute -left-[25px] top-1 h-3 w-3 rounded-full bg-brand shadow-[0_0_0_5px_rgba(89,165,44,0.15)] md:-left-[33px]" />
-              <span className="absolute -left-14 top-px w-12 text-right font-mono text-[13px] font-bold text-obsidian md:-left-[104px] md:w-[60px] md:text-base">
+              <span className="hidden text-right font-mono text-[13px] font-bold text-obsidian sm:absolute sm:-left-14 sm:top-px sm:block sm:w-12 md:-left-[104px] md:w-[60px] md:text-base">
                 {dataCurta}
               </span>
               <p className="mb-1.5 font-mono text-[13px] font-bold text-obsidian/55">

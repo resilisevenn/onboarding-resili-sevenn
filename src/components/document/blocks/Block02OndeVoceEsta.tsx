@@ -21,7 +21,7 @@ export function Block02OndeVoceEsta({
     <div>
       <BlockHeading number={2} title="Onde você está hoje" subtitle="A linha de base a partir da qual medimos o progresso." />
 
-      <div className="mb-8 grid grid-cols-2 gap-5 md:grid-cols-5">
+      <div className="mb-8 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-5">
         <Stat label="Faturamento médio (últimos 3 meses)">
           {editable && onChange ? (
             <EditableNumber

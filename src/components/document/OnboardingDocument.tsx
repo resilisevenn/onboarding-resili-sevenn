@@ -54,6 +54,7 @@ export function OnboardingDocument({
   const [progress, setProgress] = useState(0)
   const [showSavedBadge, setShowSavedBadge] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
   useEffect(() => {
     function onChange() {
@@ -106,6 +107,7 @@ export function OnboardingDocument({
 
   function scrollTo(id: string) {
     setActive(id)
+    setMobileNavOpen(false)
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
@@ -177,6 +179,51 @@ export function OnboardingDocument({
           </svg>
         )}
       </button>
+
+      {/* ===================== NAVEGAÇÃO MOBILE ===================== */}
+      <div className="md:hidden">
+        <button
+          type="button"
+          onClick={() => setMobileNavOpen((v) => !v)}
+          title="Navegar entre os blocos"
+          aria-label="Navegar entre os blocos"
+          aria-expanded={mobileNavOpen}
+          className="fixed right-4 top-16 z-[110] flex h-10 w-10 items-center justify-center rounded-full border border-bone/25 bg-obsidian/35 text-bone/80 backdrop-blur-md transition-colors hover:border-bone/50 hover:bg-obsidian/55 hover:text-bone"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <line x1="4" y1="18" x2="20" y2="18" />
+          </svg>
+        </button>
+
+        {mobileNavOpen && (
+          <>
+            <div className="fixed inset-0 z-[105] bg-obsidian/40" onClick={() => setMobileNavOpen(false)} />
+            <nav className="fixed right-4 top-28 z-[110] max-h-[70vh] w-[min(280px,calc(100vw-32px))] overflow-y-auto rounded-2xl border border-obsidian/10 bg-bone p-2 shadow-[0_8px_30px_rgba(11,19,16,0.25)]">
+              {NAV_ITEMS.map((item) => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollTo(item.id)
+                  }}
+                  className={cn(
+                    'mb-0.5 flex items-center gap-2 overflow-hidden whitespace-nowrap rounded-lg px-3 py-2.5 text-[14px] no-underline transition-colors last:mb-0',
+                    active === item.id
+                      ? 'bg-gradient-to-br from-[var(--color-doc-dark)] to-obsidian-alt text-bone shadow-[0_2px_8px_rgba(11,19,16,0.25)]'
+                      : 'text-obsidian/70 hover:bg-obsidian/5 hover:text-obsidian',
+                  )}
+                >
+                  <span className="shrink-0 font-mono">{item.num}</span>
+                  <span>{item.label}</span>
+                </a>
+              ))}
+            </nav>
+          </>
+        )}
+      </div>
 
       {/* ===================== CAPA ===================== */}
       <div

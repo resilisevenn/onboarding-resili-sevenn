@@ -165,7 +165,12 @@ export function Block03OndeQuerChegar({
                   }}
                 />
               ) : (
-                <p className={cn('font-mono font-bold', featured ? 'text-4xl text-brand-light' : 'text-2xl text-brand-hover')}>
+                <p
+                  className={cn(
+                    'font-mono font-bold',
+                    featured ? 'text-[clamp(24px,6vw,36px)] text-brand-light' : 'text-[clamp(18px,4vw,24px)] text-brand-hover',
+                  )}
+                >
                   {formatCurrency(nivel.metaFaturamento)}
                 </p>
               )}

@@ -16,7 +16,7 @@ export function Block10Checklist({
     <div>
       <BlockHeading number={10} title="O que precisa de você" />
       <div className="overflow-x-auto rounded-xl border border-obsidian/10 shadow-[0_1px_2px_rgba(11,19,16,0.04),0_4px_12px_rgba(11,19,16,0.05)]">
-        <table className="w-full text-left text-sm">
+        <table className="w-full min-w-[560px] text-left text-sm">
           <thead>
             <tr className="bg-[var(--color-doc-dark)] text-bone">
               <th className="px-3.5 py-3.5 text-[12.5px] font-medium uppercase tracking-wide">Item</th>

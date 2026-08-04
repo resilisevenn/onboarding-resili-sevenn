@@ -404,12 +404,68 @@
   .msg-front .narrative .k { font-size: 11px; color: rgba(11,19,16,0.5); margin-bottom: 4px; }
   .msg-front .narrative p { margin: 0; font-style: italic; font-size: 13.5px; line-height: 1.5; }
 
-  .banner {
-    background: linear-gradient(90deg, var(--brand-dark), var(--obsidian-alt));
-    color: var(--bone);
+  /* ---------- CAPA / ENCERRAMENTO ---------- */
+  .cover-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    font-size: 13px;
-    padding: 8px;
+    padding: 48px 24px;
+    color: var(--bone);
+    background: linear-gradient(180deg, var(--brand-dark), var(--brand-dark) 60%, var(--obsidian-alt));
+  }
+  .cover-screen .eyebrow {
+    margin-bottom: 28px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brand-light);
+  }
+  .cover-screen h1 {
+    margin: 0 0 24px;
+    font-size: clamp(38px, 6vw, 84px);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+  }
+  .cover-screen .lead {
+    max-width: 640px;
+    margin: 0 auto 56px;
+    font-size: clamp(16px, 2vw, 22px);
+    line-height: 1.6;
+    color: rgba(250,250,250,0.65);
+  }
+  .cover-screen .client-name {
+    margin-bottom: 64px;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1;
+    color: var(--brand-light);
+  }
+  .cover-screen .scroll-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(250,250,250,0.4);
+    text-decoration: none;
+    cursor: pointer;
+    animation: scroll-bob 2s ease-in-out infinite;
+  }
+  .cover-screen .scroll-hint:hover { color: var(--brand-light); }
+  @keyframes scroll-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+  .closing-screen .footer-date {
+    margin-top: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    color: rgba(250,250,250,0.35);
   }
 
   @media (max-width: 900px) {
@@ -430,8 +486,6 @@
 </head>
 <body>
 
-<div class="banner">🔧 SIMULAÇÃO: arquivo estático apenas para pré-visualização de layout e conteúdo (dados fictícios)</div>
-
 <!-- ===================== GATE SCREEN ===================== -->
 <div id="gate">
   <div class="card">
@@ -445,6 +499,19 @@
 
 <!-- ===================== DOCUMENT VIEW ===================== -->
 <div id="document">
+
+  <!-- ===================== CAPA ===================== -->
+  <div class="cover-screen" id="cover">
+    <div class="eyebrow">Onboarding Resili Sevenn</div>
+    <h1 class="serif">Bem-vindo ao<br>nosso Ecossistema</h1>
+    <p class="lead">O plano completo de como vamos levar sua clínica de onde está hoje até a meta que você definiu, passo a passo.</p>
+    <div class="client-name serif">Dra. Gabrielle Leão</div>
+    <a href="#b1" class="scroll-hint">
+      <span>Role para ver o plano</span>
+      <span>↓</span>
+    </a>
+  </div>
+
   <header class="doc-header">
     <div class="inner">
       <img class="logo" src="public/logo-resili-sevenn.png" alt="Resili Sevenn" onerror="this.style.display='none'">
@@ -771,6 +838,15 @@
 
     </main>
   </div>
+
+  <!-- ===================== ENCERRAMENTO ===================== -->
+  <div class="cover-screen closing-screen" id="closing">
+    <div class="eyebrow">Resili Sevenn</div>
+    <h1 class="serif">Obrigado</h1>
+    <p class="lead">Qualquer dúvida, fale com a gente no grupo dedicado no WhatsApp, vamos construir isso juntos.</p>
+    <p class="footer-date">Onboarding gerado em 03/08/2026</p>
+  </div>
+
 </div>
 
 <script>

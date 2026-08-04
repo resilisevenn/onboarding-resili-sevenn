@@ -14,7 +14,7 @@ export function BlockHeading({ number, title, subtitle }: { number: number; titl
       >
         {title}
       </h2>
-      {subtitle && <p className="relative z-10 mb-12 max-w-[60ch] text-[17px] leading-snug text-obsidian/60">{subtitle}</p>}
+      {subtitle && <p className="relative z-10 mb-12 max-w-[60ch] text-[15px] leading-snug text-obsidian/60 sm:text-[17px]">{subtitle}</p>}
     </div>
   )
 }
